@@ -1,9 +1,17 @@
+import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
 
-// Import sample data (we need to make sure we don't import Next.js client components here)
-// So we will just define a simplified version of the seed data directly to avoid Next.js import errors in Node
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+const adapter = new PrismaPg(pool);
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding database...");
