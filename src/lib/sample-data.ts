@@ -1,5 +1,5 @@
 // ============================================
-// LUMIÈRE — Sample Product Data
+// Cherry Jewelry — Sample Product Data
 // Used for development before database integration
 // ============================================
 
@@ -94,7 +94,7 @@ export const sampleProducts: Product[] = [
     ],
     reviews: [],
     tags: ["diamond", "engagement", "halo", "gold"],
-    metaTitle: "Celestial Diamond Ring | 18K Gold | LUMIÈRE",
+    metaTitle: "Celestial Diamond Ring | 18K Gold | Cherry Jewelry",
     metaDescription: "Shop the Celestial Diamond Ring — a brilliant-cut diamond halo ring set in 18K yellow gold.",
     isFeatured: true,
     isNewArrival: true,
@@ -368,7 +368,7 @@ export const sampleTestimonials = [
     name: "Meera Krishnan",
     location: "Bangalore",
     rating: 5,
-    text: "The Rose Petal Earrings are my everyday go-to now. They're lightweight, elegant, and I get compliments everywhere. LUMIÈRE has won a customer for life!",
+    text: "The Rose Petal Earrings are my everyday go-to now. They're lightweight, elegant, and I get compliments everywhere. Cherry Jewelry has won a customer for life!",
     avatar: "MK",
     product: "Rose Petal Earrings",
   },

@@ -33,7 +33,7 @@ export default function ContactPage() {
           {/* Contact Info */}
           <div className="space-y-6">
             {[
-              { icon: Mail, label: "Email", value: "hello@lumiere.in", href: "mailto:hello@lumiere.in" },
+              { icon: Mail, label: "Email", value: "hello@cherryjewelry.in", href: "mailto:hello@cherryjewelry.in" },
               { icon: Phone, label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
               { icon: MapPin, label: "Address", value: "123 Jewel Street, Mumbai, Maharashtra 400001", href: null },
             ].map(({ icon: Icon, label, value, href }) => (

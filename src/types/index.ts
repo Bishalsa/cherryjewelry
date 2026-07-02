@@ -1,5 +1,5 @@
 // ============================================
-// LUMIÈRE — TypeScript Type Definitions
+// Cherry Jewelry — TypeScript Type Definitions
 // ============================================
 
 // --- Product Types ---

@@ -26,7 +26,7 @@ export async function sendOrderConfirmationEmail({
 
   try {
     await resend.emails.send({
-      from: `${APP_NAME} <orders@lumiere.in>`,
+      from: `${APP_NAME} <orders@cherryjewelry.in>`,
       to: email,
       subject: `Order Confirmation - ${orderNumber}`,
       html: `

@@ -183,11 +183,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:hello@lumiere.in"
+                  href="mailto:hello@cherryjewelry.in"
                   className="flex items-center gap-3 text-sm text-ivory/40 hover:text-gold transition-colors"
                 >
                   <Mail className="w-4 h-4 shrink-0 text-gold/60" />
-                  hello@lumiere.in
+                  hello@cherryjewelry.in
                 </a>
               </li>
             </ul>

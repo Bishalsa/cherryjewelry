@@ -1,8 +1,8 @@
 import AdminSidebar from "@/components/admin/AdminSidebar";
 
 export const metadata = {
-  title: "Admin Dashboard | LUMIÈRE",
-  description: "Admin dashboard for LUMIÈRE jewelry e-commerce platform.",
+  title: "Admin Dashboard | Cherry Jewelry",
+  description: "Admin dashboard for Cherry Jewelry e-commerce platform.",
 };
 
 export default function AdminLayout({

@@ -1,8 +1,8 @@
 // ============================================
-// LUMIÈRE — Application Constants
+// Cherry Jewelry — Application Constants
 // ============================================
 
-export const APP_NAME = "LUMIÈRE";
+export const APP_NAME = "Cherry Jewelry";
 export const APP_DESCRIPTION = "Exquisite handcrafted jewelry — where artistry meets elegance. Discover our curated collection of rings, necklaces, earrings, and bracelets.";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 

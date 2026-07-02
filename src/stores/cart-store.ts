@@ -108,7 +108,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: "lumiere-cart",
+      name: "cherry-cart",
       partialize: (state) => ({
         items: state.items,
         couponCode: state.couponCode,
