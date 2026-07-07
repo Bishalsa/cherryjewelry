@@ -2,10 +2,8 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
-// Disable strict TLS check for self-signed certificates (Supabase pooler requirement in local dev)
-if (process.env.NODE_ENV !== "production") {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-}
+// Disable strict TLS check for self-signed certificates (Supabase pooler requirement)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
