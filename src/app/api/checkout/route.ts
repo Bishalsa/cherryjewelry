@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { razorpay } from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/constants";
+import { checkStock, reserveInventory } from "@/lib/db-queries";
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +11,25 @@ export async function POST(req: Request) {
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
+    }
+
+    // 0. Check stock availability before processing
+    const stockResult = await checkStock(
+      items.map((item: { productId: string; variantId?: string; quantity: number }) => ({
+        productId: item.productId,
+        variantId: item.variantId || null,
+        quantity: item.quantity,
+      }))
+    );
+
+    if (!stockResult.available) {
+      return NextResponse.json(
+        {
+          error: "Some items are out of stock",
+          unavailableItems: stockResult.unavailableItems,
+        },
+        { status: 409 }
+      );
     }
 
     // 1. Calculate subtotal securely from the database
@@ -84,6 +104,15 @@ export async function POST(req: Request) {
         },
       },
     });
+
+    // 4b. Reserve inventory for the ordered items
+    await reserveInventory(
+      items.map((item: { productId: string; variantId?: string; quantity: number }) => ({
+        productId: item.productId,
+        variantId: item.variantId || null,
+        quantity: item.quantity,
+      }))
+    );
 
     // 5. Handle Payment Method
     if (paymentMethod === "razorpay") {

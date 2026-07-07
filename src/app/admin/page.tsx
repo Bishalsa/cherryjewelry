@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   TrendingUp, 
@@ -7,64 +8,110 @@ import {
   Package, 
   Users, 
   ArrowUpRight, 
-  ArrowDownRight 
+  ArrowDownRight,
+  Loader2,
+  RefreshCw
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
+import Link from "next/link";
+import { toast } from "sonner";
 
-const STATS = [
-  {
-    label: "Total Revenue",
-    value: 1254300,
-    change: "+12.5%",
-    isPositive: true,
-    icon: TrendingUp,
-    format: (v: number) => formatPrice(v),
-  },
-  {
-    label: "Total Orders",
-    value: 145,
-    change: "+5.2%",
-    isPositive: true,
-    icon: ShoppingCart,
-    format: (v: number) => v.toString(),
-  },
-  {
-    label: "Total Products",
-    value: 52,
-    change: "-2.1%",
-    isPositive: false,
-    icon: Package,
-    format: (v: number) => v.toString(),
-  },
-  {
-    label: "Active Customers",
-    value: 843,
-    change: "+18.4%",
-    isPositive: true,
-    icon: Users,
-    format: (v: number) => v.toString(),
-  },
-];
+interface StatItem {
+  label: string;
+  value: number;
+  change: string;
+  isPositive: boolean;
+  icon: string;
+}
 
-const RECENT_ORDERS = [
-  { id: "#ORD-001", customer: "Priya Sharma", date: "Today", amount: 45999, status: "Processing" },
-  { id: "#ORD-002", customer: "Rahul Verma", date: "Yesterday", amount: 125000, status: "Shipped" },
-  { id: "#ORD-003", customer: "Anjali Patel", date: "May 28", amount: 34500, status: "Delivered" },
-  { id: "#ORD-004", customer: "Vikram Singh", date: "May 25", amount: 78500, status: "Processing" },
-];
+interface RecentOrder {
+  id: string;
+  customer: string;
+  date: string;
+  amount: number;
+  status: string;
+}
+
+interface TopProduct {
+  name: string;
+  sales: number;
+  revenue: number;
+}
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  TrendingUp: TrendingUp,
+  ShoppingCart: ShoppingCart,
+  Package: Package,
+  Users: Users,
+};
 
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<StatItem[]>([]);
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchDashboardData = async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
+    else setRefreshing(true);
+
+    try {
+      const res = await fetch("/api/admin/metrics");
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to load dashboard metrics");
+      }
+
+      setStats(data.stats);
+      setRecentOrders(data.recentOrders);
+      setTopProducts(data.topProducts);
+    } catch (err: unknown) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Error loading dashboard metrics");
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="w-10 h-10 text-gold animate-spin" />
+        <p className="text-neutral-400 text-sm font-medium">Loading store metrics...</p>
+      </div>
+    );
+  }
+
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-heading text-3xl text-obsidian">Dashboard Overview</h1>
-        <p className="text-neutral-500 mt-2">Welcome back! Here&apos;s what&apos;s happening with your store today.</p>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="font-heading text-3xl text-obsidian">Dashboard Overview</h1>
+          <p className="text-neutral-500 mt-2">Welcome back! Here&apos;s what&apos;s happening with your store today.</p>
+        </div>
+        <button
+          onClick={() => fetchDashboardData(true)}
+          disabled={refreshing}
+          className="inline-flex items-center gap-2 px-4 py-2 border border-neutral-200 bg-white hover:bg-neutral-50 rounded-xl text-sm font-medium text-neutral-600 transition-colors disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
+          {refreshing ? "Refreshing..." : "Refresh"}
+        </button>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {STATS.map((stat, i) => {
-          const Icon = stat.icon;
+        {stats.map((stat, i) => {
+          const Icon = ICON_MAP[stat.icon] || Package;
+          const isCurrency = stat.label.toLowerCase().includes("revenue");
+
           return (
             <motion.div
               key={stat.label}
@@ -83,7 +130,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <h3 className="text-neutral-500 text-sm font-medium mb-1">{stat.label}</h3>
-              <p className="text-2xl font-semibold text-obsidian">{stat.format(stat.value)}</p>
+              <p className="text-2xl font-semibold text-obsidian">
+                {isCurrency ? formatPrice(stat.value) : stat.value}
+              </p>
             </motion.div>
           );
         })}
@@ -94,7 +143,9 @@ export default function AdminDashboard() {
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-card border border-neutral-100 overflow-hidden">
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
             <h2 className="font-heading text-xl text-obsidian">Recent Orders</h2>
-            <button className="text-sm text-gold-dark hover:text-gold transition-colors">View All</button>
+            <Link href="/admin/orders" className="text-sm text-gold-dark hover:text-gold transition-colors font-medium">
+              View All
+            </Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -108,54 +159,64 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
-                {RECENT_ORDERS.map((order) => (
-                  <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
-                    <td className="px-6 py-4 text-sm font-medium text-obsidian">{order.id}</td>
-                    <td className="px-6 py-4 text-sm text-neutral-600">{order.customer}</td>
-                    <td className="px-6 py-4 text-sm text-neutral-400">{order.date}</td>
-                    <td className="px-6 py-4 text-sm text-obsidian font-medium">{formatPrice(order.amount)}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                        order.status === 'Delivered' ? 'bg-success/10 text-success' :
-                        order.status === 'Processing' ? 'bg-warning/10 text-warning-dark' :
-                        'bg-blue-100 text-blue-700'
-                      }`}>
-                        {order.status}
-                      </span>
+                {recentOrders.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-10 text-center text-neutral-400 text-sm">
+                      No recent orders found. Test checkout to populate.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  recentOrders.map((order) => (
+                    <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
+                      <td className="px-6 py-4 text-sm font-medium text-obsidian">{order.id}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-600">{order.customer}</td>
+                      <td className="px-6 py-4 text-sm text-neutral-400">{order.date}</td>
+                      <td className="px-6 py-4 text-sm text-obsidian font-medium">{formatPrice(order.amount)}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                          order.status === 'DELIVERED' || order.status === 'Delivered' ? 'bg-success/10 text-success' :
+                          order.status === 'PROCESSING' || order.status === 'Processing' || order.status === 'CONFIRMED' || order.status === 'Confirmed' ? 'bg-warning/10 text-warning-dark' :
+                          order.status === 'CANCELLED' || order.status === 'Cancelled' ? 'bg-destructive/10 text-destructive' :
+                          'bg-blue-50 text-blue-700'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
         {/* Top Products */}
-        <div className="bg-white rounded-2xl shadow-card border border-neutral-100 p-6">
-          <h2 className="font-heading text-xl text-obsidian mb-6">Top Products</h2>
-          <div className="space-y-6">
-            {[
-              { name: "Celestial Diamond Ring", sales: 24, revenue: 1103976 },
-              { name: "Aria Gold Necklace", sales: 18, revenue: 1413000 },
-              { name: "Rose Petal Earrings", sales: 31, revenue: 898969 },
-            ].map((product, i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center shrink-0">
-                  <span className="text-xl opacity-20">💎</span>
+        <div className="bg-white rounded-2xl shadow-card border border-neutral-100 p-6 flex flex-col justify-between">
+          <div>
+            <h2 className="font-heading text-xl text-obsidian mb-6">Top Products</h2>
+            <div className="space-y-6">
+              {topProducts.map((product, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center shrink-0">
+                    <span className="text-xl opacity-40">💍</span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-obsidian truncate">{product.name}</p>
+                    <p className="text-xs text-neutral-400 mt-0.5">{product.sales} sales</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-obsidian">{formatPrice(product.revenue)}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-obsidian truncate">{product.name}</p>
-                  <p className="text-xs text-neutral-400 mt-0.5">{product.sales} sales</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-obsidian">{formatPrice(product.revenue)}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          <button className="w-full mt-6 py-2.5 border border-neutral-200 rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors">
-            View Inventory
-          </button>
+          <Link 
+            href="/admin/products" 
+            className="w-full mt-6 py-2.5 text-center border border-neutral-200 rounded-xl text-sm font-medium text-neutral-600 hover:bg-neutral-50 transition-colors block"
+          >
+            Manage Inventory
+          </Link>
         </div>
       </div>
     </div>

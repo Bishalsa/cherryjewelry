@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -13,10 +13,14 @@ import {
   ShieldCheck,
   Lock,
   ArrowLeft,
+  Loader2,
 } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 import { formatPrice, cn } from "@/lib/utils";
 import { APP_NAME, FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/constants";
+import Script from "next/script";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Step = "contact" | "shipping" | "payment" | "review";
 
@@ -28,6 +32,7 @@ const STEPS: { id: Step; label: string; icon: React.ElementType }[] = [
 ];
 
 export default function CheckoutPage() {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState<Step>("contact");
   const { items, getSubtotal, getShipping, getItemCount } = useCartStore();
   const subtotal = getSubtotal();
@@ -35,6 +40,7 @@ export default function CheckoutPage() {
   const total = subtotal + shipping;
   const stepIndex = STEPS.findIndex((s) => s.id === currentStep);
 
+  const [placingOrder, setPlacingOrder] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -49,6 +55,131 @@ export default function CheckoutPage() {
     gstNumber: "",
     orderNotes: "",
   });
+
+  // Autofill checkout details if buyer is logged in
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch("/api/auth");
+        const data = await res.json();
+        if (data.success && data.user) {
+          const user = data.user;
+          setFormData((prev) => ({
+            ...prev,
+            email: user.email,
+            phone: user.phone || "",
+          }));
+
+          if (user.addresses && user.addresses.length > 0) {
+            const defAddr = user.addresses.find((a: any) => a.isDefault) || user.addresses[0];
+            setFormData((prev) => ({
+              ...prev,
+              firstName: defAddr.firstName,
+              lastName: defAddr.lastName,
+              address1: defAddr.addressLine1,
+              address2: defAddr.addressLine2 || "",
+              city: defAddr.city,
+              state: defAddr.state,
+              pincode: defAddr.pincode,
+            }));
+          }
+        }
+      } catch (err) {
+        console.error("Autofill check failed", err);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handlePlaceOrder = async () => {
+    if (
+      !formData.email ||
+      !formData.phone ||
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.address1 ||
+      !formData.city ||
+      !formData.state ||
+      !formData.pincode
+    ) {
+      toast.error("Please fill in all contact and shipping address details.");
+      return;
+    }
+
+    setPlacingOrder(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            productId: item.productId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+          })),
+          contactInfo: {
+            email: formData.email,
+            phone: formData.phone,
+          },
+          shippingAddress: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            addressLine1: formData.address1,
+            addressLine2: formData.address2,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+          },
+          paymentMethod: formData.paymentMethod,
+          orderNotes: formData.orderNotes,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        toast.error(data.error || "Failed to place order. Please try again.");
+        return;
+      }
+
+      if (formData.paymentMethod === "razorpay" && data.payment?.provider === "razorpay") {
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mockkey",
+          amount: data.payment.amount,
+          currency: data.payment.currency,
+          name: APP_NAME,
+          description: `Order ${data.orderNumber}`,
+          order_id: data.payment.id,
+          handler: async function (response: any) {
+            toast.success("Payment Successful! Completing order...");
+            useCartStore.getState().clearCart();
+            router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
+            router.refresh();
+          },
+          prefill: {
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: {
+            color: "#C5A572",
+          },
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.open();
+      } else {
+        toast.success("Order placed successfully! Thank you.");
+        useCartStore.getState().clearCart();
+        router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
+        router.refresh();
+      }
+    } catch (error) {
+      console.error("Order Checkout error:", error);
+      toast.error("Place order failed. Check connection.");
+    } finally {
+      setPlacingOrder(false);
+    }
+  };
 
   const updateField = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -293,9 +424,22 @@ export default function CheckoutPage() {
                       <button onClick={prevStep} className="flex items-center gap-2 text-sm text-neutral-400 hover:text-obsidian transition-colors">
                         <ArrowLeft className="w-4 h-4" /> Back
                       </button>
-                      <button className="flex items-center gap-2 bg-gold text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-gold-dark transition-colors btn-glow">
-                        <ShieldCheck className="w-4 h-4" />
-                        Place Order — {formatPrice(total)}
+                      <button
+                        onClick={handlePlaceOrder}
+                        disabled={placingOrder}
+                        className="flex items-center gap-2 bg-gold text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-gold-dark transition-colors btn-glow disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {placingOrder ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="w-4 h-4" />
+                            Place Order — {formatPrice(total)}
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -348,6 +492,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
     </div>
   );
 }

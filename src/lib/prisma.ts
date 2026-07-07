@@ -1,4 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { Pool } from "pg";
+
+// Disable strict TLS check for self-signed certificates (Supabase pooler requirement in local dev)
+if (process.env.NODE_ENV !== "production") {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -6,13 +13,23 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient(): PrismaClient {
   try {
+    const pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
+    const adapter = new PrismaPg(pool);
+
     return new PrismaClient({
+      adapter,
       log:
         process.env.NODE_ENV === "development"
           ? ["query", "error", "warn"]
           : ["error"],
     });
-  } catch {
+  } catch (e) {
+    console.error("Prisma Client Initialization Error:", e);
     // If PrismaClient fails to initialize (e.g., missing adapter/accelerateUrl
     // during build), return a proxy that throws on any database call.
     // This allows the app to build and fall back to sample data.
