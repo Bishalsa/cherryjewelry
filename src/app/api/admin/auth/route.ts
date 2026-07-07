@@ -8,6 +8,10 @@ export async function POST(req: Request) {
     const adminEmail = process.env.ADMIN_EMAIL || "bishalsarkar5695@gmail.com";
     const adminPassword = process.env.ADMIN_PASSWORD || "bishal@2003";
 
+    console.log("Auth attempt email:", email);
+    console.log("Expected adminEmail:", adminEmail);
+    console.log("Matches:", email === adminEmail, password === adminPassword);
+
     if (email === adminEmail && password === adminPassword) {
       const cookieStore = await cookies();
       cookieStore.set("admin_session", "authenticated", {
