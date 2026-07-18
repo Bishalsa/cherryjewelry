@@ -41,6 +41,7 @@ export default function CheckoutPage() {
   const stepIndex = STEPS.findIndex((s) => s.id === currentStep);
 
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [checkingServiceability, setCheckingServiceability] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     phone: "",
@@ -90,6 +91,41 @@ export default function CheckoutPage() {
     };
     fetchUser();
   }, []);
+
+  const handleShippingSubmit = async () => {
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.address1 ||
+      !formData.city ||
+      !formData.state ||
+      !formData.pincode
+    ) {
+      toast.error("Please fill in all shipping address fields.");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(formData.pincode)) {
+      toast.error("Please enter a valid 6-digit pincode.");
+      return;
+    }
+
+    setCheckingServiceability(true);
+    try {
+      const res = await fetch(`/api/shadowfax/serviceability?pincode=${formData.pincode}`);
+      const data = await res.json();
+      if (res.ok && data.serviceable) {
+        nextStep();
+      } else {
+        toast.error(data.error || "Sorry, our delivery partner (Shadowfax) does not service this pincode.");
+      }
+    } catch (err) {
+      console.error("Serviceability check error:", err);
+      toast.error("Failed to verify address serviceability. Please try again.");
+    } finally {
+      setCheckingServiceability(false);
+    }
+  };
 
   const handlePlaceOrder = async () => {
     if (
@@ -150,10 +186,33 @@ export default function CheckoutPage() {
           description: `Order ${data.orderNumber}`,
           order_id: data.payment.id,
           handler: async function (response: any) {
-            toast.success("Payment Successful! Completing order...");
-            useCartStore.getState().clearCart();
-            router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
-            router.refresh();
+            const toastId = toast.loading("Verifying payment...");
+            try {
+              const verifyRes = await fetch("/api/verify-payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature,
+                  orderId: data.orderId,
+                }),
+              });
+
+              const verifyData = await verifyRes.json();
+
+              if (verifyRes.ok && verifyData.success) {
+                toast.success("Payment Successful! Completing order...", { id: toastId });
+                useCartStore.getState().clearCart();
+                router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
+                router.refresh();
+              } else {
+                toast.error(verifyData.error || "Payment verification failed", { id: toastId });
+              }
+            } catch (err) {
+              console.error("Verification call failed:", err);
+              toast.error("Failed to verify payment. Please contact support.", { id: toastId });
+            }
           },
           prefill: {
             name: `${formData.firstName} ${formData.lastName}`,
@@ -163,9 +222,19 @@ export default function CheckoutPage() {
           theme: {
             color: "#C5A572",
           },
+          modal: {
+            ondismiss: function () {
+              toast.warning("Payment cancelled by user.");
+              setPlacingOrder(false);
+            },
+          },
         };
 
         const rzp = new (window as any).Razorpay(options);
+        rzp.on("payment.failed", function (response: any) {
+          toast.error(response.error?.description || "Payment failed. Please try again.");
+          console.error("Payment failed error:", response.error);
+        });
         rzp.open();
       } else {
         toast.success("Order placed successfully! Thank you.");
@@ -340,8 +409,21 @@ export default function CheckoutPage() {
                       <button onClick={prevStep} className="flex items-center gap-2 text-sm text-neutral-400 hover:text-obsidian transition-colors">
                         <ArrowLeft className="w-4 h-4" /> Back
                       </button>
-                      <button onClick={nextStep} className="flex items-center gap-2 bg-obsidian text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors">
-                        Continue to Payment <ChevronRight className="w-4 h-4" />
+                      <button
+                        onClick={handleShippingSubmit}
+                        disabled={checkingServiceability}
+                        className="flex items-center gap-2 bg-obsidian text-white px-8 py-3 rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        {checkingServiceability ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Checking...
+                          </>
+                        ) : (
+                          <>
+                            Continue to Payment <ChevronRight className="w-4 h-4" />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>

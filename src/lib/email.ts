@@ -46,3 +46,57 @@ export async function sendOrderConfirmationEmail({
     console.error("Failed to send order confirmation email:", error);
   }
 }
+
+export async function sendShippingConfirmationEmail({
+  email,
+  orderNumber,
+  customerName,
+  courierName,
+  trackingNumber,
+  trackingUrl,
+}: {
+  email: string;
+  orderNumber: string;
+  customerName: string;
+  courierName: string;
+  trackingNumber: string;
+  trackingUrl?: string;
+}) {
+  if (!resend) {
+    console.log("Mock Email Sent: Shipping Confirmation to", email, "via", courierName, "tracking:", trackingNumber);
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: `${APP_NAME} <orders@cherryjewelry.in>`,
+      to: email,
+      subject: `Your order has shipped! - ${orderNumber}`,
+      html: `
+        <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto; color: #1f2937;">
+          <h2 style="color: #d4af37;">Your order is on the way, ${customerName}!</h2>
+          <p>We are excited to let you know that your order <strong>${orderNumber}</strong> has been shipped via <strong>${courierName}</strong>.</p>
+          
+          <div style="background-color: #f9fafb; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0;"><strong>Shipping Details:</strong></p>
+            <p style="margin: 5px 0;"><strong>Courier:</strong> ${courierName}</p>
+            <p style="margin: 5px 0;"><strong>Tracking Number:</strong> ${trackingNumber}</p>
+            ${
+              trackingUrl
+                ? `<p style="margin: 15px 0 0 0;"><a href="${trackingUrl}" style="background-color: #1f2937; color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; display: inline-block; font-size: 14px;">Track Package</a></p>`
+                : ""
+            }
+          </div>
+          
+          <p>If you have any questions about your delivery, feel free to reply to this email.</p>
+          <br/>
+          <p>Warm regards,</p>
+          <p>The ${APP_NAME} Team</p>
+        </div>
+      `,
+    });
+    console.log("Shipping confirmation email sent to", email);
+  } catch (error) {
+    console.error("Failed to send shipping confirmation email:", error);
+  }
+}

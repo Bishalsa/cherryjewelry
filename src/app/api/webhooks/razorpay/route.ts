@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
 import { sendOrderConfirmationEmail } from "@/lib/email";
+import { bookShadowfaxShipment } from "@/lib/shadowfax";
 
 export async function POST(req: Request) {
   try {
@@ -65,6 +66,8 @@ export async function POST(req: Request) {
           },
         })
       ]);
+
+      // Shipments will be manually created on Shiprocket after receiving orders.
 
       // Send Order Confirmation Email
       await sendOrderConfirmationEmail({

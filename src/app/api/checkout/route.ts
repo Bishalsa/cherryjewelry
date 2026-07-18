@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { razorpay } from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
+import { bookShadowfaxShipment } from "@/lib/shadowfax";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/constants";
 import { checkStock, reserveInventory } from "@/lib/db-queries";
 
@@ -117,8 +118,13 @@ export async function POST(req: Request) {
     // 5. Handle Payment Method
     if (paymentMethod === "razorpay") {
       try {
+        const amountPaise = Math.round(total * 100);
+        if (amountPaise < 100) {
+          return NextResponse.json({ error: "Amount must be at least 100 paise (1 INR)" }, { status: 400 });
+        }
+
         const rpOrder = await razorpay.orders.create({
-          amount: Math.round(total * 100), // Razorpay expects amount in paise
+          amount: amountPaise, // Razorpay expects amount in paise
           currency: "INR",
           receipt: order.id,
           notes: {
@@ -150,12 +156,18 @@ export async function POST(req: Request) {
             currency: rpOrder.currency,
           }
         });
-      } catch (rpError) {
+      } catch (rpError: any) {
         console.error("Razorpay error:", rpError);
+        // Handle auth failures (return 401)
+        if (rpError.statusCode === 401 || (rpError.error && rpError.error.code === "AUTHENTICATION_ERROR")) {
+          return NextResponse.json({ error: "Payment gateway authentication failed" }, { status: 401 });
+        }
+        // Handle Razorpay API errors (return 500)
         return NextResponse.json({ error: "Failed to initialize payment gateway" }, { status: 500 });
       }
-    } else {
       // COD Logic
+      // Shipments will be manually created on Shiprocket after receiving orders.
+
       return NextResponse.json({
         success: true,
         orderId: order.id,

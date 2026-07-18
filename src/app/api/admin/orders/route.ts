@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
+import { sendShippingConfirmationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -26,7 +27,7 @@ export async function GET() {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { id, status, paymentStatus } = body;
+    const { id, status, paymentStatus, courierName, trackingNumber, trackingUrl } = body;
 
     if (!id) {
       return NextResponse.json(
@@ -38,6 +39,10 @@ export async function PUT(req: Request) {
     const dataToUpdate: Record<string, unknown> = {};
     if (status) dataToUpdate.status = status as OrderStatus;
     if (paymentStatus) dataToUpdate.paymentStatus = paymentStatus as PaymentStatus;
+
+    if (courierName !== undefined) dataToUpdate.courierName = courierName;
+    if (trackingNumber !== undefined) dataToUpdate.trackingNumber = trackingNumber;
+    if (trackingUrl !== undefined) dataToUpdate.trackingUrl = trackingUrl;
 
     // Update timestamp based on status transitions
     if (status === "SHIPPED") {
@@ -56,6 +61,26 @@ export async function PUT(req: Request) {
         items: true,
       },
     });
+
+    // Send shipping confirmation email if order was marked as SHIPPED
+    if (status === "SHIPPED") {
+      try {
+        const customerName = updatedOrder.shippingData
+          ? (updatedOrder.shippingData as any).firstName || "Customer"
+          : "Customer";
+
+        await sendShippingConfirmationEmail({
+          email: updatedOrder.email,
+          orderNumber: updatedOrder.orderNumber,
+          customerName,
+          courierName: updatedOrder.courierName || "Shiprocket",
+          trackingNumber: updatedOrder.trackingNumber || "N/A",
+          trackingUrl: updatedOrder.trackingUrl || undefined,
+        });
+      } catch (emailErr) {
+        console.error("Failed to send shipping confirmation email:", emailErr);
+      }
+    }
 
     return NextResponse.json({ success: true, order: updatedOrder });
   } catch (error) {

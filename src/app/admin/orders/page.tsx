@@ -32,6 +32,9 @@ interface Order {
   shippingData: any;
   items: OrderItem[];
   createdAt: string;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
+  courierName?: string | null;
 }
 
 const ORDER_STATUS_COLORS: Record<string, string> = {
@@ -64,6 +67,9 @@ export default function AdminOrdersPage() {
   const [modalStatus, setModalStatus] = useState("");
   const [modalPaymentStatus, setModalPaymentStatus] = useState("");
   const [submittingStatus, setSubmittingStatus] = useState(false);
+  const [modalCourierName, setModalCourierName] = useState("");
+  const [modalTrackingNumber, setModalTrackingNumber] = useState("");
+  const [modalTrackingUrl, setModalTrackingUrl] = useState("");
 
   const fetchOrders = async () => {
     try {
@@ -92,6 +98,9 @@ export default function AdminOrdersPage() {
     setSelectedOrder(order);
     setModalStatus(order.status);
     setModalPaymentStatus(order.paymentStatus);
+    setModalCourierName(order.courierName || "");
+    setModalTrackingNumber(order.trackingNumber || "");
+    setModalTrackingUrl(order.trackingUrl || "");
   };
 
   const handleUpdateStatus = async (e: React.FormEvent) => {
@@ -107,6 +116,9 @@ export default function AdminOrdersPage() {
           id: selectedOrder.id,
           status: modalStatus,
           paymentStatus: modalPaymentStatus,
+          courierName: modalCourierName,
+          trackingNumber: modalTrackingNumber,
+          trackingUrl: modalTrackingUrl,
         }),
       });
       const data = await res.json();
@@ -317,6 +329,29 @@ export default function AdminOrdersPage() {
                         <p className="text-sm text-neutral-500 italic">No shipping details provided.</p>
                       )}
                     </div>
+
+                    {selectedOrder.trackingNumber && (
+                      <div>
+                        <h3 className="text-xs uppercase tracking-wider text-neutral-400 font-medium mb-2">Fulfillment Details</h3>
+                        <div className="text-sm text-neutral-600 leading-relaxed bg-neutral-50 p-4 rounded-2xl border border-neutral-100 space-y-1">
+                          <p><strong>Courier:</strong> {selectedOrder.courierName || "N/A"}</p>
+                          <p><strong>AWB / Tracking Number:</strong> {selectedOrder.trackingNumber}</p>
+                          {selectedOrder.trackingUrl && (
+                            <p>
+                              <strong>Link:</strong>{" "}
+                              <a
+                                href={selectedOrder.trackingUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gold hover:underline font-semibold"
+                              >
+                                Track shipment
+                              </a>
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Status update form */}
@@ -356,6 +391,41 @@ export default function AdminOrdersPage() {
                           <option value="COD_PENDING">COD Pending</option>
                         </select>
                       </div>
+
+                      {modalStatus === "SHIPPED" && (
+                        <div className="space-y-3 pt-2 border-t border-neutral-200/60">
+                          <div className="space-y-1">
+                            <label className="text-xs text-neutral-500 font-medium block">Courier Name</label>
+                            <input
+                              type="text"
+                              value={modalCourierName}
+                              onChange={(e) => setModalCourierName(e.target.value)}
+                              placeholder="e.g. Shiprocket, Blue Dart"
+                              className="w-full px-3 py-2 border border-neutral-200 bg-white rounded-xl text-sm focus:outline-none focus:border-gold"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs text-neutral-500 font-medium block">Tracking / AWB Number</label>
+                            <input
+                              type="text"
+                              value={modalTrackingNumber}
+                              onChange={(e) => setModalTrackingNumber(e.target.value)}
+                              placeholder="e.g. 123456789"
+                              className="w-full px-3 py-2 border border-neutral-200 bg-white rounded-xl text-sm focus:outline-none focus:border-gold"
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs text-neutral-500 font-medium block">Tracking URL</label>
+                            <input
+                              type="text"
+                              value={modalTrackingUrl}
+                              onChange={(e) => setModalTrackingUrl(e.target.value)}
+                              placeholder="e.g. https://track.shiprocket.in/..."
+                              className="w-full px-3 py-2 border border-neutral-200 bg-white rounded-xl text-sm focus:outline-none focus:border-gold"
+                            />
+                          </div>
+                        </div>
+                      )}
 
                       <button
                         type="submit"
