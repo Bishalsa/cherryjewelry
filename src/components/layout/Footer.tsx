@@ -27,7 +27,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-obsidian text-ivory/80">
+    <footer className="bg-deep-plum text-ivory/80">
       {/* Newsletter Section */}
       <div className="border-b border-white/10">
         <div className="container-luxury py-16">
@@ -46,11 +46,11 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-full text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 transition-colors pr-14"
+                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-full text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-rose-gold/50 transition-colors pr-14"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-gold hover:bg-gold-dark text-white p-2.5 rounded-full transition-colors"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-rose-gold hover:bg-rose-gold-dark text-white p-2.5 rounded-full transition-colors"
                 aria-label="Subscribe"
               >
                 <ArrowRight className="w-4 h-4" />
@@ -60,7 +60,7 @@ export default function Footer() {
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-gold text-sm mt-4"
+                className="text-rose-gold-light text-sm mt-4"
               >
                 ✨ Welcome to the {APP_NAME} family!
               </motion.p>
@@ -96,7 +96,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-white/5 hover:bg-gold/20 hover:text-gold rounded-full transition-all duration-300"
+                  className="p-2 bg-white/5 hover:bg-rose-gold/20 hover:text-rose-gold-light rounded-full transition-all duration-300"
                   aria-label={label}
                 >
                   {svg}
@@ -115,7 +115,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300"
+                    className="text-sm text-ivory/40 hover:text-rose-gold-light transition-colors duration-300"
                   >
                     {link.label}
                   </Link>
@@ -134,7 +134,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300"
+                    className="text-sm text-ivory/40 hover:text-rose-gold-light transition-colors duration-300"
                   >
                     {link.label}
                   </Link>
@@ -153,7 +153,7 @@ export default function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-ivory/40 hover:text-gold transition-colors duration-300"
+                    className="text-sm text-ivory/40 hover:text-rose-gold-light transition-colors duration-300"
                   >
                     {link.label}
                   </Link>
@@ -169,24 +169,24 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3 text-sm text-ivory/40">
-                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-gold/60" />
+                <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-rose-gold/60" />
                 <span>123 Jewel Street, Mumbai, Maharashtra 400001</span>
               </li>
               <li>
                 <a
                   href="tel:+919876543210"
-                  className="flex items-center gap-3 text-sm text-ivory/40 hover:text-gold transition-colors"
+                  className="flex items-center gap-3 text-sm text-ivory/40 hover:text-rose-gold-light transition-colors"
                 >
-                  <Phone className="w-4 h-4 shrink-0 text-gold/60" />
+                  <Phone className="w-4 h-4 shrink-0 text-rose-gold/60" />
                   +91 98765 43210
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:hello@cherryjewelry.in"
-                  className="flex items-center gap-3 text-sm text-ivory/40 hover:text-gold transition-colors"
+                  className="flex items-center gap-3 text-sm text-ivory/40 hover:text-rose-gold-light transition-colors"
                 >
-                  <Mail className="w-4 h-4 shrink-0 text-gold/60" />
+                  <Mail className="w-4 h-4 shrink-0 text-rose-gold/60" />
                   hello@cherryjewelry.in
                 </a>
               </li>

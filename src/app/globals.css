@@ -1,58 +1,60 @@
 @import "tailwindcss";
 
 /* ============================================
-   Cherry Jewelry — Luxury Jewelry Design System
+   Lumière Jewelry — Luxury Jewelry Design System
+   Color Palette: Rose Gold · Cherry Ruby · Ivory · Soft Pink · Deep Plum
    ============================================ */
 
 @theme inline {
-  /* --- Color Palette --- */
-  --color-gold: #C5A572;
-  --color-gold-light: #D4BA8A;
-  --color-gold-dark: #A68B5B;
-  --color-champagne: #F5E6CC;
-  --color-champagne-light: #FBF3E8;
-  --color-obsidian: #0A0A0A;
-  --color-obsidian-light: #1A1A1A;
-  --color-ivory: #FAFAF5;
-  --color-ivory-warm: #F5F0E8;
+  /* --- Brand Palette --- */
   --color-rose-gold: #B76E79;
   --color-rose-gold-light: #D4949C;
-  --color-platinum: #E5E4E2;
-  --color-platinum-dark: #C0BFBD;
+  --color-rose-gold-lighter: #EBC4C8;
+  --color-rose-gold-dark: #9A5560;
+  --color-cherry-ruby: #C2185B;
+  --color-cherry-ruby-light: #D84080;
+  --color-cherry-ruby-dark: #8E1041;
+  --color-ivory: #FFF8F4;
+  --color-ivory-warm: #FEF0E9;
+  --color-soft-pink: #F7D6E0;
+  --color-soft-pink-dark: #EFBACB;
+  --color-deep-plum: #5C2248;
+  --color-deep-plum-light: #7A3060;
+  --color-deep-plum-dark: #3D1630;
 
-  /* --- Neutral Scale --- */
-  --color-neutral-50: #FAFAF9;
-  --color-neutral-100: #F5F5F4;
-  --color-neutral-200: #E7E5E4;
-  --color-neutral-300: #D6D3D1;
-  --color-neutral-400: #A8A29E;
-  --color-neutral-500: #78716C;
-  --color-neutral-600: #57534E;
-  --color-neutral-700: #44403C;
-  --color-neutral-800: #292524;
-  --color-neutral-900: #1C1917;
-  --color-neutral-950: #0C0A09;
+  /* --- Neutral Scale (warm-tinted) --- */
+  --color-neutral-50: #FDF8F6;
+  --color-neutral-100: #FAF0EC;
+  --color-neutral-200: #F2E0DA;
+  --color-neutral-300: #E4C5BC;
+  --color-neutral-400: #C9998F;
+  --color-neutral-500: #A87068;
+  --color-neutral-600: #854E47;
+  --color-neutral-700: #623530;
+  --color-neutral-800: #3F1F1A;
+  --color-neutral-900: #26100D;
+  --color-neutral-950: #140806;
 
   /* --- Semantic Colors --- */
   --color-background: var(--color-ivory);
-  --color-foreground: var(--color-obsidian);
+  --color-foreground: var(--color-deep-plum);
   --color-muted: var(--color-neutral-100);
   --color-muted-foreground: var(--color-neutral-500);
   --color-card: #FFFFFF;
-  --color-card-foreground: var(--color-obsidian);
+  --color-card-foreground: var(--color-deep-plum);
   --color-border: var(--color-neutral-200);
   --color-input: var(--color-neutral-200);
-  --color-primary: var(--color-gold);
+  --color-primary: var(--color-rose-gold);
   --color-primary-foreground: #FFFFFF;
-  --color-secondary: var(--color-champagne);
-  --color-secondary-foreground: var(--color-obsidian);
-  --color-accent: var(--color-rose-gold);
+  --color-secondary: var(--color-soft-pink);
+  --color-secondary-foreground: var(--color-deep-plum);
+  --color-accent: var(--color-cherry-ruby);
   --color-accent-foreground: #FFFFFF;
   --color-destructive: #DC2626;
   --color-destructive-foreground: #FFFFFF;
   --color-success: #16A34A;
   --color-warning: #D97706;
-  --color-ring: var(--color-gold);
+  --color-ring: var(--color-rose-gold);
 
   /* --- Typography --- */
   --font-heading: 'Playfair Display', 'Georgia', serif;
@@ -67,12 +69,12 @@
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
 
-  /* --- Shadows --- */
-  --shadow-soft: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 20px rgba(197, 165, 114, 0.15);
-  --shadow-luxury: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
-  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-card-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  /* --- Shadows (rose/plum tinted) --- */
+  --shadow-soft: 0 2px 15px -3px rgba(92, 34, 72, 0.07), 0 10px 20px -2px rgba(92, 34, 72, 0.04);
+  --shadow-glow: 0 0 20px rgba(183, 110, 121, 0.2);
+  --shadow-luxury: 0 25px 50px -12px rgba(92, 34, 72, 0.15);
+  --shadow-card: 0 4px 6px -1px rgba(92, 34, 72, 0.06), 0 2px 4px -2px rgba(92, 34, 72, 0.04);
+  --shadow-card-hover: 0 20px 25px -5px rgba(92, 34, 72, 0.1), 0 8px 10px -6px rgba(92, 34, 72, 0.06);
 
   /* --- Animations --- */
   --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
@@ -90,26 +92,26 @@
 /* --- Dark Mode --- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-background: var(--color-obsidian);
+    --color-background: var(--color-deep-plum-dark);
     --color-foreground: var(--color-ivory);
-    --color-card: var(--color-obsidian-light);
+    --color-card: var(--color-deep-plum);
     --color-card-foreground: var(--color-ivory);
-    --color-border: var(--color-neutral-800);
-    --color-input: var(--color-neutral-800);
-    --color-muted: var(--color-neutral-900);
-    --color-muted-foreground: var(--color-neutral-400);
+    --color-border: var(--color-deep-plum-light);
+    --color-input: var(--color-deep-plum-light);
+    --color-muted: var(--color-deep-plum);
+    --color-muted-foreground: var(--color-neutral-300);
   }
 }
 
 [data-theme="dark"] {
-  --color-background: var(--color-obsidian);
+  --color-background: var(--color-deep-plum-dark);
   --color-foreground: var(--color-ivory);
-  --color-card: var(--color-obsidian-light);
+  --color-card: var(--color-deep-plum);
   --color-card-foreground: var(--color-ivory);
-  --color-border: var(--color-neutral-800);
-  --color-input: var(--color-neutral-800);
-  --color-muted: var(--color-neutral-900);
-  --color-muted-foreground: var(--color-neutral-400);
+  --color-border: var(--color-deep-plum-light);
+  --color-input: var(--color-deep-plum-light);
+  --color-muted: var(--color-deep-plum);
+  --color-muted-foreground: var(--color-neutral-300);
 }
 
 /* ============================================
@@ -146,31 +148,31 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 .glass {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 248, 244, 0.08);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 248, 244, 0.14);
 }
 
 .glass-light {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 248, 244, 0.80);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(247, 214, 224, 0.5);
 }
 
 .glass-dark {
-  background: rgba(10, 10, 10, 0.6);
+  background: rgba(61, 22, 48, 0.65);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(183, 110, 121, 0.12);
 }
 
-.glass-gold {
-  background: linear-gradient(135deg, rgba(197, 165, 114, 0.1), rgba(197, 165, 114, 0.05));
+.glass-rose {
+  background: linear-gradient(135deg, rgba(183, 110, 121, 0.12), rgba(183, 110, 121, 0.06));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(197, 165, 114, 0.2);
+  border: 1px solid rgba(183, 110, 121, 0.22);
 }
 
 /* ============================================
@@ -187,9 +189,9 @@ h1, h2, h3, h4, h5, h6 {
   50% { transform: translateY(-10px); }
 }
 
-@keyframes pulse-gold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 114, 0.4); }
-  50% { box-shadow: 0 0 0 10px rgba(197, 165, 114, 0); }
+@keyframes pulse-rose {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(183, 110, 121, 0.45); }
+  50% { box-shadow: 0 0 0 10px rgba(183, 110, 121, 0); }
 }
 
 @keyframes fade-in {
@@ -225,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-shimmer {
   animation: shimmer 2s infinite;
-  background: linear-gradient(90deg, transparent, rgba(197, 165, 114, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(183, 110, 121, 0.12), transparent);
   background-size: 200% 100%;
 }
 
@@ -233,8 +235,13 @@ h1, h2, h3, h4, h5, h6 {
   animation: float 6s ease-in-out infinite;
 }
 
+.animate-pulse-rose {
+  animation: pulse-rose 2s ease-in-out infinite;
+}
+
+/* Keep backward compat alias */
 .animate-pulse-gold {
-  animation: pulse-gold 2s ease-in-out infinite;
+  animation: pulse-rose 2s ease-in-out infinite;
 }
 
 .animate-fade-in {
@@ -258,9 +265,17 @@ h1, h2, h3, h4, h5, h6 {
    Luxury Component Styles
    ============================================ */
 
-/* Gold gradient text */
+/* Rose gradient text */
 .text-gradient-gold {
-  background: linear-gradient(135deg, var(--color-gold-dark), var(--color-gold), var(--color-gold-light));
+  background: linear-gradient(135deg, var(--color-rose-gold-dark), var(--color-rose-gold), var(--color-cherry-ruby));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Alias for new naming */
+.text-gradient-rose {
+  background: linear-gradient(135deg, var(--color-deep-plum), var(--color-rose-gold), var(--color-cherry-ruby));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -269,7 +284,12 @@ h1, h2, h3, h4, h5, h6 {
 /* Elegant divider */
 .divider-gold {
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-rose-gold), transparent);
+}
+
+.divider-rose {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-rose-gold), var(--color-cherry-ruby), transparent);
 }
 
 /* Premium button hover glow */
@@ -283,7 +303,7 @@ h1, h2, h3, h4, h5, h6 {
   content: '';
   position: absolute;
   inset: -2px;
-  background: linear-gradient(135deg, var(--color-gold), var(--color-rose-gold), var(--color-gold));
+  background: linear-gradient(135deg, var(--color-rose-gold), var(--color-cherry-ruby), var(--color-rose-gold));
   border-radius: inherit;
   opacity: 0;
   transition: opacity 0.4s var(--ease-luxury);
@@ -292,7 +312,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-glow:hover::before {
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 /* Magnetic hover effect base */
@@ -355,12 +375,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-neutral-300);
+  background: var(--color-rose-gold-lighter);
   border-radius: var(--radius-full);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-neutral-400);
+  background: var(--color-rose-gold);
 }
 
 /* ============================================
@@ -368,8 +388,8 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 ::selection {
-  background-color: rgba(197, 165, 114, 0.3);
-  color: var(--color-obsidian);
+  background-color: rgba(183, 110, 121, 0.28);
+  color: var(--color-deep-plum);
 }
 
 /* ============================================
@@ -377,7 +397,7 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-rose-gold);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }

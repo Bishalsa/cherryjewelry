@@ -49,18 +49,18 @@ function SectionHeader({
         transition={{ duration: 0.6 }}
         className="flex items-center justify-center gap-3 mb-4"
       >
-        <div className="h-[1px] w-8 bg-gold/40" />
-        <span className="text-xs tracking-[0.3em] uppercase text-gold-dark font-medium">
+        <div className="h-[1px] w-8 bg-rose-gold/40" />
+        <span className="text-xs tracking-[0.3em] uppercase text-rose-gold-dark font-medium">
           {subtitle}
         </span>
-        <div className="h-[1px] w-8 bg-gold/40" />
+        <div className="h-[1px] w-8 bg-rose-gold/40" />
       </motion.div>
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="font-heading text-3xl md:text-4xl lg:text-5xl text-obsidian mb-4"
+        className="font-heading text-3xl md:text-4xl lg:text-5xl text-deep-plum mb-4"
       >
         {title}
       </motion.h2>
@@ -83,7 +83,7 @@ function SectionHeader({
         >
           <Link
             href={action.href}
-            className="inline-flex items-center gap-2 text-sm font-medium text-gold-dark hover:text-gold transition-colors group"
+            className="inline-flex items-center gap-2 text-sm font-medium text-rose-gold-dark hover:text-rose-gold transition-colors group"
           >
             {action.label}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -110,29 +110,29 @@ function HeroSection() {
     <section ref={ref} className="relative h-[85vh] md:h-[90vh] overflow-hidden">
       {/* Background */}
       <motion.div style={{ y }} className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-champagne-light via-ivory to-champagne" />
+        <div className="absolute inset-0 bg-gradient-to-br from-soft-pink/40 via-ivory to-soft-pink/20" />
         {/* Decorative elements */}
-        <div className="absolute top-20 right-10 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-rose-gold/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 right-10 w-72 h-72 bg-rose-gold/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-cherry-ruby/5 rounded-full blur-3xl" />
         {/* Floating sparkles */}
         <motion.div
           animate={{ y: [-10, 10, -10], rotate: [0, 180, 360] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[20%] right-[20%] text-gold/20 text-4xl"
+          className="absolute top-[20%] right-[20%] text-rose-gold/20 text-4xl"
         >
           ✦
         </motion.div>
         <motion.div
           animate={{ y: [10, -10, 10], rotate: [360, 180, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[60%] left-[15%] text-gold/15 text-3xl"
+          className="absolute top-[60%] left-[15%] text-rose-gold/15 text-3xl"
         >
           ✧
         </motion.div>
         <motion.div
           animate={{ y: [-5, 15, -5] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-[40%] right-[40%] text-rose-gold/10 text-5xl"
+          className="absolute top-[40%] right-[40%] text-cherry-ruby/10 text-5xl"
         >
           ◇
         </motion.div>
@@ -150,18 +150,18 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="flex items-center justify-center gap-2 mb-6"
           >
-            <div className="h-[1px] w-8 bg-gold/40" />
-            <span className="text-xs tracking-[0.3em] uppercase text-gold-dark font-medium">
+            <div className="h-[1px] w-8 bg-rose-gold/40" />
+            <span className="text-xs tracking-[0.3em] uppercase text-rose-gold-dark font-medium">
               Handcrafted with Love
             </span>
-            <div className="h-[1px] w-8 bg-gold/40" />
+            <div className="h-[1px] w-8 bg-rose-gold/40" />
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="font-heading text-4xl md:text-6xl lg:text-7xl text-obsidian leading-[1.1] mb-6"
+            className="font-heading text-4xl md:text-6xl lg:text-7xl text-deep-plum leading-[1.1] mb-6"
           >
             Where Artistry
             <br />
@@ -186,14 +186,14 @@ function HeroSection() {
           >
             <Link
               href="/collections/new-arrivals"
-              className="group inline-flex items-center gap-2 bg-obsidian text-white px-8 py-4 rounded-full text-sm font-medium hover:bg-neutral-800 transition-all duration-300 btn-glow"
+              className="group inline-flex items-center gap-2 bg-deep-plum text-white px-8 py-4 rounded-full text-sm font-medium hover:bg-deep-plum-dark transition-all duration-300 btn-glow"
             >
               Explore Collection
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/collections/best-sellers"
-              className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm text-obsidian px-8 py-4 rounded-full text-sm font-medium hover:bg-white transition-all duration-300 border border-neutral-200/50"
+              className="inline-flex items-center gap-2 bg-white/60 backdrop-blur-sm text-deep-plum px-8 py-4 rounded-full text-sm font-medium hover:bg-white transition-all duration-300 border border-rose-gold/30"
             >
               Best Sellers
             </Link>
@@ -212,7 +212,7 @@ function HeroSection() {
               { value: "BIS", label: "Hallmarked" },
             ].map((stat) => (
               <div key={stat.label}>
-                <p className="text-2xl md:text-3xl font-heading text-gold-dark">
+                <p className="text-2xl md:text-3xl font-heading text-rose-gold-dark">
                   {stat.value}
                 </p>
                 <p className="text-[10px] md:text-xs text-neutral-400 uppercase tracking-wider mt-1">
@@ -267,11 +267,11 @@ function TrustBadgesSection() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="flex items-center gap-3 justify-center md:justify-start"
             >
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-champagne-light flex items-center justify-center text-gold-dark">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-soft-pink flex items-center justify-center text-rose-gold-dark">
                 {iconMap[badge.icon] || <Shield className="w-6 h-6" />}
               </div>
               <div>
-                <p className="text-xs font-semibold text-obsidian">{badge.label}</p>
+                <p className="text-xs font-semibold text-deep-plum">{badge.label}</p>
                 <p className="text-[10px] text-neutral-400">{badge.description}</p>
               </div>
             </motion.div>
@@ -297,7 +297,7 @@ function TestimonialsSection() {
   }, [testimonials.length]);
 
   return (
-    <section className="py-20 md:py-28 bg-gradient-to-b from-champagne-light/30 to-ivory">
+    <section className="py-20 md:py-28 bg-gradient-to-b from-soft-pink/20 to-ivory">
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader
           subtitle="Love Letters"
@@ -326,7 +326,7 @@ function TestimonialsSection() {
                 {Array.from({ length: testimonial.rating }).map((_, s) => (
                   <Star
                     key={s}
-                    className="w-4 h-4 fill-gold text-gold"
+                    className="w-4 h-4 fill-rose-gold text-rose-gold"
                   />
                 ))}
               </div>
@@ -338,11 +338,11 @@ function TestimonialsSection() {
 
               {/* Author */}
               <div className="flex items-center justify-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-white text-xs font-semibold">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-gold to-rose-gold-dark flex items-center justify-center text-white text-xs font-semibold">
                   {testimonial.avatar}
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-obsidian">{testimonial.name}</p>
+                  <p className="text-sm font-semibold text-deep-plum">{testimonial.name}</p>
                   <p className="text-xs text-neutral-400">{testimonial.location} · {testimonial.product}</p>
                 </div>
               </div>
@@ -358,7 +358,7 @@ function TestimonialsSection() {
                 className={cn(
                   "w-2 h-2 rounded-full transition-all duration-300",
                   i === activeIndex
-                    ? "bg-gold w-6"
+                    ? "bg-rose-gold w-6"
                     : "bg-neutral-300 hover:bg-neutral-400"
                 )}
               />
@@ -393,10 +393,10 @@ function LimitedOffer() {
 
   return (
     <section className="py-16 md:py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian-light to-obsidian" />
+      <div className="absolute inset-0 bg-gradient-to-r from-deep-plum-dark via-deep-plum to-deep-plum-dark" />
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-gold rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-rose-gold rounded-full blur-[80px]" />
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-rose-gold rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-cherry-ruby rounded-full blur-[80px]" />
       </div>
 
       <div className="relative max-w-4xl mx-auto px-4 text-center">
@@ -406,9 +406,9 @@ function LimitedOffer() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 bg-gold/10 border border-gold/20 px-4 py-1.5 rounded-full mb-6">
-            <Clock className="w-3.5 h-3.5 text-gold" />
-            <span className="text-xs tracking-wider uppercase text-gold font-medium">
+          <div className="inline-flex items-center gap-2 bg-rose-gold/10 border border-rose-gold/20 px-4 py-1.5 rounded-full mb-6">
+            <Clock className="w-3.5 h-3.5 text-rose-gold-light" />
+            <span className="text-xs tracking-wider uppercase text-rose-gold-light font-medium">
               Limited Time Offer
             </span>
           </div>
@@ -417,7 +417,7 @@ function LimitedOffer() {
             Get <span className="text-gradient-gold">20% Off</span> Your First Order
           </h2>
           <p className="text-neutral-400 text-sm md:text-base max-w-lg mx-auto mb-8">
-            Use code <span className="font-mono text-gold font-semibold bg-gold/10 px-2 py-0.5 rounded">CHERRY20</span> at checkout. Offer ends soon!
+            Use code <span className="font-mono text-rose-gold-light font-semibold bg-rose-gold/10 px-2 py-0.5 rounded">CHERRY20</span> at checkout. Offer ends soon!
           </p>
 
           {/* Countdown */}
@@ -442,7 +442,7 @@ function LimitedOffer() {
 
           <Link
             href="/collections"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-gold to-gold-dark text-white px-8 py-4 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-rose-gold to-cherry-ruby text-white px-8 py-4 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
           >
             <Gift className="w-4 h-4" />
             Shop Now & Save
@@ -485,7 +485,7 @@ function WhyChooseUs() {
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-champagne-light/30">
+    <section className="py-20 md:py-28 bg-soft-pink/15">
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader
           subtitle="Our Promise"
@@ -501,12 +501,12 @@ function WhyChooseUs() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group text-center p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-neutral-100 hover:border-gold/20 hover:shadow-[0_0_30px_rgba(197,165,114,0.1)] transition-all duration-500"
+              className="group text-center p-6 rounded-2xl bg-white/60 backdrop-blur-sm border border-neutral-100 hover:border-rose-gold/20 hover:shadow-[0_0_30px_rgba(183,110,121,0.1)] transition-all duration-500"
             >
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-champagne to-champagne-light flex items-center justify-center text-gold-dark mx-auto mb-5 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-soft-pink to-soft-pink-dark flex items-center justify-center text-rose-gold-dark mx-auto mb-5 group-hover:scale-110 transition-transform duration-300">
                 {reason.icon}
               </div>
-              <h3 className="font-heading text-lg text-obsidian mb-2">
+              <h3 className="font-heading text-lg text-deep-plum mb-2">
                 {reason.title}
               </h3>
               <p className="text-sm text-neutral-500 leading-relaxed">
@@ -525,12 +525,12 @@ function WhyChooseUs() {
 // ============================================
 function InstagramGallery() {
   const images = [
-    { id: 1, gradient: "from-rose-gold/20 to-champagne", emoji: "💍" },
-    { id: 2, gradient: "from-gold/15 to-champagne-light", emoji: "✨" },
-    { id: 3, gradient: "from-champagne to-ivory", emoji: "📿" },
-    { id: 4, gradient: "from-platinum/20 to-neutral-100", emoji: "💎" },
-    { id: 5, gradient: "from-gold/10 to-rose-gold/10", emoji: "⭐" },
-    { id: 6, gradient: "from-champagne-light to-ivory-warm", emoji: "🌟" },
+    { id: 1, gradient: "from-rose-gold/20 to-soft-pink", emoji: "💍" },
+    { id: 2, gradient: "from-cherry-ruby/10 to-soft-pink/50", emoji: "✨" },
+    { id: 3, gradient: "from-soft-pink to-ivory", emoji: "📿" },
+    { id: 4, gradient: "from-deep-plum/10 to-soft-pink/30", emoji: "💎" },
+    { id: 5, gradient: "from-rose-gold/10 to-cherry-ruby/8", emoji: "⭐" },
+    { id: 6, gradient: "from-soft-pink/50 to-ivory", emoji: "🌟" },
   ];
 
   return (
@@ -559,7 +559,7 @@ function InstagramGallery() {
               <div className="absolute inset-0 flex items-center justify-center text-4xl opacity-20 group-hover:opacity-40 group-hover:scale-110 transition-all duration-500">
                 {img.emoji}
               </div>
-              <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/40 transition-colors duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-deep-plum/0 group-hover:bg-deep-plum/40 transition-colors duration-300 flex items-center justify-center">
                 <Camera className="w-5 h-5 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
             </motion.a>
@@ -613,9 +613,9 @@ export default function HomePageClient({
                 >
                   <div className={cn(
                     "absolute inset-0 transition-transform duration-700 group-hover:scale-105",
-                    i % 3 === 0 ? "bg-gradient-to-br from-champagne to-champagne-light" :
-                    i % 3 === 1 ? "bg-gradient-to-br from-rose-gold/10 to-champagne-light" :
-                    "bg-gradient-to-br from-platinum/30 to-neutral-100"
+                    i % 3 === 0 ? "bg-gradient-to-br from-soft-pink to-soft-pink-dark" :
+                    i % 3 === 1 ? "bg-gradient-to-br from-rose-gold/10 to-soft-pink" :
+                    "bg-gradient-to-br from-deep-plum/10 to-neutral-100"
                   )} />
                   <div className="absolute inset-0 flex items-center justify-center">
                     <span className="text-6xl md:text-7xl opacity-15 group-hover:opacity-25 group-hover:scale-110 transition-all duration-700">
@@ -631,7 +631,7 @@ export default function HomePageClient({
                     <h3 className="font-heading text-lg md:text-xl text-white mb-1">
                       {category.name}
                     </h3>
-                    <div className="flex items-center gap-1 text-white/70 text-xs group-hover:text-gold-light transition-colors">
+                    <div className="flex items-center gap-1 text-white/70 text-xs group-hover:text-rose-gold-lighter transition-colors">
                       <span>Explore</span>
                       <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                     </div>

@@ -48,9 +48,9 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement Bar */}
-      <div className="bg-obsidian text-ivory text-center py-2 px-4 text-xs tracking-widest uppercase">
+      <div className="bg-deep-plum text-ivory text-center py-2 px-4 text-xs tracking-widest uppercase">
         <span className="opacity-80">Free shipping on orders above ₹999</span>
-        <span className="mx-2 text-gold">✦</span>
+        <span className="mx-2 text-rose-gold-light">✦</span>
         <span className="opacity-80">15-Day Easy Returns</span>
       </div>
 
@@ -82,10 +82,10 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm tracking-wide text-neutral-600 hover:text-obsidian transition-colors duration-300 relative group"
+                  className="text-sm tracking-wide text-neutral-600 hover:text-deep-plum transition-colors duration-300 relative group"
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-gold transition-all duration-300 group-hover:w-full" />
+                  <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-rose-gold transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
             </div>
@@ -96,7 +96,7 @@ export default function Navbar() {
               className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0"
             >
               <motion.h1
-                className="font-heading text-2xl md:text-3xl tracking-[0.2em] text-obsidian"
+                className="font-heading text-2xl md:text-3xl tracking-[0.2em] text-deep-plum"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
@@ -126,7 +126,7 @@ export default function Navbar() {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 bg-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
                   >
                     {wishlistCount}
                   </motion.span>
@@ -153,7 +153,7 @@ export default function Navbar() {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 bg-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
                   >
                     {cartItemCount > 9 ? "9+" : cartItemCount}
                   </motion.span>
@@ -265,7 +265,7 @@ export default function Navbar() {
                   type="text"
                   autoFocus
                   placeholder="Search for jewelry..."
-                  className="w-full py-4 pl-12 pr-12 text-lg bg-transparent border-b-2 border-neutral-200 focus:border-gold focus:outline-none transition-colors font-sans"
+                  className="w-full py-4 pl-12 pr-12 text-lg bg-transparent border-b-2 border-neutral-200 focus:border-rose-gold focus:outline-none transition-colors font-sans"
                 />
                 <button
                   onClick={() => setIsSearchOpen(false)}
@@ -286,7 +286,7 @@ export default function Navbar() {
                         key={term}
                         href={`/search?q=${encodeURIComponent(term)}`}
                         onClick={() => setIsSearchOpen(false)}
-                        className="px-4 py-2 bg-neutral-100 hover:bg-gold/10 hover:text-gold rounded-full text-sm transition-colors"
+                        className="px-4 py-2 bg-neutral-100 hover:bg-rose-gold/10 hover:text-rose-gold rounded-full text-sm transition-colors"
                       >
                         {term}
                       </Link>

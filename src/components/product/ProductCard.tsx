@@ -50,7 +50,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
             {product.isNewArrival && (
-              <span className="px-2.5 py-1 bg-obsidian text-white text-[10px] uppercase tracking-wider rounded-full font-medium">
+              <span className="px-2.5 py-1 bg-deep-plum text-white text-[10px] uppercase tracking-wider rounded-full font-medium">
                 New
               </span>
             )}
@@ -75,7 +75,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                 e.stopPropagation();
                 addItem(product, firstVariant);
               }}
-              className="flex-1 flex items-center justify-center gap-2 bg-white/95 backdrop-blur-sm text-obsidian py-2.5 rounded-lg text-xs font-medium hover:bg-obsidian hover:text-white transition-colors shadow-lg"
+              className="flex-1 flex items-center justify-center gap-2 bg-white/95 backdrop-blur-sm text-deep-plum py-2.5 rounded-lg text-xs font-medium hover:bg-deep-plum hover:text-white transition-colors shadow-lg"
               aria-label={`Add ${product.name} to cart`}
             >
               <ShoppingBag className="w-3.5 h-3.5" />
@@ -84,7 +84,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
             <Link
               href={`/products/${product.slug}`}
               onClick={(e) => e.stopPropagation()}
-              className="p-2.5 bg-white/95 backdrop-blur-sm rounded-lg hover:bg-obsidian hover:text-white transition-colors shadow-lg"
+              className="p-2.5 bg-white/95 backdrop-blur-sm rounded-lg hover:bg-deep-plum hover:text-white transition-colors shadow-lg"
               aria-label={`Quick view ${product.name}`}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -117,7 +117,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
           {/* Name */}
           <Link href={`/products/${product.slug}`}>
-            <h3 className="text-sm font-medium text-obsidian group-hover:text-gold-dark transition-colors line-clamp-1">
+            <h3 className="text-sm font-medium text-deep-plum group-hover:text-rose-gold-dark transition-colors line-clamp-1">
               {product.name}
             </h3>
           </Link>
@@ -132,7 +132,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                     className={cn(
                       "w-3 h-3",
                       i < Math.round(product.averageRating)
-                        ? "text-gold fill-gold"
+                        ? "text-rose-gold fill-rose-gold"
                         : "text-neutral-200"
                     )}
                   />
@@ -146,7 +146,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
           {/* Price */}
           <div className="flex items-center gap-2 mt-2">
-            <span className="font-semibold text-sm text-obsidian">
+            <span className="font-semibold text-sm text-deep-plum">
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice && product.compareAtPrice > product.price && (

@@ -49,7 +49,7 @@ export default function MobileBottomNav() {
             <motion.div
               className={cn(
                 "flex flex-col items-center justify-center gap-0.5 py-1 px-3 rounded-xl transition-colors relative",
-                isActive ? "text-gold" : "text-neutral-400"
+                isActive ? "text-rose-gold" : "text-neutral-400"
               )}
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -58,7 +58,7 @@ export default function MobileBottomNav() {
                 <Icon className="w-5 h-5" />
                 {/* Cart Badge */}
                 {"isCart" in item && item.isCart && cartItemCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2 bg-gold text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1.5 -right-2 bg-rose-gold text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {cartItemCount > 9 ? "9+" : cartItemCount}
                   </span>
                 )}
@@ -73,7 +73,7 @@ export default function MobileBottomNav() {
               {isActive && (
                 <motion.div
                   layoutId="mobile-nav-indicator"
-                  className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-gold rounded-full"
+                  className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-5 h-0.5 bg-rose-gold rounded-full"
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}
