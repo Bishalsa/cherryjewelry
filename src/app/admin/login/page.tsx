@@ -1,9 +1,10 @@
-﻿"use client";
+"use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Gem, Lock, Mail, Loader2 } from "lucide-react";
+import { Lock, Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { APP_NAME } from "@/lib/constants";
 
@@ -58,11 +59,18 @@ export default function AdminLoginPage() {
         {/* Decorative border line */}
         <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-gold/40 to-transparent" />
 
-        <div className="text-center mb-10">
-          <div className="inline-flex p-3 bg-gradient-to-br from-rose-gold/25 to-rose-gold/5 rounded-2xl border border-rose-gold/30 mb-4 shadow-glow">
-            <Gem className="w-8 h-8 text-rose-gold" />
+        <div className="text-center mb-8">
+          <div className="relative w-28 h-28 mx-auto mb-3">
+            <Image
+              src="/logo.png"
+              alt={APP_NAME}
+              fill
+              className="object-contain filter drop-shadow-md"
+              priority
+              sizes="112px"
+            />
           </div>
-          <h1 className="font-heading text-2xl md:text-3xl text-white tracking-wide">
+          <h1 className="font-heading text-2xl md:text-3xl text-white tracking-wide uppercase font-semibold">
             {APP_NAME} Admin
           </h1>
           <p className="text-neutral-400 text-sm mt-2">

@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Mail, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { Mail, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
@@ -79,13 +80,20 @@ export default function LoginPage() {
         className="w-full max-w-md bg-white border border-neutral-100 p-8 md:p-10 rounded-3xl shadow-luxury relative overflow-hidden"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-rose-gold/10 rounded-2xl mb-4 border border-rose-gold/25">
-            <Sparkles className="w-6 h-6 text-rose-gold-dark" />
+          <div className="relative w-24 h-24 mx-auto mb-2">
+            <Image
+              src="/logo.png"
+              alt={APP_NAME}
+              fill
+              className="object-contain"
+              priority
+              sizes="96px"
+            />
           </div>
-          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide">
+          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide font-semibold uppercase">
             Sign In
           </h1>
-          <p className="text-neutral-500 text-sm mt-2">
+          <p className="text-neutral-600 text-sm mt-2">
             Welcome to {APP_NAME}. Please enter your registered email.
           </p>
         </div>

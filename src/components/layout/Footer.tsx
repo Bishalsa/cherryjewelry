@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -75,9 +76,20 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-4 lg:mb-0">
             <Link href="/" className="inline-block">
-              <h2 className="font-heading text-2xl tracking-[0.2em] text-ivory mb-4">
-                {APP_NAME}
-              </h2>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="relative w-8 h-8 shrink-0">
+                  <Image
+                    src="/logo-emblem.png"
+                    alt={APP_NAME}
+                    fill
+                    className="object-contain"
+                    sizes="32px"
+                  />
+                </div>
+                <h2 className="font-heading text-2xl tracking-[0.2em] text-ivory font-semibold uppercase">
+                  {APP_NAME}
+                </h2>
+              </div>
             </Link>
             <p className="text-ivory/40 text-sm leading-relaxed mb-6 max-w-xs">
               Where artistry meets elegance. Handcrafted jewelry that tells your

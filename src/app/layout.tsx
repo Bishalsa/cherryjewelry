@@ -1,4 +1,4 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Playfair_Display, DM_Sans } from "next/font/google";
 import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION, APP_URL, APP_OG_IMAGE } from "@/lib/constants";
 import Script from "next/script";
@@ -137,15 +137,33 @@ export const metadata: Metadata = {
     },
   },
 
+  // Favicons & Brand Icons
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: ["/favicon.ico"],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: "#5C2248",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
+
   // Apple / PWA
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
     title: APP_NAME,
   },
-
-  // Verification (add Search Console ID when available)
-  // verification: { google: "YOUR_GOOGLE_VERIFICATION_ID" },
 
   // Format detection — prevent iOS auto-linking phone numbers incorrectly
   formatDetection: {
@@ -172,9 +190,9 @@ const organizationSchema = {
       url: APP_URL,
       logo: {
         "@type": "ImageObject",
-        url: `${APP_URL}/icon-512.png`,
-        width: 512,
-        height: 512,
+        url: `${APP_URL}/logo.png`,
+        width: 800,
+        height: 800,
       },
       description: APP_DESCRIPTION,
       foundingDate: "2024",
@@ -229,9 +247,13 @@ export default function RootLayout({
       <head>
         {/* Favicon system */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5C2248" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="msapplication-TileColor" content="#5C2248" />
+        <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
 
         {/* JSON-LD Structured Data */}
         <script

@@ -1,0 +1,25 @@
+{
+  "name": "Cherry Jewelry",
+  "short_name": "Cherry Jewelry",
+  "description": "Exquisite fine & fashion jewelry handcrafted with love. Gold, diamonds, rose-gold, and fine silver.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#5C2248",
+  "background_color": "#FFF8F4",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "scope": "/"
+}

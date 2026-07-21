@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -17,7 +18,6 @@ import {
   LogOut,
   Menu,
   X,
-  Gem,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -47,8 +47,16 @@ export default function AdminSidebar() {
       {/* Mobile Menu Topbar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-neutral-100 z-50 flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <Gem className="w-5 h-5 text-rose-gold" />
-          <span className="font-heading text-lg text-deep-plum tracking-wider">
+          <div className="relative w-6 h-6 shrink-0">
+            <Image
+              src="/logo-emblem.png"
+              alt={APP_NAME}
+              fill
+              className="object-contain"
+              sizes="24px"
+            />
+          </div>
+          <span className="font-heading text-lg text-deep-plum tracking-wider font-semibold">
             {APP_NAME} CMS
           </span>
         </div>
@@ -80,8 +88,16 @@ export default function AdminSidebar() {
         <div className="flex flex-col h-full">
           {/* Brand Logo Area */}
           <div className="h-16 flex items-center gap-2 px-6 border-b border-neutral-100 hidden lg:flex">
-            <Gem className="w-6 h-6 text-rose-gold" />
-            <span className="font-heading text-xl text-deep-plum tracking-wider">
+            <div className="relative w-7 h-7 shrink-0">
+              <Image
+                src="/logo-emblem.png"
+                alt={APP_NAME}
+                fill
+                className="object-contain"
+                sizes="28px"
+              />
+            </div>
+            <span className="font-heading text-lg text-deep-plum tracking-wider font-semibold">
               {APP_NAME} CMS
             </span>
           </div>

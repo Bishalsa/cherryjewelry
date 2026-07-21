@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, User, Phone, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { Mail, User, Phone, ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -60,13 +61,20 @@ export default function RegisterPage() {
         className="w-full max-w-md bg-white border border-neutral-100 p-8 md:p-10 rounded-3xl shadow-luxury relative overflow-hidden"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-rose-gold/10 rounded-2xl mb-4 border border-rose-gold/25">
-            <Sparkles className="w-6 h-6 text-rose-gold-dark" />
+          <div className="relative w-24 h-24 mx-auto mb-2">
+            <Image
+              src="/logo.png"
+              alt={APP_NAME}
+              fill
+              className="object-contain"
+              priority
+              sizes="96px"
+            />
           </div>
-          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide">
+          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide font-semibold uppercase">
             Create Account
           </h1>
-          <p className="text-neutral-500 text-sm mt-2">
+          <p className="text-neutral-600 text-sm mt-2">
             Join {APP_NAME} to track orders and save addresses.
           </p>
         </div>

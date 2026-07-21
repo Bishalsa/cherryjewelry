@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -93,10 +94,24 @@ export default function Navbar() {
             {/* Center: Logo */}
             <Link
               href="/"
-              className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0"
+              className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0 flex items-center gap-2 group"
             >
+              <motion.div
+                whileHover={{ scale: 1.05, rotate: 3 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="relative w-8 h-8 md:w-10 md:h-10 shrink-0"
+              >
+                <Image
+                  src="/logo-emblem.png"
+                  alt={APP_NAME}
+                  fill
+                  className="object-contain"
+                  sizes="40px"
+                  priority
+                />
+              </motion.div>
               <motion.h1
-                className="font-heading text-2xl md:text-3xl tracking-[0.2em] text-deep-plum font-semibold"
+                className="font-heading text-xl md:text-2xl tracking-[0.18em] text-deep-plum font-semibold uppercase"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
@@ -184,9 +199,20 @@ export default function Navbar() {
             >
               <div className="p-6 flex-1">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-neutral-100">
-                  <h2 className="font-heading text-xl tracking-[0.15em] text-deep-plum font-semibold">
-                    {APP_NAME}
-                  </h2>
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-7 h-7 shrink-0">
+                      <Image
+                        src="/logo-emblem.png"
+                        alt={APP_NAME}
+                        fill
+                        className="object-contain"
+                        sizes="28px"
+                      />
+                    </div>
+                    <h2 className="font-heading text-lg tracking-[0.15em] text-deep-plum font-semibold uppercase">
+                      {APP_NAME}
+                    </h2>
+                  </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-deep-plum"
