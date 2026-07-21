@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   SlidersHorizontal,
@@ -45,9 +46,27 @@ export default function CollectionsClient({
   const [showFilters, setShowFilters] = useState(false);
   const [gridCols, setGridCols] = useState<2 | 3>(3);
 
-  // Build a new URL with updated query params
+  // Build a new URL with updated query params.
+  // IMPORTANT: Category navigation goes to /collections/[slug].
+  // All other filters (material, price, sort) stay as params on /collections.
   const updateFilters = (updates: Record<string, string | null>) => {
     const params = new URLSearchParams(searchParams.toString());
+
+    // Handle category separately — navigate to slug route
+    if ("category" in updates) {
+      const newCat = updates.category;
+      if (newCat === null) {
+        // Clear category → stay on /collections
+        params.delete("category");
+        params.delete("page");
+        const query = params.toString();
+        router.push(`/collections${query ? `?${query}` : ""}`);
+      } else {
+        // Navigate to /collections/[slug]
+        router.push(`/collections/${newCat}`);
+      }
+      return;
+    }
 
     for (const [key, value] of Object.entries(updates)) {
       if (value === null || value === "") {
@@ -93,14 +112,14 @@ export default function CollectionsClient({
             className={cn(
               "flex items-center gap-2 px-4 py-2 border rounded-full text-sm transition-colors",
               showFilters
-                ? "border-gold bg-gold/5 text-gold-dark"
+                ? "border-rose-gold bg-rose-gold/5 text-rose-gold-dark"
                 : "border-neutral-200 hover:border-neutral-300"
             )}
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
             {hasFilters && (
-              <span className="w-4 h-4 bg-gold text-white text-[10px] rounded-full flex items-center justify-center">
+              <span className="w-4 h-4 bg-rose-gold text-white text-[10px] rounded-full flex items-center justify-center">
                 !
               </span>
             )}
@@ -140,7 +159,7 @@ export default function CollectionsClient({
           <select
             value={activeSort}
             onChange={(e) => updateFilters({ sort: e.target.value })}
-            className="px-4 py-2 border border-neutral-200 rounded-full text-sm bg-white focus:outline-none focus:border-gold transition-colors appearance-none pr-8 cursor-pointer"
+            className="px-4 py-2 border border-neutral-200 rounded-full text-sm bg-white focus:outline-none focus:border-rose-gold transition-colors appearance-none pr-8 cursor-pointer"
           >
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low to High</option>
@@ -168,7 +187,7 @@ export default function CollectionsClient({
                     </span>
                     <button
                       onClick={clearFilters}
-                      className="text-xs text-gold hover:text-gold-dark transition-colors"
+                      className="text-xs text-rose-gold hover:text-rose-gold-dark transition-colors"
                     >
                       Clear all
                     </button>
@@ -178,35 +197,30 @@ export default function CollectionsClient({
 
               {/* Categories */}
               <div>
-                <h4 className="text-sm font-medium text-obsidian mb-3">
+                <h4 className="text-sm font-medium text-deep-plum mb-3">
                   Category
                 </h4>
                 <div className="space-y-1.5">
                   {categories.map((cat) => (
-                    <button
+                    <Link
                       key={cat.id}
-                      onClick={() =>
-                        updateFilters({
-                          category:
-                            activeCategory === cat.slug ? null : cat.slug,
-                        })
-                      }
+                      href={`/collections/${cat.slug}`}
                       className={cn(
                         "block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
                         activeCategory === cat.slug
-                          ? "bg-gold/10 text-gold-dark"
+                          ? "bg-rose-gold/10 text-rose-gold-dark"
                           : "text-neutral-500 hover:bg-neutral-50"
                       )}
                     >
                       {cat.name}
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>
 
               {/* Material */}
               <div>
-                <h4 className="text-sm font-medium text-obsidian mb-3">
+                <h4 className="text-sm font-medium text-deep-plum mb-3">
                   Material
                 </h4>
                 <div className="space-y-1.5">
@@ -221,7 +235,7 @@ export default function CollectionsClient({
                       className={cn(
                         "block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
                         activeMaterial === mat
-                          ? "bg-gold/10 text-gold-dark"
+                          ? "bg-rose-gold/10 text-rose-gold-dark"
                           : "text-neutral-500 hover:bg-neutral-50"
                       )}
                     >
@@ -233,7 +247,7 @@ export default function CollectionsClient({
 
               {/* Price Range */}
               <div>
-                <h4 className="text-sm font-medium text-obsidian mb-3">
+                <h4 className="text-sm font-medium text-deep-plum mb-3">
                   Price Range
                 </h4>
                 <div className="space-y-2">
@@ -258,7 +272,7 @@ export default function CollectionsClient({
                         "block w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
                         activePriceMin === option.min &&
                           activePriceMax === option.max
-                          ? "bg-gold/10 text-gold-dark"
+                          ? "bg-rose-gold/10 text-rose-gold-dark"
                           : "text-neutral-500 hover:bg-neutral-50"
                       )}
                     >
@@ -276,7 +290,7 @@ export default function CollectionsClient({
           {products.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-5xl mb-4">🔍</p>
-              <h3 className="font-heading text-xl text-obsidian mb-2">
+              <h3 className="font-heading text-xl text-deep-plum mb-2">
                 No products found
               </h3>
               <p className="text-sm text-neutral-400 mb-4">
@@ -285,7 +299,7 @@ export default function CollectionsClient({
               </p>
               <button
                 onClick={clearFilters}
-                className="text-sm text-gold hover:text-gold-dark transition-colors underline underline-offset-4"
+                className="text-sm text-rose-gold hover:text-rose-gold-dark transition-colors underline underline-offset-4"
               >
                 Clear all filters
               </button>
@@ -319,7 +333,7 @@ export default function CollectionsClient({
                       "px-4 py-2 border rounded-full text-sm transition-colors",
                       currentPage <= 1
                         ? "border-neutral-100 text-neutral-300 cursor-not-allowed"
-                        : "border-neutral-200 hover:border-gold text-neutral-600"
+                        : "border-neutral-200 hover:border-rose-gold text-neutral-600"
                     )}
                   >
                     Previous
@@ -334,8 +348,8 @@ export default function CollectionsClient({
                         className={cn(
                           "w-10 h-10 rounded-full text-sm font-medium transition-colors",
                           pageNum === currentPage
-                            ? "bg-gold text-white"
-                            : "border border-neutral-200 text-neutral-600 hover:border-gold"
+                            ? "bg-rose-gold text-white"
+                            : "border border-neutral-200 text-neutral-600 hover:border-rose-gold"
                         )}
                       >
                         {pageNum}
@@ -353,7 +367,7 @@ export default function CollectionsClient({
                       "px-4 py-2 border rounded-full text-sm transition-colors",
                       currentPage >= totalPages
                         ? "border-neutral-100 text-neutral-300 cursor-not-allowed"
-                        : "border-neutral-200 hover:border-gold text-neutral-600"
+                        : "border-neutral-200 hover:border-rose-gold text-neutral-600"
                     )}
                   >
                     Next

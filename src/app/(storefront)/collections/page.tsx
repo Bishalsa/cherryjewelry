@@ -51,12 +51,12 @@ export default async function CollectionsPage({
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="bg-gradient-to-b from-champagne-light to-ivory py-16 md:py-20">
+      <section className="bg-gradient-to-b from-soft-pink/30 to-ivory py-16 md:py-20">
         <div className="container-luxury text-center">
-          <p className="text-xs tracking-[0.3em] uppercase text-gold-dark mb-3">
+          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold-dark mb-3">
             Our Collection
           </p>
-          <h1 className="font-heading text-3xl md:text-5xl text-obsidian">
+          <h1 className="font-heading text-3xl md:text-5xl text-deep-plum">
             All Jewelry
           </h1>
           <p className="text-neutral-400 mt-3 text-sm">

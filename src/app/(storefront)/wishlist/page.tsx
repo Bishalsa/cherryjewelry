@@ -17,11 +17,11 @@ export default function WishlistPage() {
 
   return (
     <div className="min-h-screen">
-      <section className="bg-gradient-to-b from-champagne-light to-ivory py-16">
+      <section className="bg-gradient-to-b from-soft-pink/20 to-ivory py-16">
         <div className="container-luxury text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <Heart className="w-8 h-8 text-rose-gold mx-auto mb-4" />
-            <h1 className="font-heading text-3xl md:text-4xl text-obsidian">Your Wishlist</h1>
+            <h1 className="font-heading text-3xl md:text-4xl text-deep-plum">Your Wishlist</h1>
             <p className="text-neutral-400 mt-2 text-sm">{items.length} saved items</p>
           </motion.div>
         </div>
@@ -31,11 +31,11 @@ export default function WishlistPage() {
         {wishlistProducts.length === 0 ? (
           <div className="text-center py-20">
             <Heart className="w-16 h-16 text-neutral-200 mx-auto mb-4" />
-            <h3 className="font-heading text-xl text-obsidian mb-2">Your wishlist is empty</h3>
+            <h3 className="font-heading text-xl text-deep-plum mb-2">Your wishlist is empty</h3>
             <p className="text-sm text-neutral-400 mb-6">
               Save your favorite pieces to revisit them later.
             </p>
-            <Link href="/collections" className="inline-flex items-center gap-2 bg-obsidian text-white px-6 py-3 rounded-full text-sm hover:bg-neutral-800 transition-colors">
+            <Link href="/collections" className="inline-flex items-center gap-2 bg-deep-plum text-white px-6 py-3 rounded-full text-sm hover:bg-deep-plum-dark transition-colors">
               Explore Collections
             </Link>
           </div>
@@ -54,17 +54,17 @@ export default function WishlistPage() {
                 </Link>
                 <div className="flex-1 min-w-0">
                   <Link href={`/products/${product.slug}`}>
-                    <h3 className="text-sm font-medium text-obsidian hover:text-gold-dark transition-colors truncate">{product.name}</h3>
+                    <h3 className="text-sm font-medium text-deep-plum hover:text-rose-gold transition-colors truncate">{product.name}</h3>
                   </Link>
                   <p className="text-xs text-neutral-400 mt-0.5">{product.material}</p>
-                  <p className="text-sm font-semibold text-gold-dark mt-2">{formatPrice(product.price)}</p>
+                  <p className="text-sm font-semibold text-rose-gold-dark mt-2">{formatPrice(product.price)}</p>
                   <div className="flex items-center gap-2 mt-3">
                     <button
                       onClick={() => {
                         addItem(product, product.variants[0] || null);
                         removeItem(product.id);
                       }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-obsidian text-white rounded-full text-xs hover:bg-neutral-800 transition-colors"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-deep-plum text-white rounded-full text-xs hover:bg-deep-plum-dark transition-colors"
                     >
                       <ShoppingBag className="w-3 h-3" />
                       Move to Bag

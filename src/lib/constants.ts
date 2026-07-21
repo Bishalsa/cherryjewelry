@@ -3,8 +3,10 @@
 // ============================================
 
 export const APP_NAME = "Cherry Jewelry";
-export const APP_DESCRIPTION = "Exquisite handcrafted jewelry — where artistry meets elegance. Discover our curated collection of rings, necklaces, earrings, and bracelets.";
-export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+export const APP_TAGLINE = "Where Artistry Meets Elegance";
+export const APP_DESCRIPTION = "Discover exquisite handcrafted jewelry — rings, necklaces, earrings & bracelets. BIS Hallmarked gold & certified diamonds. Free shipping above ₹999.";
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cherryjewelry.store";
+export const APP_OG_IMAGE = "/og-image.jpg";
 
 // Navigation
 export const NAV_LINKS = [

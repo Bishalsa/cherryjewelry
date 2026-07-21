@@ -1,11 +1,13 @@
 import { MetadataRoute } from "next";
 import prisma from "@/lib/prisma";
 import { APP_URL } from "@/lib/constants";
+import { CATEGORIES } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = APP_URL;
+  const now = new Date();
 
   // 1. Fetch active products dynamically
   let productEntries: MetadataRoute.Sitemap = [];
@@ -31,13 +33,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("Sitemap generation database query error:", error);
   }
 
-  // 2. Define static pages
-  const staticRoutes = ["", "/collections", "/about", "/contact", "/faq", "/search"].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
+  // 2. Static top-level pages
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: baseUrl, lastModified: now, changeFrequency: "daily", priority: 1.0 },
+    { url: `${baseUrl}/collections`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${baseUrl}/search`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${baseUrl}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${baseUrl}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${baseUrl}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${baseUrl}/shipping-policy`, lastModified: now, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${baseUrl}/returns`, lastModified: now, changeFrequency: "monthly", priority: 0.3 },
+    { url: `${baseUrl}/privacy`, lastModified: now, changeFrequency: "monthly", priority: 0.2 },
+    { url: `${baseUrl}/terms`, lastModified: now, changeFrequency: "monthly", priority: 0.2 },
+  ];
+
+  // 3. Collection pages (high SEO value for category-level queries)
+  const collectionRoutes: MetadataRoute.Sitemap = [
+    "new-arrivals",
+    "best-sellers",
+    ...CATEGORIES.map((c) => c.slug),
+  ].map((slug) => ({
+    url: `${baseUrl}/collections/${slug}`,
+    lastModified: now,
     changeFrequency: "daily" as const,
-    priority: route === "" ? 1.0 : 0.6,
+    priority: 0.85,
   }));
 
-  return [...staticRoutes, ...productEntries];
+  return [...staticRoutes, ...collectionRoutes, ...productEntries];
 }

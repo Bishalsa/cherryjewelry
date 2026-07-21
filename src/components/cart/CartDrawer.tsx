@@ -58,7 +58,7 @@ export default function CartDrawer() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-neutral-100">
               <div className="flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5 text-gold" />
+                <ShoppingBag className="w-5 h-5 text-rose-gold" />
                 <h2 className="font-heading text-lg">
                   Your Bag ({getItemCount()})
                 </h2>
@@ -74,10 +74,10 @@ export default function CartDrawer() {
 
             {/* Free Shipping Progress */}
             {subtotal > 0 && (
-              <div className="px-4 py-3 bg-champagne-light">
+              <div className="px-4 py-3 bg-soft-pink/20">
                 {amountToFreeShipping > 0 ? (
                   <p className="text-xs text-neutral-600 mb-2">
-                    Add <span className="font-semibold text-gold-dark">{formatPrice(amountToFreeShipping)}</span> more for free shipping!
+                    Add <span className="font-semibold text-rose-gold-dark">{formatPrice(amountToFreeShipping)}</span> more for free shipping!
                   </p>
                 ) : (
                   <p className="text-xs text-success font-medium mb-2">
@@ -86,7 +86,7 @@ export default function CartDrawer() {
                 )}
                 <div className="w-full h-1.5 bg-white rounded-full overflow-hidden">
                   <motion.div
-                    className="h-full bg-gradient-to-r from-gold to-gold-light rounded-full"
+                    className="h-full bg-gradient-to-r from-rose-gold to-cherry-ruby rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${freeShippingProgress}%` }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
@@ -113,7 +113,7 @@ export default function CartDrawer() {
                   <Link
                     href="/collections/new-arrivals"
                     onClick={closeCart}
-                    className="inline-flex items-center gap-2 bg-obsidian text-white px-6 py-3 rounded-full text-sm hover:bg-neutral-800 transition-colors"
+                    className="inline-flex items-center gap-2 bg-deep-plum text-white px-6 py-3 rounded-full text-sm hover:bg-deep-plum-dark transition-colors"
                   >
                     Shop New Arrivals
                     <ArrowRight className="w-4 h-4" />
@@ -158,7 +158,7 @@ export default function CartDrawer() {
                               {item.variant.name}
                             </p>
                           )}
-                          <p className="text-sm font-semibold text-gold-dark mt-1">
+                          <p className="text-sm font-semibold text-rose-gold-dark mt-1">
                             {formatPrice(item.price)}
                           </p>
 
@@ -206,7 +206,7 @@ export default function CartDrawer() {
                   <div className="pt-2">
                     <button
                       onClick={() => setShowGiftNote(!showGiftNote)}
-                      className="flex items-center gap-2 text-sm text-neutral-500 hover:text-gold transition-colors"
+                      className="flex items-center gap-2 text-sm text-neutral-500 hover:text-rose-gold transition-colors"
                     >
                       <Gift className="w-4 h-4" />
                       {showGiftNote ? "Hide gift note" : "Add a gift note"}
@@ -223,7 +223,7 @@ export default function CartDrawer() {
                             value={giftNote || ""}
                             onChange={(e) => setGiftNote(e.target.value)}
                             placeholder="Write your message..."
-                            className="w-full mt-3 p-3 border border-neutral-200 rounded-lg text-sm resize-none h-20 focus:outline-none focus:border-gold transition-colors"
+                            className="w-full mt-3 p-3 border border-neutral-200 rounded-lg text-sm resize-none h-20 focus:outline-none focus:border-rose-gold transition-colors"
                           />
                         </motion.div>
                       )}
@@ -265,7 +265,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={closeCart}
-                  className="block w-full bg-obsidian text-white text-center py-3.5 rounded-full font-medium text-sm hover:bg-neutral-800 transition-colors btn-glow"
+                  className="block w-full bg-deep-plum text-white text-center py-3.5 rounded-full font-medium text-sm hover:bg-deep-plum-dark transition-colors btn-glow"
                 >
                   Proceed to Checkout
                 </Link>

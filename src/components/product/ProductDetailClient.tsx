@@ -90,7 +90,7 @@ export default function ProductDetailClient({
               </div>
               {/* Badges */}
               {product.isNewArrival && (
-                <span className="absolute top-4 left-4 px-3 py-1 bg-obsidian text-white text-xs uppercase tracking-wider rounded-full">
+                <span className="absolute top-4 left-4 px-3 py-1 bg-deep-plum text-white text-xs uppercase tracking-wider rounded-full">
                   New
                 </span>
               )}
@@ -108,7 +108,7 @@ export default function ProductDetailClient({
                   className={cn(
                     "w-16 h-20 rounded-lg bg-neutral-100 flex items-center justify-center border-2 transition-colors",
                     i === 1
-                      ? "border-gold"
+                      ? "border-rose-gold"
                       : "border-transparent hover:border-neutral-200"
                   )}
                 >
@@ -127,7 +127,7 @@ export default function ProductDetailClient({
           >
             {/* Category & SKU */}
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs tracking-[0.2em] uppercase text-gold-dark font-medium">
+              <span className="text-xs tracking-[0.2em] uppercase text-rose-gold-dark font-medium">
                 {product.material}
               </span>
               <span className="text-xs text-neutral-300">
@@ -136,7 +136,7 @@ export default function ProductDetailClient({
             </div>
 
             {/* Name */}
-            <h1 className="font-heading text-2xl md:text-3xl lg:text-4xl text-obsidian mb-3">
+            <h1 className="font-heading text-2xl md:text-3xl lg:text-4xl text-deep-plum mb-3">
               {product.name}
             </h1>
 
@@ -150,7 +150,7 @@ export default function ProductDetailClient({
                       className={cn(
                         "w-4 h-4",
                         i < Math.round(product.averageRating)
-                          ? "text-gold fill-gold"
+                          ? "text-rose-gold fill-rose-gold"
                           : "text-neutral-200"
                       )}
                     />
@@ -168,7 +168,7 @@ export default function ProductDetailClient({
                 key={currentPrice}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-2xl md:text-3xl font-heading text-obsidian"
+                className="text-2xl md:text-3xl font-heading text-deep-plum"
               >
                 {formatPrice(currentPrice)}
               </motion.span>
@@ -189,12 +189,12 @@ export default function ProductDetailClient({
               {product.shortDescription}
             </p>
 
-            <div className="divider-gold mb-6" />
+            <div className="h-px bg-gradient-to-r from-transparent via-rose-gold/30 to-transparent my-6" />
 
             {/* Variants */}
             {product.variants.length > 1 && (
               <div className="mb-6">
-                <h4 className="text-sm font-medium text-obsidian mb-3">
+                <h4 className="text-sm font-medium text-deep-plum mb-3">
                   Size / Variant
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -207,12 +207,12 @@ export default function ProductDetailClient({
                       }}
                       disabled={variant.stock === 0}
                       className={cn(
-                        "px-4 py-2.5 border rounded-lg text-sm transition-all",
+                        "px-4 py-3 border rounded-lg text-sm transition-all min-h-[44px]",
                         selectedVariant?.id === variant.id
-                          ? "border-gold bg-gold/5 text-gold-dark"
+                          ? "border-rose-gold bg-rose-gold/5 text-rose-gold-dark"
                           : variant.stock === 0
                           ? "border-neutral-100 text-neutral-300 cursor-not-allowed"
-                          : "border-neutral-200 hover:border-gold/50 text-neutral-600"
+                          : "border-neutral-200 hover:border-rose-gold/50 text-neutral-600"
                       )}
                     >
                       {variant.name}
@@ -265,7 +265,7 @@ export default function ProductDetailClient({
                     ? "bg-success text-white"
                     : currentStock === 0
                     ? "bg-neutral-200 text-neutral-400 cursor-not-allowed"
-                    : "bg-obsidian text-white hover:bg-neutral-800"
+                    : "bg-deep-plum text-white hover:bg-deep-plum-dark"
                 )}
               >
                 {addedToCart ? (
@@ -317,8 +317,8 @@ export default function ProductDetailClient({
                   key={label}
                   className="flex flex-col items-center text-center p-3 rounded-xl bg-neutral-50"
                 >
-                  <Icon className="w-4 h-4 text-gold-dark mb-1" />
-                  <span className="text-[10px] font-medium text-obsidian">
+                  <Icon className="w-4 h-4 text-rose-gold-dark mb-1" />
+                  <span className="text-[10px] font-medium text-deep-plum">
                     {label}
                   </span>
                   <span className="text-[9px] text-neutral-400">{sub}</span>
@@ -327,7 +327,7 @@ export default function ProductDetailClient({
             </div>
 
             {/* Share */}
-            <button className="inline-flex items-center gap-2 text-xs text-neutral-400 hover:text-gold transition-colors self-start">
+            <button className="inline-flex items-center gap-2 text-xs text-neutral-400 hover:text-rose-gold transition-colors self-start">
               <Share2 className="w-3.5 h-3.5" />
               Share this product
             </button>
@@ -344,7 +344,7 @@ export default function ProductDetailClient({
                 className={cn(
                   "pb-3 text-sm font-medium whitespace-nowrap transition-colors relative",
                   activeTab === tab.id
-                    ? "text-obsidian"
+                    ? "text-deep-plum"
                     : "text-neutral-400 hover:text-neutral-600"
                 )}
               >
@@ -352,7 +352,7 @@ export default function ProductDetailClient({
                 {activeTab === tab.id && (
                   <motion.div
                     layoutId="product-tab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-rose-gold"
                   />
                 )}
               </button>
@@ -388,7 +388,7 @@ export default function ProductDetailClient({
                       <span className="text-sm text-neutral-400 w-32">
                         {spec.label}
                       </span>
-                      <span className="text-sm text-obsidian">
+                      <span className="text-sm text-deep-plum">
                         {spec.value}
                       </span>
                     </div>
@@ -445,7 +445,7 @@ export default function ProductDetailClient({
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="mt-16">
-            <h2 className="font-heading text-2xl text-obsidian mb-8 text-center">
+            <h2 className="font-heading text-2xl text-deep-plum mb-8 text-center">
               You May Also Like
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
