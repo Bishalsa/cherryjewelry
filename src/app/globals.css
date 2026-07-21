@@ -22,24 +22,24 @@
   --color-deep-plum-light: #7A3060;
   --color-deep-plum-dark: #3D1630;
 
-  /* --- Neutral Scale (warm-tinted) --- */
+  /* --- Neutral Scale (crisp warm-tinted) --- */
   --color-neutral-50: #FDF8F6;
   --color-neutral-100: #FAF0EC;
-  --color-neutral-200: #F2E0DA;
-  --color-neutral-300: #E4C5BC;
-  --color-neutral-400: #C9998F;
-  --color-neutral-500: #A87068;
-  --color-neutral-600: #854E47;
-  --color-neutral-700: #623530;
-  --color-neutral-800: #3F1F1A;
-  --color-neutral-900: #26100D;
-  --color-neutral-950: #140806;
+  --color-neutral-200: #E8D5CE;
+  --color-neutral-300: #CFA59A;
+  --color-neutral-400: #9C6B61;
+  --color-neutral-500: #7A4940;
+  --color-neutral-600: #5C322B;
+  --color-neutral-700: #42201B;
+  --color-neutral-800: #2D1410;
+  --color-neutral-900: #1C0A07;
+  --color-neutral-950: #100503;
 
   /* --- Semantic Colors --- */
   --color-background: var(--color-ivory);
   --color-foreground: var(--color-deep-plum);
   --color-muted: var(--color-neutral-100);
-  --color-muted-foreground: var(--color-neutral-500);
+  --color-muted-foreground: var(--color-neutral-600);
   --color-card: #FFFFFF;
   --color-card-foreground: var(--color-deep-plum);
   --color-border: var(--color-neutral-200);
@@ -144,28 +144,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================
-   Glassmorphism Utilities
+   Glassmorphism Utilities (Crisp High-Contrast Surfaces)
    ============================================ */
 
 .glass {
-  background: rgba(255, 248, 244, 0.08);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 248, 244, 0.14);
+  background: rgba(255, 248, 244, 0.95);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(183, 110, 121, 0.2);
 }
 
 .glass-light {
-  background: rgba(255, 248, 244, 0.80);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(247, 214, 224, 0.5);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(247, 214, 224, 0.6);
 }
 
 .glass-dark {
-  background: rgba(61, 22, 48, 0.65);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(183, 110, 121, 0.12);
+  background: rgba(61, 22, 48, 0.92);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(183, 110, 121, 0.25);
 }
 
 .glass-rose {

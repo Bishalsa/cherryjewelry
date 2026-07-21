@@ -96,10 +96,10 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         <button
           onClick={() => toggleItem(product.id)}
           className={cn(
-            "absolute top-3 right-3 p-2 rounded-full transition-all duration-300 z-10",
+            "absolute top-3 right-3 p-2 rounded-full transition-all duration-300 z-10 shadow-sm",
             wishlisted
-              ? "bg-rose-gold/10 text-rose-gold"
-              : "bg-white/80 backdrop-blur-sm text-neutral-400 hover:text-rose-gold opacity-0 group-hover:opacity-100"
+              ? "bg-rose-gold/15 text-rose-gold"
+              : "bg-white/95 text-neutral-600 hover:text-rose-gold md:opacity-0 md:group-hover:opacity-100"
           )}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
@@ -111,13 +111,13 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         {/* Product Info */}
         <div className="p-4">
           {/* Category */}
-          <p className="text-[10px] uppercase tracking-wider text-neutral-400 mb-1">
+          <p className="text-[10px] uppercase tracking-wider font-semibold text-neutral-700 mb-1">
             {product.material}
           </p>
 
           {/* Name */}
           <Link href={`/products/${product.slug}`}>
-            <h3 className="text-sm font-medium text-deep-plum group-hover:text-rose-gold-dark transition-colors line-clamp-1">
+            <h3 className="text-sm font-semibold text-deep-plum group-hover:text-rose-gold-dark transition-colors line-clamp-1">
               {product.name}
             </h3>
           </Link>
@@ -133,12 +133,12 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
                       "w-3 h-3",
                       i < Math.round(product.averageRating)
                         ? "text-rose-gold fill-rose-gold"
-                        : "text-neutral-200"
+                        : "text-neutral-300"
                     )}
                   />
                 ))}
               </div>
-              <span className="text-[10px] text-neutral-400">
+              <span className="text-[11px] font-medium text-neutral-700">
                 ({product.reviewCount})
               </span>
             </div>
@@ -146,11 +146,11 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
           {/* Price */}
           <div className="flex items-center gap-2 mt-2">
-            <span className="font-semibold text-sm text-deep-plum">
+            <span className="font-bold text-sm text-deep-plum">
               {formatPrice(product.price)}
             </span>
             {product.compareAtPrice && product.compareAtPrice > product.price && (
-              <span className="text-xs text-neutral-400 line-through">
+              <span className="text-xs text-neutral-600 line-through font-medium">
                 {formatPrice(product.compareAtPrice)}
               </span>
             )}

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -92,18 +92,18 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium block">
+            <label className="text-xs uppercase tracking-wider text-neutral-700 font-bold block">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-3 bg-white border border-neutral-300 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20 transition-all text-deep-plum placeholder:text-neutral-500 shadow-xs"
               />
             </div>
           </div>

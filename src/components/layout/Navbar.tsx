@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -57,10 +57,10 @@ export default function Navbar() {
       {/* Main Navbar */}
       <header
         className={cn(
-          "sticky top-0 z-[100] w-full transition-all duration-500",
+          "sticky top-0 z-[100] w-full transition-all duration-300",
           isScrolled
-            ? "glass-light shadow-lg shadow-black/[0.03]"
-            : "bg-white/90 backdrop-blur-sm"
+            ? "bg-white/98 backdrop-blur-md shadow-md border-b border-neutral-200/60"
+            : "bg-white border-b border-neutral-100"
         )}
       >
         <nav className="container-luxury" aria-label="Main navigation">
@@ -69,7 +69,7 @@ export default function Navbar() {
             <div className="flex items-center gap-2 md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-deep-plum"
                 aria-label="Open menu"
               >
                 <Menu className="w-5 h-5" />
@@ -82,7 +82,7 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm tracking-wide text-neutral-600 hover:text-deep-plum transition-colors duration-300 relative group"
+                  className="text-sm font-medium tracking-wide text-neutral-700 hover:text-deep-plum transition-colors duration-300 relative group"
                 >
                   {link.label}
                   <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-rose-gold transition-all duration-300 group-hover:w-full" />
@@ -96,7 +96,7 @@ export default function Navbar() {
               className="absolute left-1/2 -translate-x-1/2 md:relative md:left-auto md:translate-x-0"
             >
               <motion.h1
-                className="font-heading text-2xl md:text-3xl tracking-[0.2em] text-deep-plum"
+                className="font-heading text-2xl md:text-3xl tracking-[0.2em] text-deep-plum font-semibold"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >
@@ -109,7 +109,7 @@ export default function Navbar() {
               {/* Search */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-deep-plum"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
@@ -118,7 +118,7 @@ export default function Navbar() {
               {/* Wishlist */}
               <Link
                 href="/wishlist"
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors relative hidden md:flex"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors relative hidden md:flex text-deep-plum"
                 aria-label="Wishlist"
               >
                 <Heart className="w-5 h-5" />
@@ -126,7 +126,7 @@ export default function Navbar() {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm"
                   >
                     {wishlistCount}
                   </motion.span>
@@ -136,7 +136,7 @@ export default function Navbar() {
               {/* Account */}
               <Link
                 href="/account"
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors hidden md:flex"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors hidden md:flex text-deep-plum"
                 aria-label="Account"
               >
                 <User className="w-5 h-5" />
@@ -145,7 +145,7 @@ export default function Navbar() {
               {/* Cart */}
               <button
                 onClick={openCart}
-                className="p-2 hover:bg-neutral-100 rounded-full transition-colors relative"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors relative text-deep-plum"
                 aria-label="Cart"
               >
                 <ShoppingBag className="w-5 h-5" />
@@ -153,7 +153,7 @@ export default function Navbar() {
                   <motion.span
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                    className="absolute -top-0.5 -right-0.5 bg-rose-gold text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm"
                   >
                     {cartItemCount > 9 ? "9+" : cartItemCount}
                   </motion.span>
@@ -172,7 +172,7 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-[200] backdrop-blur-sm"
+              className="fixed inset-0 bg-black/60 z-[200] backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
             />
             <motion.div
@@ -180,16 +180,16 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-[201] overflow-y-auto"
+              className="fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-[201] overflow-y-auto h-dvh max-h-dvh shadow-2xl flex flex-col"
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="font-heading text-xl tracking-[0.15em]">
+              <div className="p-6 flex-1">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-neutral-100">
+                  <h2 className="font-heading text-xl tracking-[0.15em] text-deep-plum font-semibold">
                     {APP_NAME}
                   </h2>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-neutral-100 rounded-full transition-colors"
+                    className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-deep-plum"
                     aria-label="Close menu"
                   >
                     <X className="w-5 h-5" />
@@ -207,7 +207,7 @@ export default function Navbar() {
                       <Link
                         href={link.href}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block py-3 px-4 text-lg hover:bg-neutral-50 rounded-lg transition-colors"
+                        className="block py-3 px-4 text-base font-semibold text-deep-plum hover:bg-neutral-100 rounded-xl transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -228,9 +228,9 @@ export default function Navbar() {
                       key={link.href}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="flex items-center gap-3 py-3 px-4 text-neutral-600 hover:bg-neutral-50 rounded-lg transition-colors"
+                      className="flex items-center gap-3 py-3 px-4 text-sm font-medium text-neutral-800 hover:bg-neutral-100 rounded-xl transition-colors"
                     >
-                      <link.icon className="w-4 h-4" />
+                      <link.icon className="w-4 h-4 text-rose-gold-dark" />
                       {link.label}
                     </Link>
                   ))}
@@ -241,42 +241,59 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Search Overlay */}
+      {/* Search Overlay & Modal */}
       <AnimatePresence>
         {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-white/95 backdrop-blur-xl z-[300] flex items-start justify-center pt-[15vh]"
-            onClick={() => setIsSearchOpen(false)}
-          >
+          <>
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ delay: 0.1 }}
-              className="w-full max-w-xl px-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-[300] backdrop-blur-md"
+              onClick={() => setIsSearchOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.98 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed left-1/2 top-[10%] -translate-x-1/2 w-[92%] max-w-xl bg-white border border-neutral-200 z-[301] rounded-3xl p-6 md:p-8 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="Search for jewelry..."
-                  className="w-full py-4 pl-12 pr-12 text-lg bg-transparent border-b-2 border-neutral-200 focus:border-rose-gold focus:outline-none transition-colors font-sans"
-                />
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-deep-plum uppercase tracking-wider">
+                  Search Collection
+                </h3>
                 <button
                   onClick={() => setIsSearchOpen(false)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 hover:bg-neutral-100 rounded-full transition-colors"
+                  className="p-1.5 hover:bg-neutral-100 rounded-full transition-colors text-deep-plum"
                   aria-label="Close search"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
-              <div className="mt-8">
-                <p className="text-sm text-neutral-400 uppercase tracking-wider mb-4">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const form = e.currentTarget;
+                  const input = form.querySelector("input");
+                  if (input && input.value.trim()) {
+                    setIsSearchOpen(false);
+                    window.location.href = `/search?q=${encodeURIComponent(input.value.trim())}`;
+                  }
+                }}
+                className="relative"
+              >
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-600 pointer-events-none" />
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="Search rings, necklaces, earrings..."
+                  className="w-full py-3.5 pl-12 pr-12 text-base font-medium text-deep-plum bg-neutral-50 border-2 border-neutral-200 rounded-2xl focus:border-rose-gold focus:bg-white focus:outline-none transition-all placeholder:text-neutral-500 shadow-inner"
+                />
+              </form>
+              <div className="mt-6">
+                <p className="text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-3">
                   Popular Searches
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -286,7 +303,7 @@ export default function Navbar() {
                         key={term}
                         href={`/search?q=${encodeURIComponent(term)}`}
                         onClick={() => setIsSearchOpen(false)}
-                        className="px-4 py-2 bg-neutral-100 hover:bg-rose-gold/10 hover:text-rose-gold rounded-full text-sm transition-colors"
+                        className="px-3.5 py-1.5 bg-neutral-100 hover:bg-deep-plum hover:text-white border border-neutral-200 rounded-full text-xs font-semibold text-neutral-800 transition-colors"
                       >
                         {term}
                       </Link>
@@ -295,7 +312,7 @@ export default function Navbar() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

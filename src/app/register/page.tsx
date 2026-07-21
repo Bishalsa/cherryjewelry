@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -74,53 +74,53 @@ export default function RegisterPage() {
         <form onSubmit={handleRegister} className="space-y-4">
           {/* Full Name */}
           <div className="space-y-1">
-            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium block">
+            <label className="text-xs uppercase tracking-wider text-neutral-700 font-bold block">
               Full Name *
             </label>
             <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600" />
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Priya Sharma"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-white border border-neutral-300 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20 transition-all text-deep-plum placeholder:text-neutral-500 shadow-xs"
               />
             </div>
           </div>
 
           {/* Email */}
           <div className="space-y-1">
-            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium block">
+            <label className="text-xs uppercase tracking-wider text-neutral-700 font-bold block">
               Email Address *
             </label>
             <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600" />
               <input
                 type="email"
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-white border border-neutral-300 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20 transition-all text-deep-plum placeholder:text-neutral-500 shadow-xs"
               />
             </div>
           </div>
 
           {/* Phone */}
           <div className="space-y-1">
-            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium block">
+            <label className="text-xs uppercase tracking-wider text-neutral-700 font-bold block">
               Phone Number (Optional)
             </label>
             <div className="relative">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600" />
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-white border border-neutral-300 rounded-xl text-sm font-medium focus:outline-none focus:border-rose-gold focus:ring-2 focus:ring-rose-gold/20 transition-all text-deep-plum placeholder:text-neutral-500 shadow-xs"
               />
             </div>
           </div>
