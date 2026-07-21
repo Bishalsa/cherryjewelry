@@ -4,9 +4,13 @@ import path from "path";
 
 const srcPath = "C:\\Users\\bisha\\.gemini\\antigravity-ide\\brain\\18f1e36e-c295-4f3d-a830-1ef31b4350bd\\media__1784668171193.jpg";
 const publicDir = "c:\\Users\\bisha\\OneDrive\\Desktop\\jewellery\\public";
+const appDir = "c:\\Users\\bisha\\OneDrive\\Desktop\\jewellery\\src\\app";
 
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
+}
+if (!fs.existsSync(appDir)) {
+  fs.mkdirSync(appDir, { recursive: true });
 }
 
 async function generateBrandAssets() {
@@ -25,7 +29,6 @@ async function generateBrandAssets() {
   console.log("Created public/logo.png");
 
   // 2. Extract emblem crop (the C-J heart cherry mark) for high legibility at small sizes
-  // Emblem is in the top-center part of the image (~15% to 65% vertical range)
   const cropLeft = Math.round(width * 0.22);
   const cropTop = Math.round(height * 0.12);
   const cropWidth = Math.round(width * 0.56);
@@ -60,7 +63,11 @@ async function generateBrandAssets() {
     .resize(180, 180, { fit: "cover" })
     .png()
     .toFile(path.join(publicDir, "apple-touch-icon.png"));
-  console.log("Created public/apple-touch-icon.png");
+  await sharp(srcPath)
+    .resize(180, 180, { fit: "cover" })
+    .png()
+    .toFile(path.join(appDir, "apple-icon.png"));
+  console.log("Created public/apple-touch-icon.png & src/app/apple-icon.png");
 
   // 6. Generate mstile 150x150
   await sharp(srcPath)
@@ -69,12 +76,16 @@ async function generateBrandAssets() {
     .toFile(path.join(publicDir, "mstile-150x150.png"));
   console.log("Created public/mstile-150x150.png");
 
-  // 7. Generate favicon-32x32.png (using sharp emblem crop for max clarity)
+  // 7. Generate favicon-32x32.png
   await sharp(emblemBuffer)
     .resize(32, 32, { fit: "contain" })
     .png()
     .toFile(path.join(publicDir, "favicon-32x32.png"));
-  console.log("Created public/favicon-32x32.png");
+  await sharp(emblemBuffer)
+    .resize(32, 32, { fit: "contain" })
+    .png()
+    .toFile(path.join(appDir, "icon.png"));
+  console.log("Created public/favicon-32x32.png & src/app/icon.png");
 
   // 8. Generate favicon-16x16.png
   await sharp(emblemBuffer)
@@ -83,21 +94,24 @@ async function generateBrandAssets() {
     .toFile(path.join(publicDir, "favicon-16x16.png"));
   console.log("Created public/favicon-16x16.png");
 
-  // 9. Generate favicon.ico (32x32 PNG standard fallback for ico)
+  // 9. Generate favicon.ico (Overwrite both public/favicon.ico and src/app/favicon.ico!)
   await sharp(emblemBuffer)
     .resize(32, 32, { fit: "contain" })
     .png()
     .toFile(path.join(publicDir, "favicon.ico"));
-  console.log("Created public/favicon.ico");
+  await sharp(emblemBuffer)
+    .resize(32, 32, { fit: "contain" })
+    .png()
+    .toFile(path.join(appDir, "favicon.ico"));
+  console.log("Created & overwrote public/favicon.ico AND src/app/favicon.ico");
 
   // 10. Generate Open Graph Image (1200x630)
-  // Combine luxury marble background and logo composition
   const ogCanvas = sharp({
     create: {
       width: 1200,
       height: 630,
       channels: 4,
-      background: { r: 254, g: 240, b: 233, alpha: 1 }, // warm ivory/soft pink
+      background: { r: 254, g: 240, b: 233, alpha: 1 },
     },
   });
 
@@ -105,17 +119,8 @@ async function generateBrandAssets() {
     .resize(540, 540, { fit: "contain" })
     .toBuffer();
 
-  // Create SVG text overlay for high clarity
   const ogTextSvg = Buffer.from(`
     <svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="roseGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#9A5560"/>
-          <stop offset="50%" stop-color="#B76E79"/>
-          <stop offset="100%" stop-color="#C2185B"/>
-        </linearGradient>
-      </defs>
-      <!-- Background subtle frame -->
       <rect x="20" y="20" width="1160" height="590" rx="16" fill="none" stroke="rgba(183,110,121,0.25)" stroke-width="2"/>
     </svg>
   `);
@@ -127,7 +132,10 @@ async function generateBrandAssets() {
     ])
     .jpeg({ quality: 92 })
     .toFile(path.join(publicDir, "og-image.jpg"));
-  console.log("Created public/og-image.jpg (1200x630)");
+
+  await sharp(path.join(publicDir, "og-image.jpg"))
+    .toFile(path.join(appDir, "opengraph-image.jpg"));
+  console.log("Created public/og-image.jpg & src/app/opengraph-image.jpg");
 
   // 11. Generate safari-pinned-tab.svg & mask-icon.svg
   const svgMaskContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="#5C2248">
@@ -138,7 +146,7 @@ async function generateBrandAssets() {
   fs.writeFileSync(path.join(publicDir, "mask-icon.svg"), svgMaskContent);
   console.log("Created safari-pinned-tab.svg & mask-icon.svg");
 
-  console.log("All brand assets successfully generated in /public!");
+  console.log("All brand assets successfully updated in public/ and src/app/!");
 }
 
 generateBrandAssets().catch((err) => {
