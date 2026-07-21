@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
@@ -20,14 +20,14 @@ const FAQ_CATEGORIES = [
     title: "Returns & Exchanges",
     faqs: [
       { q: "What is your return policy?", a: "We offer a 15-day hassle-free return policy. Items must be in their original condition with all tags and packaging intact." },
-      { q: "Do you offer lifetime exchange?", a: "Yes! All gold jewelry comes with a lifetime exchange policy. You can exchange your old piece for any new design of equal or higher value." },
+      { q: "Do you offer lifetime exchange?", a: "Yes! All rose-gold jewelry comes with a lifetime exchange policy. You can exchange your old piece for any new design of equal or higher value." },
       { q: "How do I initiate a return?", a: "Simply log into your account, go to 'My Orders', select the item, and click 'Return'. Our team will arrange a pickup within 2-3 days." },
     ],
   },
   {
     title: "Product & Quality",
     faqs: [
-      { q: "Are your products BIS hallmarked?", a: "Yes, all our gold and silver jewelry is BIS hallmarked, guaranteeing the purity of the metal used." },
+      { q: "Are your products BIS hallmarked?", a: "Yes, all our rose-gold and silver jewelry is BIS hallmarked, guaranteeing the purity of the metal used." },
       { q: "Do diamonds come with certification?", a: "All our diamond jewelry above ₹25,000 comes with IGI or GIA certification, verifying the 4Cs of every stone." },
       { q: `How do I care for my ${APP_NAME} jewelry?`, a: "Store in the provided box away from moisture. Clean gently with a soft cloth. Remove before swimming or using chemicals. We recommend annual professional cleaning for diamond pieces." },
     ],
@@ -51,10 +51,10 @@ function FAQItem({ faq }: { faq: { q: string; a: string } }) {
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between py-4 text-left group"
       >
-        <span className={cn("text-sm font-medium transition-colors", open ? "text-gold-dark" : "text-obsidian group-hover:text-gold-dark")}>
+        <span className={cn("text-sm font-medium transition-colors", open ? "text-rose-gold-dark" : "text-deep-plum group-hover:text-rose-gold-dark")}>
           {faq.q}
         </span>
-        <ChevronDown className={cn("w-4 h-4 text-neutral-400 transition-transform duration-300", open && "rotate-180 text-gold")} />
+        <ChevronDown className={cn("w-4 h-4 text-neutral-400 transition-transform duration-300", open && "rotate-180 text-rose-gold")} />
       </button>
       <AnimatePresence>
         {open && (
@@ -78,11 +78,11 @@ function FAQItem({ faq }: { faq: { q: string; a: string } }) {
 export default function FAQPage() {
   return (
     <div className="min-h-screen">
-      <section className="bg-gradient-to-b from-champagne-light to-ivory py-16 md:py-20">
+      <section className="bg-gradient-to-b from-soft-pink-light to-ivory py-16 md:py-20">
         <div className="container-luxury text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <HelpCircle className="w-8 h-8 text-gold mx-auto mb-4" />
-            <h1 className="font-heading text-3xl md:text-5xl text-obsidian">Frequently Asked Questions</h1>
+            <HelpCircle className="w-8 h-8 text-rose-gold mx-auto mb-4" />
+            <h1 className="font-heading text-3xl md:text-5xl text-deep-plum">Frequently Asked Questions</h1>
             <p className="text-neutral-400 mt-3 text-sm">Everything you need to know about {APP_NAME}</p>
           </motion.div>
         </div>
@@ -98,7 +98,7 @@ export default function FAQPage() {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <h2 className="font-heading text-xl text-obsidian mb-4">{category.title}</h2>
+              <h2 className="font-heading text-xl text-deep-plum mb-4">{category.title}</h2>
               <div className="bg-white rounded-xl border border-neutral-100 px-6">
                 {category.faqs.map((faq) => (
                   <FAQItem key={faq.q} faq={faq} />

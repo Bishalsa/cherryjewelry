@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -413,7 +413,7 @@ export default function ProductDetailClient({
                   </p>
                   <p>
                     <strong>Exchanges:</strong> Lifetime exchange available
-                    on all gold jewelry.
+                    on all rose-gold jewelry.
                   </p>
                 </div>
               )}
@@ -425,7 +425,7 @@ export default function ProductDetailClient({
                   </p>
                   <p>
                     <strong>Cleaning:</strong> Gently clean with a soft
-                    cloth. For gold jewelry, use warm soapy water and a soft
+                    cloth. For rose-gold jewelry, use warm soapy water and a soft
                     brush.
                   </p>
                   <p>

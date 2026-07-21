@@ -1,10 +1,10 @@
-// ============================================
+﻿// ============================================
 // Cherry Jewelry — Application Constants
 // ============================================
 
 export const APP_NAME = "Cherry Jewelry";
 export const APP_TAGLINE = "Where Artistry Meets Elegance";
-export const APP_DESCRIPTION = "Discover exquisite handcrafted jewelry — rings, necklaces, earrings & bracelets. BIS Hallmarked gold & certified diamonds. Free shipping above ₹999.";
+export const APP_DESCRIPTION = "Discover exquisite handcrafted jewelry — rings, necklaces, earrings & bracelets. BIS Hallmarked rose-gold & certified diamonds. Free shipping above ₹999.";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cherryjewelry.store";
 export const APP_OG_IMAGE = "/og-image.jpg";
 

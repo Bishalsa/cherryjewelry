@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ export default function LoginPage() {
   if (pageLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-50">
-        <Loader2 className="w-8 h-8 text-gold animate-spin" />
+        <Loader2 className="w-8 h-8 text-rose-gold animate-spin" />
       </div>
     );
   }
@@ -70,7 +70,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-100 via-white to-neutral-50 flex items-center justify-center p-4">
       {/* Glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-gold/5 blur-[120px] rounded-full pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -79,10 +79,10 @@ export default function LoginPage() {
         className="w-full max-w-md bg-white border border-neutral-100 p-8 md:p-10 rounded-3xl shadow-luxury relative overflow-hidden"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-gold/10 rounded-2xl mb-4 border border-gold/25">
-            <Sparkles className="w-6 h-6 text-gold-dark" />
+          <div className="inline-flex p-3 bg-rose-gold/10 rounded-2xl mb-4 border border-rose-gold/25">
+            <Sparkles className="w-6 h-6 text-rose-gold-dark" />
           </div>
-          <h1 className="font-heading text-2xl md:text-3xl text-obsidian tracking-wide">
+          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide">
             Sign In
           </h1>
           <p className="text-neutral-500 text-sm mt-2">
@@ -103,7 +103,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-gold focus:bg-white transition-all text-obsidian placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-obsidian text-white font-medium rounded-xl text-sm tracking-wide shadow-sm hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 bg-deep-plum text-white font-medium rounded-xl text-sm tracking-wide shadow-sm hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <>
@@ -130,7 +130,7 @@ export default function LoginPage() {
         <div className="mt-8 text-center border-t border-neutral-100 pt-6">
           <p className="text-neutral-500 text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-gold-dark hover:underline font-semibold transition-all">
+            <Link href="/register" className="text-rose-gold-dark hover:underline font-semibold transition-all">
               Sign Up
             </Link>
           </p>

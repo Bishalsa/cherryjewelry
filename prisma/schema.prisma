@@ -151,12 +151,17 @@ model Category {
   slug        String     @unique
   description String?
   image       String?
+  banner      String?
   parentId    String?
   parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
   children    Category[] @relation("CategoryHierarchy")
   products    Product[]
   position    Int        @default(0)
   isActive    Boolean    @default(true)
+  isFeatured  Boolean    @default(false)
+  isArchived  Boolean    @default(false)
+  metaTitle   String?
+  metaDescription String?
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
@@ -175,9 +180,18 @@ model Product {
   compareAtPrice   Decimal?         @db.Decimal(10, 2)
   costPrice        Decimal?         @db.Decimal(10, 2)
   sku              String           @unique
+  barcode          String?
   material         String
   weight           String?
   purity           String?
+  stoneType        String?
+  stoneWeight      String?
+  dimensions       String?
+  careInstructions String?
+  shippingDetails  String?
+  warranty         String?
+  lowStockWarning  Int?             @default(5)
+  status           String           @default("PUBLISHED")
   categoryId       String
   category         Category         @relation(fields: [categoryId], references: [id])
   images           ProductImage[]
@@ -188,6 +202,9 @@ model Product {
 
   metaTitle        String?
   metaDescription  String?
+  ogImage          String?
+  canonicalUrl     String?
+  keywords         String[]         @default([])
 
   isFeatured       Boolean          @default(false)
   isNewArrival     Boolean          @default(false)

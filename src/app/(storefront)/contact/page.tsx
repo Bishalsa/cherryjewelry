@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -16,11 +16,11 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen">
-      <section className="bg-gradient-to-b from-champagne-light to-ivory py-16 md:py-20">
+      <section className="bg-gradient-to-b from-soft-pink-light to-ivory py-16 md:py-20">
         <div className="container-luxury text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <p className="text-xs tracking-[0.3em] uppercase text-gold-dark mb-3">Get in Touch</p>
-            <h1 className="font-heading text-3xl md:text-5xl text-obsidian">Contact Us</h1>
+            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold-dark mb-3">Get in Touch</p>
+            <h1 className="font-heading text-3xl md:text-5xl text-deep-plum">Contact Us</h1>
             <p className="text-neutral-400 mt-3 text-sm max-w-md mx-auto">
               Have a question? We&apos;d love to hear from you. Reach out and we&apos;ll get back within 24 hours.
             </p>
@@ -44,13 +44,13 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 className="flex items-start gap-4 p-4 rounded-xl bg-neutral-50"
               >
-                <div className="w-10 h-10 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4 text-gold-dark" />
+                <div className="w-10 h-10 bg-rose-gold/10 rounded-lg flex items-center justify-center shrink-0">
+                  <Icon className="w-4 h-4 text-rose-gold-dark" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-obsidian">{label}</h4>
+                  <h4 className="text-sm font-medium text-deep-plum">{label}</h4>
                   {href ? (
-                    <a href={href} className="text-sm text-neutral-400 hover:text-gold transition-colors">{value}</a>
+                    <a href={href} className="text-sm text-neutral-400 hover:text-rose-gold transition-colors">{value}</a>
                   ) : (
                     <p className="text-sm text-neutral-400">{value}</p>
                   )}
@@ -58,8 +58,8 @@ export default function ContactPage() {
               </motion.div>
             ))}
 
-            <div className="p-4 rounded-xl bg-champagne-light/50">
-              <h4 className="text-sm font-medium text-obsidian mb-1">Business Hours</h4>
+            <div className="p-4 rounded-xl bg-soft-pink-light/50">
+              <h4 className="text-sm font-medium text-deep-plum mb-1">Business Hours</h4>
               <p className="text-xs text-neutral-400">Mon - Sat: 10:00 AM - 7:00 PM IST</p>
               <p className="text-xs text-neutral-400">Sunday: Closed</p>
             </div>
@@ -76,41 +76,41 @@ export default function ContactPage() {
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-obsidian mb-1.5">First Name</label>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-deep-plum mb-1.5">First Name</label>
                   <input
                     id="firstName"
                     type="text"
                     required
-                    className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-rose-gold transition-colors"
                     placeholder="John"
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-obsidian mb-1.5">Last Name</label>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-deep-plum mb-1.5">Last Name</label>
                   <input
                     id="lastName"
                     type="text"
                     required
-                    className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-gold transition-colors"
+                    className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-rose-gold transition-colors"
                     placeholder="Doe"
                   />
                 </div>
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-obsidian mb-1.5">Email</label>
+                <label htmlFor="email" className="block text-sm font-medium text-deep-plum mb-1.5">Email</label>
                 <input
                   id="email"
                   type="email"
                   required
-                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-gold transition-colors"
+                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-rose-gold transition-colors"
                   placeholder="john@example.com"
                 />
               </div>
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-obsidian mb-1.5">Subject</label>
+                <label htmlFor="subject" className="block text-sm font-medium text-deep-plum mb-1.5">Subject</label>
                 <select
                   id="subject"
-                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-gold transition-colors bg-white"
+                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-rose-gold transition-colors bg-white"
                 >
                   <option>General Inquiry</option>
                   <option>Order Support</option>
@@ -121,19 +121,19 @@ export default function ContactPage() {
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-obsidian mb-1.5">Message</label>
+                <label htmlFor="message" className="block text-sm font-medium text-deep-plum mb-1.5">Message</label>
                 <textarea
                   id="message"
                   required
                   rows={5}
-                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-gold transition-colors resize-none"
+                  className="w-full px-4 py-3 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:border-rose-gold transition-colors resize-none"
                   placeholder="Tell us how we can help..."
                 />
               </div>
 
               <button
                 type="submit"
-                className="inline-flex items-center gap-2 bg-obsidian text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors btn-glow"
+                className="inline-flex items-center gap-2 bg-deep-plum text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors btn-glow"
               >
                 {submitted ? (
                   <>

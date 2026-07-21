@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -45,9 +45,9 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-obsidian to-black flex items-center justify-center p-4">
-      {/* Background ambient gold glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-deep-plum to-black flex items-center justify-center p-4">
+      {/* Background ambient rose-gold glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-rose-gold/5 blur-[120px] rounded-full pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -56,11 +56,11 @@ export default function AdminLoginPage() {
         className="w-full max-w-md bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] p-8 md:p-10 rounded-3xl shadow-luxury relative overflow-hidden"
       >
         {/* Decorative border line */}
-        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+        <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-rose-gold/40 to-transparent" />
 
         <div className="text-center mb-10">
-          <div className="inline-flex p-3 bg-gradient-to-br from-gold/25 to-gold/5 rounded-2xl border border-gold/30 mb-4 shadow-glow">
-            <Gem className="w-8 h-8 text-gold" />
+          <div className="inline-flex p-3 bg-gradient-to-br from-rose-gold/25 to-rose-gold/5 rounded-2xl border border-rose-gold/30 mb-4 shadow-glow">
+            <Gem className="w-8 h-8 text-rose-gold" />
           </div>
           <h1 className="font-heading text-2xl md:text-3xl text-white tracking-wide">
             {APP_NAME} Admin
@@ -83,7 +83,7 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@yourdomain.com"
-                className="w-full pl-11 pr-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold focus:bg-white/[0.04] transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-rose-gold focus:bg-white/[0.04] transition-all"
               />
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-11 pr-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-gold focus:bg-white/[0.04] transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-white/[0.02] border border-white/[0.08] rounded-xl text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-rose-gold focus:bg-white/[0.04] transition-all"
               />
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-gradient-to-r from-gold-dark via-gold to-gold-dark text-obsidian font-semibold rounded-xl text-sm tracking-wide shadow-glow hover:opacity-95 active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-gradient-to-r from-rose-gold-dark via-rose-gold to-rose-gold-dark text-deep-plum font-semibold rounded-xl text-sm tracking-wide shadow-glow hover:opacity-95 active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

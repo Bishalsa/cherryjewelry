@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
@@ -165,7 +165,7 @@ function HeroSection() {
           >
             Where Artistry
             <br />
-            Meets <span className="text-gradient-gold italic">Elegance</span>
+            Meets <span className="text-gradient-rose italic">Elegance</span>
           </motion.h1>
 
           <motion.p
@@ -414,7 +414,7 @@ function LimitedOffer() {
           </div>
 
           <h2 className="font-heading text-3xl md:text-5xl text-white mb-4">
-            Get <span className="text-gradient-gold">20% Off</span> Your First Order
+            Get <span className="text-gradient-rose">20% Off</span> Your First Order
           </h2>
           <p className="text-neutral-400 text-sm md:text-base max-w-lg mx-auto mb-8">
             Use code <span className="font-mono text-rose-gold-light font-semibold bg-rose-gold/10 px-2 py-0.5 rounded">CHERRY20</span> at checkout. Offer ends soon!
@@ -462,7 +462,7 @@ function WhyChooseUs() {
       icon: <Gem className="w-6 h-6" />,
       title: "BIS Hallmarked Gold",
       description:
-        "Every gold piece is certified with BIS hallmark, guaranteeing purity and authenticity you can trust.",
+        "Every rose-gold piece is certified with BIS hallmark, guaranteeing purity and authenticity you can trust.",
     },
     {
       icon: <Award className="w-6 h-6" />,
@@ -480,7 +480,7 @@ function WhyChooseUs() {
       icon: <Shield className="w-6 h-6" />,
       title: "Lifetime Exchange",
       description:
-        "We stand behind our quality. Enjoy lifetime exchange on all gold jewelry at full value.",
+        "We stand behind our quality. Enjoy lifetime exchange on all rose-gold jewelry at full value.",
     },
   ];
 

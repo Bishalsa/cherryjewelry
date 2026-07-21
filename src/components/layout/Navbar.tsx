@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -215,7 +215,7 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                <div className="divider-gold my-6" />
+                <div className="divider-rose-gold my-6" />
 
                 <div className="space-y-1">
                   {[

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -51,7 +51,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neutral-100 via-white to-neutral-50 flex items-center justify-center p-4">
       {/* Ambient background glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-gold/5 blur-[120px] rounded-full pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -60,10 +60,10 @@ export default function RegisterPage() {
         className="w-full max-w-md bg-white border border-neutral-100 p-8 md:p-10 rounded-3xl shadow-luxury relative overflow-hidden"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-gold/10 rounded-2xl mb-4 border border-gold/25">
-            <Sparkles className="w-6 h-6 text-gold-dark" />
+          <div className="inline-flex p-3 bg-rose-gold/10 rounded-2xl mb-4 border border-rose-gold/25">
+            <Sparkles className="w-6 h-6 text-rose-gold-dark" />
           </div>
-          <h1 className="font-heading text-2xl md:text-3xl text-obsidian tracking-wide">
+          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum tracking-wide">
             Create Account
           </h1>
           <p className="text-neutral-500 text-sm mt-2">
@@ -85,7 +85,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g. Priya Sharma"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-gold focus:bg-white transition-all text-obsidian placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="you@example.com"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-gold focus:bg-white transition-all text-obsidian placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
               />
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function RegisterPage() {
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-gold focus:bg-white transition-all text-obsidian placeholder-neutral-400"
+                className="w-full pl-11 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-rose-gold focus:bg-white transition-all text-deep-plum placeholder-neutral-400"
               />
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 mt-2 bg-obsidian text-white font-medium rounded-xl text-sm tracking-wide shadow-sm hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 mt-2 bg-deep-plum text-white font-medium rounded-xl text-sm tracking-wide shadow-sm hover:bg-neutral-800 transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
         <div className="mt-8 text-center border-t border-neutral-100 pt-6">
           <p className="text-neutral-500 text-sm">
             Already have an account?{" "}
-            <Link href="/login" className="text-gold-dark hover:underline font-semibold transition-all">
+            <Link href="/login" className="text-rose-gold-dark hover:underline font-semibold transition-all">
               Sign In
             </Link>
           </p>

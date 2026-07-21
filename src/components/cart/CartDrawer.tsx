@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -251,10 +251,10 @@ export default function CartDrawer() {
                       )}
                     </span>
                   </div>
-                  <div className="divider-gold my-2" />
+                  <div className="divider-rose-gold my-2" />
                   <div className="flex justify-between font-semibold text-base">
                     <span>Total</span>
-                    <span className="text-gold-dark">{formatPrice(total)}</span>
+                    <span className="text-rose-gold-dark">{formatPrice(total)}</span>
                   </div>
                 </div>
 

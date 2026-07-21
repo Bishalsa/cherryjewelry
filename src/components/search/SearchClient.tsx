@@ -72,14 +72,14 @@ export default function SearchClient({
   return (
     <>
       {/* Search Header */}
-      <section className="bg-gradient-to-b from-champagne-light to-ivory py-12 md:py-16">
+      <section className="bg-gradient-to-b from-soft-pink/30 to-ivory py-12 md:py-16">
         <div className="container-luxury">
           <div className="max-w-2xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <h1 className="font-heading text-2xl md:text-4xl text-obsidian text-center mb-8">
+              <h1 className="font-heading text-2xl md:text-4xl text-deep-plum text-center mb-8">
                 Find Your Perfect Piece
               </h1>
               <div className="relative">
@@ -90,7 +90,7 @@ export default function SearchClient({
                   onChange={(e) => handleInputChange(e.target.value)}
                   placeholder="Search for rings, necklaces, earrings..."
                   autoFocus
-                  className="w-full py-4 pl-12 pr-12 bg-white border border-neutral-200 rounded-2xl text-base focus:outline-none focus:border-gold focus:shadow-glow transition-all"
+                  className="w-full py-4 pl-12 pr-12 bg-white border border-neutral-200 rounded-2xl text-base focus:outline-none focus:border-rose-gold focus:shadow-glow transition-all"
                 />
                 {inputValue && (
                   <button
@@ -119,7 +119,7 @@ export default function SearchClient({
                   <button
                     key={term}
                     onClick={() => handleQuickSearch(term)}
-                    className="px-4 py-2 bg-white border border-neutral-200 hover:border-gold hover:bg-gold/5 rounded-full text-sm transition-colors"
+                    className="px-4 py-2 bg-white border border-neutral-200 hover:border-rose-gold hover:bg-rose-gold/5 rounded-full text-sm transition-colors"
                   >
                     {term}
                   </button>
@@ -141,12 +141,12 @@ export default function SearchClient({
                 ].map((cat) => (
                   <Link
                     key={cat.slug}
-                    href={`/collections?category=${cat.slug}`}
-                    className="flex items-center gap-3 p-4 bg-white border border-neutral-100 rounded-xl hover:border-gold/30 hover:shadow-soft transition-all group"
+                    href={`/collections/${cat.slug}`}
+                    className="flex items-center gap-3 p-4 bg-white border border-neutral-100 rounded-xl hover:border-rose-gold/30 hover:shadow-soft transition-all group"
                   >
                     <span className="text-2xl">{cat.emoji}</span>
                     <div className="text-left">
-                      <p className="text-sm font-medium text-obsidian group-hover:text-gold-dark transition-colors">
+                      <p className="text-sm font-medium text-deep-plum group-hover:text-rose-gold-dark transition-colors">
                         {cat.name}
                       </p>
                       <p className="text-xs text-neutral-400">Explore →</p>
@@ -163,7 +163,7 @@ export default function SearchClient({
               <p className="text-sm text-neutral-400">
                 {results.length} result{results.length !== 1 ? "s" : ""} for
                 &ldquo;
-                <span className="text-obsidian font-medium">
+                <span className="text-deep-plum font-medium">
                   {initialQuery}
                 </span>
                 &rdquo;
@@ -183,7 +183,7 @@ export default function SearchClient({
             {results.length === 0 ? (
               <div className="text-center py-20">
                 <p className="text-5xl mb-4">🔍</p>
-                <h3 className="font-heading text-xl text-obsidian mb-2">
+                <h3 className="font-heading text-xl text-deep-plum mb-2">
                   No results found
                 </h3>
                 <p className="text-sm text-neutral-400 mb-6">
@@ -191,7 +191,7 @@ export default function SearchClient({
                 </p>
                 <Link
                   href="/collections"
-                  className="inline-flex items-center gap-2 text-sm text-gold hover:text-gold-dark transition-colors"
+                  className="inline-flex items-center gap-2 text-sm text-rose-gold hover:text-rose-gold-dark transition-colors"
                 >
                   Browse Collections <ArrowRight className="w-3 h-3" />
                 </Link>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-4">
-        <Loader2 className="w-10 h-10 text-gold animate-spin" />
+        <Loader2 className="w-10 h-10 text-rose-gold animate-spin" />
         <p className="text-neutral-400 text-sm font-medium">Loading store metrics...</p>
       </div>
     );
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-heading text-3xl text-obsidian">Dashboard Overview</h1>
+          <h1 className="font-heading text-3xl text-deep-plum">Dashboard Overview</h1>
           <p className="text-neutral-500 mt-2">Welcome back! Here&apos;s what&apos;s happening with your store today.</p>
         </div>
         <button
@@ -121,8 +121,8 @@ export default function AdminDashboard() {
               className="bg-white p-6 rounded-2xl shadow-card border border-neutral-100"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-gold-dark" />
+                <div className="w-10 h-10 bg-rose-gold/10 rounded-xl flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-rose-gold-dark" />
                 </div>
                 <div className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${stat.isPositive ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'}`}>
                   {stat.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <h3 className="text-neutral-500 text-sm font-medium mb-1">{stat.label}</h3>
-              <p className="text-2xl font-semibold text-obsidian">
+              <p className="text-2xl font-semibold text-deep-plum">
                 {isCurrency ? formatPrice(stat.value) : stat.value}
               </p>
             </motion.div>
@@ -142,8 +142,8 @@ export default function AdminDashboard() {
         {/* Recent Orders */}
         <div className="lg:col-span-2 bg-white rounded-2xl shadow-card border border-neutral-100 overflow-hidden">
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-            <h2 className="font-heading text-xl text-obsidian">Recent Orders</h2>
-            <Link href="/admin/orders" className="text-sm text-gold-dark hover:text-gold transition-colors font-medium">
+            <h2 className="font-heading text-xl text-deep-plum">Recent Orders</h2>
+            <Link href="/admin/orders" className="text-sm text-rose-gold-dark hover:text-rose-gold transition-colors font-medium">
               View All
             </Link>
           </div>
@@ -168,10 +168,10 @@ export default function AdminDashboard() {
                 ) : (
                   recentOrders.map((order) => (
                     <tr key={order.id} className="hover:bg-neutral-50/50 transition-colors">
-                      <td className="px-6 py-4 text-sm font-medium text-obsidian">{order.id}</td>
+                      <td className="px-6 py-4 text-sm font-medium text-deep-plum">{order.id}</td>
                       <td className="px-6 py-4 text-sm text-neutral-600">{order.customer}</td>
                       <td className="px-6 py-4 text-sm text-neutral-400">{order.date}</td>
-                      <td className="px-6 py-4 text-sm text-obsidian font-medium">{formatPrice(order.amount)}</td>
+                      <td className="px-6 py-4 text-sm text-deep-plum font-medium">{formatPrice(order.amount)}</td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
                           order.status === 'DELIVERED' || order.status === 'Delivered' ? 'bg-success/10 text-success' :
@@ -193,7 +193,7 @@ export default function AdminDashboard() {
         {/* Top Products */}
         <div className="bg-white rounded-2xl shadow-card border border-neutral-100 p-6 flex flex-col justify-between">
           <div>
-            <h2 className="font-heading text-xl text-obsidian mb-6">Top Products</h2>
+            <h2 className="font-heading text-xl text-deep-plum mb-6">Top Products</h2>
             <div className="space-y-6">
               {topProducts.map((product, i) => (
                 <div key={i} className="flex items-center gap-4">
@@ -201,11 +201,11 @@ export default function AdminDashboard() {
                     <span className="text-xl opacity-40">💍</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-obsidian truncate">{product.name}</p>
+                    <p className="text-sm font-medium text-deep-plum truncate">{product.name}</p>
                     <p className="text-xs text-neutral-400 mt-0.5">{product.sales} sales</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-obsidian">{formatPrice(product.revenue)}</p>
+                    <p className="text-sm font-semibold text-deep-plum">{formatPrice(product.revenue)}</p>
                   </div>
                 </div>
               ))}

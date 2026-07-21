@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight } from "lucide-react";
@@ -113,18 +113,18 @@ export default async function ProductPage({
       {/* Breadcrumbs */}
       <div className="container-luxury py-4">
         <nav className="flex items-center gap-2 text-xs text-neutral-400">
-          <Link href="/" className="hover:text-gold transition-colors">
+          <Link href="/" className="hover:text-rose-gold transition-colors">
             Home
           </Link>
           <ChevronRight className="w-3 h-3" />
           <Link
             href="/collections"
-            className="hover:text-gold transition-colors"
+            className="hover:text-rose-gold transition-colors"
           >
             Collections
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-obsidian">{product.name}</span>
+          <span className="text-deep-plum">{product.name}</span>
         </nav>
       </div>
 

@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from "next";
+﻿import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Playfair_Display, DM_Sans } from "next/font/google";
 import { APP_NAME, APP_TAGLINE, APP_DESCRIPTION, APP_URL, APP_OG_IMAGE } from "@/lib/constants";
 import Script from "next/script";
@@ -67,13 +67,13 @@ export const metadata: Metadata = {
     "Cherry Jewelry",
     "handcrafted jewelry India",
     "luxury jewelry online",
-    "BIS hallmarked gold jewelry",
+    "BIS hallmarked rose-gold jewelry",
     "certified diamond jewelry",
     // Category keywords
-    "gold rings online",
+    "rose-gold rings online",
     "diamond necklace",
     "silver earrings",
-    "gold bracelets",
+    "rose-gold bracelets",
     "mangalsutra online",
     "jewelry pendants",
     // Long-tail / gift intent

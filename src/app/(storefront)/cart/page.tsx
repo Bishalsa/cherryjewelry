@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 // ============================================
 // Cherry Jewelry — Cart Page (/cart)
@@ -400,7 +400,7 @@ export default function CartPage() {
               <div className="border-t border-neutral-100 p-5 hidden lg:block">
                 <div className="space-y-3">
                   {[
-                    { icon: Shield, label: "BIS Hallmarked", sub: "100% certified gold & diamonds" },
+                    { icon: Shield, label: "BIS Hallmarked", sub: "100% certified rose-gold & diamonds" },
                     { icon: Truck, label: "Free Shipping", sub: "On orders above ₹999" },
                     { icon: RefreshCw, label: "15-Day Returns", sub: "No questions asked" },
                   ].map(({ icon: Icon, label, sub }) => (

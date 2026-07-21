@@ -240,7 +240,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Keep backward compat alias */
-.animate-pulse-gold {
+.animate-pulse-rose-gold {
   animation: pulse-rose 2s ease-in-out infinite;
 }
 
@@ -266,7 +266,7 @@ h1, h2, h3, h4, h5, h6 {
    ============================================ */
 
 /* Rose gradient text */
-.text-gradient-gold {
+.text-gradient-rose-gold {
   background: linear-gradient(135deg, var(--color-rose-gold-dark), var(--color-rose-gold), var(--color-cherry-ruby));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -282,7 +282,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Elegant divider */
-.divider-gold {
+.divider-rose-gold {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--color-rose-gold), transparent);
 }
