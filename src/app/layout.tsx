@@ -245,13 +245,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Favicon system */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5C2248" />
-        <link rel="manifest" href="/site.webmanifest" />
+        {/* Favicon & PWA metadata handled via Next.js metadata API */}
         <meta name="msapplication-TileColor" content="#5C2248" />
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
 
