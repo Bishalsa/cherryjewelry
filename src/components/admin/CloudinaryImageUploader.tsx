@@ -41,6 +41,26 @@ export default function CloudinaryImageUploader({
     setProgress(10);
     const newUrls: string[] = [...images];
 
+    // Determine target folder path
+    let targetFolder = "cherry-jewelry/products";
+    if (folder.includes("/")) {
+      targetFolder = folder;
+    } else if (folder !== "products") {
+      targetFolder = `cherry-jewelry/${folder}`;
+    }
+
+    // Try fetching backend signature for direct signed upload
+    let sigData: { signature: string; timestamp: number; apiKey: string; cloudName: string; folder: string } | null = null;
+    try {
+      const sigRes = await fetch(`/api/admin/media/signature?folder=${encodeURIComponent(targetFolder)}`);
+      const sigJson = await sigRes.json();
+      if (sigJson.success && sigJson.signature) {
+        sigData = sigJson;
+      }
+    } catch {
+      // Ignore signature error; will fallback to server upload
+    }
+
     try {
       for (let i = 0; i < fileArray.length; i++) {
         const file = fileArray[i];
@@ -51,21 +71,66 @@ export default function CloudinaryImageUploader({
           continue;
         }
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("folder", folder);
+        let uploadedUrl: string | null = null;
 
-        const res = await fetch("/api/admin/media/upload", {
-          method: "POST",
-          body: formData,
-        });
+        // Strategy A: Direct Signed Upload to Cloudinary CDN
+        if (sigData) {
+          try {
+            const directData = new FormData();
+            directData.append("file", file);
+            directData.append("api_key", sigData.apiKey);
+            directData.append("timestamp", sigData.timestamp.toString());
+            directData.append("signature", sigData.signature);
+            directData.append("folder", sigData.folder);
 
-        const data = await res.json();
-        if (data.success && data.url) {
-          newUrls.push(data.url);
+            const cdnRes = await fetch(`https://api.cloudinary.com/v1_1/${sigData.cloudName}/image/upload`, {
+              method: "POST",
+              body: directData,
+            });
+
+            const cdnJson = await cdnRes.json();
+            if (cdnJson.secure_url) {
+              uploadedUrl = cdnJson.secure_url;
+            }
+          } catch (cdnErr) {
+            console.warn("Direct signed upload failed, falling back to server route", cdnErr);
+          }
+        }
+
+        // Strategy B: Fallback to Next.js Server Route Upload
+        if (!uploadedUrl) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("folder", folder);
+
+          const res = await fetch("/api/admin/media/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            let errMsg = `Upload failed with status ${res.status}`;
+            try {
+              const errData = await res.json();
+              errMsg = errData.error || errMsg;
+            } catch {
+              // HTML or server error
+            }
+            toast.error(errMsg);
+            continue;
+          }
+
+          const data = await res.json();
+          if (data.success && data.url) {
+            uploadedUrl = data.url;
+          } else {
+            toast.error(data.error || `Failed to upload ${file.name}`);
+          }
+        }
+
+        if (uploadedUrl) {
+          newUrls.push(uploadedUrl);
           setProgress(Math.round(((i + 1) / fileArray.length) * 100));
-        } else {
-          toast.error(data.error || `Failed to upload ${file.name}`);
         }
       }
 
@@ -73,9 +138,9 @@ export default function CloudinaryImageUploader({
         onChange(newUrls);
         toast.success("Images uploaded successfully to Cloudinary");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Upload handler error:", err);
-      toast.error("Network error during file upload");
+      toast.error(err?.message || "Network error during file upload");
     } finally {
       setUploading(false);
       setProgress(0);

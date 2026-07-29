@@ -41,6 +41,7 @@ interface VariantItem {
 interface CategoryItem {
   id: string;
   name: string;
+  slug?: string;
 }
 
 interface ProductItem {
@@ -990,7 +991,7 @@ export default function AdminProductsPage() {
                     <CloudinaryImageUploader
                       images={formData.images}
                       onChange={(urls) => setFormData({ ...formData, images: urls })}
-                      folder="products"
+                      folder={(categories.find(c => c.id === formData.categoryId)?.slug || categories.find(c => c.id === formData.categoryId)?.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "products") as any}
                       maxFiles={8}
                     />
                   </div>

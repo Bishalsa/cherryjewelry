@@ -24,7 +24,39 @@ export const CLOUDINARY_FOLDERS = {
   SEO: "cherry-jewelry/seo",
   LOGOS: "cherry-jewelry/logos",
   FAVICON: "cherry-jewelry/favicon",
+  RINGS: "cherry-jewelry/products/rings",
+  NECKLACES: "cherry-jewelry/products/necklaces",
+  EARRINGS: "cherry-jewelry/products/earrings",
+  BRACELETS: "cherry-jewelry/products/bracelets",
+  PENDANTS: "cherry-jewelry/products/pendants",
+  BANGLES: "cherry-jewelry/products/bangles",
+  ANKLETS: "cherry-jewelry/products/anklets",
+  MANGALSUTRA: "cherry-jewelry/products/mangalsutra",
 };
+
+/**
+ * Generate a signed upload signature for direct browser uploads
+ */
+export function generateUploadSignature(folder: string = "cherry-jewelry/products") {
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const paramsToSign = {
+    timestamp: timestamp,
+    folder: folder,
+  };
+
+  const signature = cloudinary.utils.api_sign_request(
+    paramsToSign,
+    process.env.CLOUDINARY_API_SECRET || ""
+  );
+
+  return {
+    timestamp,
+    signature,
+    apiKey: process.env.CLOUDINARY_API_KEY || "",
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    folder,
+  };
+}
 
 /**
  * Upload a Buffer or Base64 string to Cloudinary

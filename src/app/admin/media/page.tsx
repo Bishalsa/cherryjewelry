@@ -17,7 +17,15 @@ import CloudinaryImageUploader from "@/components/admin/CloudinaryImageUploader"
 import { cn } from "@/lib/utils";
 
 const FOLDERS = [
-  { id: "products", label: "Products", path: "cherry-jewelry/products" },
+  { id: "products", label: "All Products", path: "cherry-jewelry/products" },
+  { id: "rings", label: "Rings 💍", path: "cherry-jewelry/products/rings" },
+  { id: "necklaces", label: "Necklaces 📿", path: "cherry-jewelry/products/necklaces" },
+  { id: "earrings", label: "Earrings ✨", path: "cherry-jewelry/products/earrings" },
+  { id: "bracelets", label: "Bracelets ⭐", path: "cherry-jewelry/products/bracelets" },
+  { id: "pendants", label: "Pendants 💎", path: "cherry-jewelry/products/pendants" },
+  { id: "bangles", label: "Bangles 🌟", path: "cherry-jewelry/products/bangles" },
+  { id: "anklets", label: "Anklets 🦶", path: "cherry-jewelry/products/anklets" },
+  { id: "mangalsutra", label: "Mangalsutra 🪷", path: "cherry-jewelry/products/mangalsutra" },
   { id: "collections", label: "Collections", path: "cherry-jewelry/collections" },
   { id: "banners", label: "Banners", path: "cherry-jewelry/banners" },
   { id: "homepage", label: "Homepage Assets", path: "cherry-jewelry/homepage" },
@@ -105,7 +113,7 @@ export default function AdminMediaPage() {
         <CloudinaryImageUploader
           images={[]}
           onChange={() => fetchMedia()}
-          folder={selectedFolder as any}
+          folder={currentFolderConfig.path as any}
           maxFiles={10}
         />
       </div>
