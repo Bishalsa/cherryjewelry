@@ -143,6 +143,23 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
+/* Ensure inputs, selects, and textareas always have high-contrast readable text */
+input, select, textarea {
+  color: var(--color-deep-plum-dark);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  color: var(--color-ivory);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-neutral-400);
+}
+
+
 /* ============================================
    Glassmorphism Utilities (Crisp High-Contrast Surfaces)
    ============================================ */

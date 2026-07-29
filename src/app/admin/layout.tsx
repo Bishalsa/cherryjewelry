@@ -12,7 +12,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-neutral-50/50 flex">
+    <div data-theme="light" className="min-h-screen bg-neutral-50/50 flex text-deep-plum">
       <AdminSidebar />
       <div className="flex-1 lg:ml-64 pt-16 lg:pt-0 flex flex-col min-w-0">
         <AdminHeader />

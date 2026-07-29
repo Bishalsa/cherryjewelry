@@ -615,7 +615,7 @@ export default function AdminProductsPage() {
               initial={{ scale: 0.95, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              className="bg-white rounded-3xl shadow-luxury border border-neutral-100 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative z-10 p-6 md:p-8 space-y-6"
+              className="bg-white rounded-3xl shadow-luxury border border-neutral-100 w-full max-w-3xl max-h-[90vh] overflow-y-auto relative z-10 p-6 md:p-8 space-y-6 text-deep-plum"
             >
               {/* Header */}
               <div className="flex items-center justify-between border-b border-neutral-100 pb-4">

@@ -69,14 +69,19 @@ export default function CloudinaryImageUploader({
         }
       }
 
-      onChange(newUrls);
-      toast.success("Images uploaded successfully to Cloudinary");
+      if (newUrls.length > images.length) {
+        onChange(newUrls);
+        toast.success("Images uploaded successfully to Cloudinary");
+      }
     } catch (err) {
       console.error("Upload handler error:", err);
       toast.error("Network error during file upload");
     } finally {
       setUploading(false);
       setProgress(0);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
   };
 

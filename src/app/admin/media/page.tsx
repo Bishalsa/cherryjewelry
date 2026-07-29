@@ -138,7 +138,7 @@ export default function AdminMediaPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search assets by file ID..."
-              className="w-full pl-10 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+              className="w-full pl-10 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold text-deep-plum font-medium"
             />
           </div>
           <div className="text-xs text-neutral-400">

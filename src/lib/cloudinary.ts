@@ -44,7 +44,7 @@ export async function uploadToCloudinary(
           folder: targetFolder,
           public_id: options.publicId,
           tags: options.tags || ["cherry-jewelry"],
-          resource_type: "auto",
+          resource_type: "image",
         },
         (error, result) => {
           if (error || !result) return reject(error || new Error("Upload failed"));
@@ -58,7 +58,7 @@ export async function uploadToCloudinary(
           folder: targetFolder,
           public_id: options.publicId,
           tags: options.tags || ["cherry-jewelry"],
-          resource_type: "auto",
+          resource_type: "image",
         },
         (error, result) => {
           if (error || !result) return reject(error || new Error("Upload failed"));
@@ -94,6 +94,7 @@ export async function deleteFromCloudinary(publicId: string): Promise<boolean> {
 export async function listCloudinaryResources(folderPrefix = "cherry-jewelry", maxResults = 100) {
   try {
     const result = await cloudinary.api.resources({
+      resource_type: "image",
       type: "upload",
       prefix: folderPrefix,
       max_results: maxResults,
