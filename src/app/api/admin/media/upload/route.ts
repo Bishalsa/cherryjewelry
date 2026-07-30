@@ -1,11 +1,22 @@
 import { NextResponse } from "next/server";
-import { uploadToCloudinary, CLOUDINARY_FOLDERS } from "@/lib/cloudinary";
+import { uploadToCloudinary } from "@/lib/cloudinary";
+import { resolveCloudinaryFolder } from "@/lib/cloudinary-folders";
 
+/**
+ * POST /api/admin/media/upload
+ *
+ * Server-side fallback upload route. Called only when the browser's direct
+ * signed CDN upload fails. Uses the canonical folder resolver so the path
+ * is always correct regardless of what string is passed.
+ *
+ * Vercel limit: 4.5 MB body. For larger files the client should use the
+ * direct signed CDN upload path (Strategy A in CloudinaryImageUploader).
+ */
 export async function POST(req: Request) {
   try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
-    const folderType = (formData.get("folder") as string) || "products";
+    const formData  = await req.formData();
+    const file      = formData.get("file") as File | null;
+    const folderRaw = (formData.get("folder") as string | null) || "products";
 
     if (!file) {
       return NextResponse.json(
@@ -14,62 +25,43 @@ export async function POST(req: Request) {
       );
     }
 
-    // Map folder string to CLOUDINARY_FOLDERS namespace or custom path
-    let targetFolder = CLOUDINARY_FOLDERS.PRODUCTS;
-    if (folderType.includes("/")) {
-      targetFolder = folderType;
-    } else if (folderType === "collections") {
-      targetFolder = CLOUDINARY_FOLDERS.COLLECTIONS;
-    } else if (folderType === "banners") {
-      targetFolder = CLOUDINARY_FOLDERS.BANNERS;
-    } else if (folderType === "homepage") {
-      targetFolder = CLOUDINARY_FOLDERS.HOMEPAGE;
-    } else if (folderType === "blog") {
-      targetFolder = CLOUDINARY_FOLDERS.BLOG;
-    } else if (folderType === "seo") {
-      targetFolder = CLOUDINARY_FOLDERS.SEO;
-    } else if (folderType === "logos") {
-      targetFolder = CLOUDINARY_FOLDERS.LOGOS;
-    } else if (folderType === "rings") {
-      targetFolder = CLOUDINARY_FOLDERS.RINGS;
-    } else if (folderType === "necklaces") {
-      targetFolder = CLOUDINARY_FOLDERS.NECKLACES;
-    } else if (folderType === "earrings") {
-      targetFolder = CLOUDINARY_FOLDERS.EARRINGS;
-    } else if (folderType === "bracelets") {
-      targetFolder = CLOUDINARY_FOLDERS.BRACELETS;
-    } else if (folderType === "pendants") {
-      targetFolder = CLOUDINARY_FOLDERS.PENDANTS;
-    } else if (folderType === "bangles") {
-      targetFolder = CLOUDINARY_FOLDERS.BANGLES;
-    } else if (folderType === "anklets") {
-      targetFolder = CLOUDINARY_FOLDERS.ANKLETS;
-    } else if (folderType === "mangalsutra") {
-      targetFolder = CLOUDINARY_FOLDERS.MANGALSUTRA;
-    } else if (folderType) {
-      targetFolder = `cherry-jewelry/products/${folderType}`;
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json(
+        { success: false, error: `Unsupported file type: ${file.type}` },
+        { status: 400 }
+      );
     }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // 4.5 MB hard limit for Vercel server route
+    const MAX_BYTES = 4.5 * 1024 * 1024;
+    if (file.size > MAX_BYTES) {
+      return NextResponse.json(
+        { success: false, error: `File too large for server route (${(file.size / 1024 / 1024).toFixed(1)} MB). Use the direct CDN upload path.` },
+        { status: 413 }
+      );
+    }
 
-    const uploadResult = await uploadToCloudinary(buffer, {
-      folder: targetFolder,
-    });
+    // Canonical folder resolution — same logic everywhere
+    const targetFolder = resolveCloudinaryFolder(folderRaw);
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer      = Buffer.from(arrayBuffer);
+
+    const uploadResult = await uploadToCloudinary(buffer, { folder: targetFolder });
 
     return NextResponse.json({
-      success: true,
-      url: uploadResult.secure_url,
+      success:  true,
+      url:      uploadResult.secure_url,
       publicId: uploadResult.public_id,
-      format: uploadResult.format,
-      bytes: uploadResult.bytes,
-      width: uploadResult.width,
-      height: uploadResult.height,
+      format:   uploadResult.format,
+      bytes:    uploadResult.bytes,
+      width:    uploadResult.width,
+      height:   uploadResult.height,
     });
   } catch (error: any) {
-    console.error("Cloudinary Upload API Error:", error);
+    console.error("[Cloudinary Upload API]", error);
     return NextResponse.json(
-      { success: false, error: error.message || "Upload failed" },
+      { success: false, error: error?.message || "Upload failed" },
       { status: 500 }
     );
   }

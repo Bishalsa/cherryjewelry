@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Image as ImageIcon,
   Folder,
@@ -9,43 +9,49 @@ import {
   Trash2,
   ExternalLink,
   Loader2,
-  Plus,
   Check,
+  RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
 import CloudinaryImageUploader from "@/components/admin/CloudinaryImageUploader";
 import { cn } from "@/lib/utils";
+import type { FolderKey } from "@/lib/cloudinary-folders";
 
-const FOLDERS = [
-  { id: "products", label: "All Products", path: "cherry-jewelry/products" },
-  { id: "rings", label: "Rings 💍", path: "cherry-jewelry/products/rings" },
-  { id: "necklaces", label: "Necklaces 📿", path: "cherry-jewelry/products/necklaces" },
-  { id: "earrings", label: "Earrings ✨", path: "cherry-jewelry/products/earrings" },
-  { id: "bracelets", label: "Bracelets ⭐", path: "cherry-jewelry/products/bracelets" },
-  { id: "pendants", label: "Pendants 💎", path: "cherry-jewelry/products/pendants" },
-  { id: "bangles", label: "Bangles 🌟", path: "cherry-jewelry/products/bangles" },
-  { id: "anklets", label: "Anklets 🦶", path: "cherry-jewelry/products/anklets" },
-  { id: "mangalsutra", label: "Mangalsutra 🪷", path: "cherry-jewelry/products/mangalsutra" },
-  { id: "collections", label: "Collections", path: "cherry-jewelry/collections" },
-  { id: "banners", label: "Banners", path: "cherry-jewelry/banners" },
-  { id: "homepage", label: "Homepage Assets", path: "cherry-jewelry/homepage" },
-  { id: "seo", label: "SEO & OG Images", path: "cherry-jewelry/seo" },
-  { id: "logos", label: "Logos & Favicons", path: "cherry-jewelry/logos" },
+interface FolderDef {
+  id:    FolderKey;
+  label: string;
+}
+
+const FOLDERS: FolderDef[] = [
+  { id: "products",     label: "All Products"       },
+  { id: "rings",        label: "Rings 💍"            },
+  { id: "necklaces",    label: "Necklaces 📿"        },
+  { id: "earrings",     label: "Earrings ✨"          },
+  { id: "bracelets",    label: "Bracelets ⭐"         },
+  { id: "pendants",     label: "Pendants 💎"          },
+  { id: "bangles",      label: "Bangles 🌟"           },
+  { id: "anklets",      label: "Anklets 🦶"           },
+  { id: "mangalsutra",  label: "Mangalsutra 🪷"       },
+  { id: "collections",  label: "Collections"         },
+  { id: "banners",      label: "Banners"             },
+  { id: "homepage",     label: "Homepage Assets"     },
+  { id: "seo",          label: "SEO & OG Images"     },
+  { id: "logos",        label: "Logos & Favicons"    },
+  { id: "blog",         label: "Blog"                },
 ];
 
 export default function AdminMediaPage() {
-  const [selectedFolder, setSelectedFolder] = useState<string>("products");
-  const [resources, setResources] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<FolderKey>("products");
+  const [resources,      setResources]      = useState<any[]>([]);
+  const [loading,        setLoading]        = useState(false);
+  const [query,          setQuery]          = useState("");
+  const [copiedId,       setCopiedId]       = useState<string | null>(null);
 
-  const currentFolderConfig = FOLDERS.find((f) => f.id === selectedFolder) || FOLDERS[0];
-
-  const fetchMedia = async () => {
+  const fetchMedia = useCallback(async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await fetch(`/api/admin/media?folder=${encodeURIComponent(currentFolderConfig.path)}`);
+      // Pass the FolderKey directly — the API resolves to the correct path
+      const res  = await fetch(`/api/admin/media?folder=${encodeURIComponent(selectedFolder)}`);
       const data = await res.json();
       if (data.success) {
         setResources(data.resources || []);
@@ -57,11 +63,10 @@ export default function AdminMediaPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchMedia();
   }, [selectedFolder]);
+
+  // Reload when folder tab changes
+  useEffect(() => { fetchMedia(); }, [fetchMedia]);
 
   const handleCopyUrl = (url: string, id: string) => {
     navigator.clipboard.writeText(url);
@@ -71,15 +76,12 @@ export default function AdminMediaPage() {
   };
 
   const handleDeleteMedia = async (publicId: string) => {
-    if (!confirm("Are you sure you want to delete this asset from Cloudinary?")) return;
-
+    if (!confirm("Delete this asset from Cloudinary permanently?")) return;
     try {
-      const res = await fetch(`/api/admin/media?publicId=${encodeURIComponent(publicId)}`, {
-        method: "DELETE",
-      });
+      const res  = await fetch(`/api/admin/media?publicId=${encodeURIComponent(publicId)}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) {
-        toast.success("Asset deleted from Cloudinary");
+        toast.success("Asset deleted");
         fetchMedia();
       } else {
         toast.error(data.error || "Deletion failed");
@@ -96,29 +98,39 @@ export default function AdminMediaPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="font-heading text-2xl md:text-3xl text-deep-plum">
-          Cloudinary Media Library
-        </h1>
-        <p className="text-xs text-neutral-400 mt-1">
-          Manage, upload, and organize your brand media assets across Cloudinary CDN folders.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-2xl md:text-3xl text-deep-plum">
+            Cloudinary Media Library
+          </h1>
+          <p className="text-xs text-neutral-400 mt-1">
+            Upload, organise and manage brand media assets across Cloudinary CDN folders.
+          </p>
+        </div>
+        <button
+          onClick={fetchMedia}
+          disabled={loading}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-xs font-medium text-deep-plum transition-colors disabled:opacity-50"
+        >
+          <RefreshCw className={cn("w-3.5 h-3.5", loading && "animate-spin")} />
+          Refresh
+        </button>
       </div>
 
-      {/* Cloudinary Drag & Drop Uploader */}
+      {/* Uploader */}
       <div className="bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm space-y-3">
         <h3 className="font-heading text-sm text-deep-plum font-semibold">
-          Upload New Assets to /{currentFolderConfig.path}
+          Upload New Assets
         </h3>
         <CloudinaryImageUploader
           images={[]}
-          onChange={() => fetchMedia()}
-          folder={currentFolderConfig.path as any}
-          maxFiles={10}
+          onChange={() => fetchMedia()}   // Refresh media grid after upload
+          folder={selectedFolder}          // FolderKey — resolved inside the component
+          maxFiles={20}
         />
       </div>
 
-      {/* Folder Navigation & Search */}
+      {/* Folder tabs + search */}
       <div className="bg-white p-4 rounded-2xl border border-neutral-100 shadow-sm space-y-4">
         <div className="flex items-center gap-2 overflow-x-auto border-b border-neutral-100 pb-3">
           {FOLDERS.map((f) => (
@@ -145,27 +157,32 @@ export default function AdminMediaPage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search assets by file ID..."
-              className="w-full pl-10 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold text-deep-plum font-medium"
+              placeholder="Search assets by file ID…"
+              className="w-full pl-10 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold text-deep-plum font-medium placeholder:text-neutral-400"
             />
           </div>
-          <div className="text-xs text-neutral-400">
-            Assets count: {filtered.length}
+          <div className="text-xs text-neutral-400 shrink-0">
+            {filtered.length} asset{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
       </div>
 
-      {/* Media Grid */}
+      {/* Media grid */}
       <div className="bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm min-h-[300px]">
         {loading ? (
           <div className="p-12 text-center text-xs text-neutral-400 flex items-center justify-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-rose-gold" /> Loading Cloudinary resources...
+            <Loader2 className="w-4 h-4 animate-spin text-rose-gold" />
+            Loading Cloudinary resources…
           </div>
         ) : filtered.length === 0 ? (
           <div className="p-12 text-center">
             <ImageIcon className="w-10 h-10 text-neutral-300 mx-auto mb-3" />
-            <p className="text-sm font-medium text-deep-plum mb-1">No media assets in this folder</p>
-            <p className="text-xs text-neutral-400">Upload images above to add them to Cloudinary.</p>
+            <p className="text-sm font-medium text-deep-plum mb-1">
+              No media assets in this folder
+            </p>
+            <p className="text-xs text-neutral-400">
+              Upload images above to add them to Cloudinary.
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -182,6 +199,16 @@ export default function AdminMediaPage() {
 
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-between p-2">
                   <div className="flex justify-end gap-1">
+                    <a
+                      href={item.secure_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-1.5 bg-white text-deep-plum rounded-lg hover:bg-blue-500 hover:text-white transition-colors"
+                      title="Open in new tab"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                     <button
                       onClick={() => handleCopyUrl(item.secure_url, item.public_id)}
                       className="p-1.5 bg-white text-deep-plum rounded-lg hover:bg-rose-gold hover:text-white transition-colors"
