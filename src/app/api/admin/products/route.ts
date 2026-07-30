@@ -100,6 +100,37 @@ export async function POST(req: Request) {
       });
     }
 
+    // Resolve & validate categoryId to ensure foreign key constraint passes
+    let validCategoryId = categoryId;
+    let categoryObj = await prisma.category.findUnique({ where: { id: categoryId } });
+
+    if (!categoryObj) {
+      // Try finding category by slug or name
+      const searchSlug = categoryId.replace(/^cat-/, "").toLowerCase();
+      categoryObj = await prisma.category.findFirst({
+        where: {
+          OR: [
+            { slug: searchSlug },
+            { name: { equals: searchSlug, mode: "insensitive" } },
+          ],
+        },
+      });
+    }
+
+    if (!categoryObj) {
+      // Auto-create or find first category in DB
+      categoryObj = (await prisma.category.findFirst()) || (await prisma.category.create({
+        data: {
+          name: "Rings",
+          slug: "rings",
+          description: "Exquisite rings",
+          position: 1,
+        },
+      }));
+    }
+
+    validCategoryId = categoryObj.id;
+
     // Create product in transaction
     const product = await prisma.$transaction(async (tx) => {
       // 1. Create Product
@@ -115,7 +146,7 @@ export async function POST(req: Request) {
           material,
           weight: weight || null,
           purity: purity || null,
-          categoryId,
+          categoryId: validCategoryId,
           isActive: true,
         },
       });

@@ -2,9 +2,21 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import slugify from "slugify";
 
+const DEFAULT_CATEGORIES = [
+  { name: "Rings", slug: "rings", description: "Exquisite rings for every occasion", position: 1 },
+  { name: "Necklaces", slug: "necklaces", description: "Stunning necklaces that captivate", position: 2 },
+  { name: "Earrings", slug: "earrings", description: "Elegant earrings for every style", position: 3 },
+  { name: "Bracelets", slug: "bracelets", description: "Beautiful bracelets that shine", position: 4 },
+  { name: "Pendants", slug: "pendants", description: "Charming pendants & amulets", position: 5 },
+  { name: "Bangles", slug: "bangles", description: "Traditional & modern bangles", position: 6 },
+  { name: "Anklets", slug: "anklets", description: "Graceful anklets for women", position: 7 },
+  { name: "Mangalsutra", slug: "mangalsutra", description: "Sacred mangalsutras", position: 8 },
+  { name: "Solitaires", slug: "solitaires", description: "Classic solitaire jewelry", position: 9 },
+];
+
 export async function GET() {
   try {
-    const categories = await prisma.category.findMany({
+    let categories = await prisma.category.findMany({
       include: {
         _count: {
           select: { products: true },
@@ -15,6 +27,30 @@ export async function GET() {
         position: "asc",
       },
     });
+
+    // Auto-seed standard jewelry categories if table is empty
+    if (categories.length === 0) {
+      try {
+        await prisma.category.createMany({
+          data: DEFAULT_CATEGORIES,
+          skipDuplicates: true,
+        });
+
+        categories = await prisma.category.findMany({
+          include: {
+            _count: {
+              select: { products: true },
+            },
+            parent: true,
+          },
+          orderBy: {
+            position: "asc",
+          },
+        });
+      } catch (seedErr) {
+        console.warn("Category auto-seed warning:", seedErr);
+      }
+    }
 
     return NextResponse.json({ success: true, categories });
   } catch (error) {

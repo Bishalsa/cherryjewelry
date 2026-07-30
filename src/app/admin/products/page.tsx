@@ -85,9 +85,21 @@ interface ProductItem {
 
 type TabType = "all" | "published" | "draft" | "archived";
 
+const DEFAULT_CATEGORIES: CategoryItem[] = [
+  { id: "rings", name: "Rings 💍", slug: "rings" },
+  { id: "necklaces", name: "Necklaces 📿", slug: "necklaces" },
+  { id: "earrings", name: "Earrings ✨", slug: "earrings" },
+  { id: "bracelets", name: "Bracelets ⭐", slug: "bracelets" },
+  { id: "pendants", name: "Pendants 💎", slug: "pendants" },
+  { id: "bangles", name: "Bangles 🌟", slug: "bangles" },
+  { id: "anklets", name: "Anklets 🦶", slug: "anklets" },
+  { id: "mangalsutra", name: "Mangalsutra 🪷", slug: "mangalsutra" },
+  { id: "solitaires", name: "Solitaires 💎", slug: "solitaires" },
+];
+
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<ProductItem[]>([]);
-  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>(DEFAULT_CATEGORIES);
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState<TabType>("all");
   const [loading, setLoading] = useState(true);
@@ -101,7 +113,7 @@ export default function AdminProductsPage() {
     slug: "",
     sku: "",
     barcode: "",
-    categoryId: "",
+    categoryId: DEFAULT_CATEGORIES[0].id,
     material: "Gold (18K)",
     purity: "750",
     weight: "",
@@ -154,11 +166,14 @@ export default function AdminProductsPage() {
     try {
       const res = await fetch("/api/admin/categories");
       const data = await res.json();
-      if (data.success) {
+      if (data.success && Array.isArray(data.categories) && data.categories.length > 0) {
         setCategories(data.categories);
+      } else {
+        setCategories(DEFAULT_CATEGORIES);
       }
     } catch {
-      console.error("Failed to load categories");
+      console.error("Failed to load categories, using defaults");
+      setCategories(DEFAULT_CATEGORIES);
     }
   };
 
@@ -168,13 +183,14 @@ export default function AdminProductsPage() {
   }, []);
 
   const handleOpenCreateModal = () => {
+    const activeCats = categories.length > 0 ? categories : DEFAULT_CATEGORIES;
     setEditingProduct(null);
     setFormData({
       name: "",
       slug: "",
       sku: "",
       barcode: "",
-      categoryId: categories[0]?.id || "",
+      categoryId: activeCats[0]?.id || DEFAULT_CATEGORIES[0].id,
       material: "Gold (18K)",
       purity: "750",
       weight: "4.5g",
@@ -710,12 +726,14 @@ export default function AdminProductsPage() {
                           Category / Collection *
                         </label>
                         <select
+                          required
                           value={formData.categoryId}
                           onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs bg-white focus:outline-none focus:border-rose-gold"
+                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs bg-white text-deep-plum font-semibold focus:outline-none focus:border-rose-gold cursor-pointer"
                         >
-                          {categories.map((c) => (
-                            <option key={c.id} value={c.id}>
+                          <option value="" disabled>-- Select Category / Collection --</option>
+                          {(categories.length > 0 ? categories : DEFAULT_CATEGORIES).map((c) => (
+                            <option key={c.id} value={c.id} className="text-deep-plum py-1">
                               {c.name}
                             </option>
                           ))}
