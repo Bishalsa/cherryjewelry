@@ -41,22 +41,44 @@ export async function POST(req: Request) {
     const body = await req.json();
     const {
       name,
+      slug: customSlug,
       description,
       shortDescription,
       price,
       compareAtPrice,
+      costPrice,
       sku,
+      barcode,
       material,
       weight,
       purity,
+      stoneType,
+      stoneWeight,
+      dimensions,
+      careInstructions,
+      shippingDetails,
+      warranty,
+      lowStockWarning,
+      status,
       categoryId,
       imageUrl,
-      initialStock = 10,
+      images,
+      stock,
+      initialStock,
+      isFeatured,
+      isNewArrival,
+      isBestSeller,
+      tags,
+      metaTitle,
+      metaDescription,
+      ogImage,
+      canonicalUrl,
+      keywords,
     } = body;
 
-    if (!name || !price || !sku || !categoryId || !material) {
+    if (!name || price === undefined || price === null || price === "" || !sku || !categoryId) {
       return NextResponse.json(
-        { success: false, error: "Missing required fields" },
+        { success: false, error: "Missing required fields (Name, Price, SKU, Category)" },
         { status: 400 }
       );
     }
@@ -73,8 +95,8 @@ export async function POST(req: Request) {
     }
 
     // Generate unique slug
-    let slug = slugify(name, { lower: true, strict: true });
-    // Check if slug is unique
+    let slug = customSlug || slugify(name, { lower: true, strict: true });
+    if (!slug) slug = slugify(name, { lower: true, strict: true }) || `product-${Date.now()}`;
     const existingSlug = await prisma.product.findUnique({
       where: { slug },
     });
@@ -131,6 +153,10 @@ export async function POST(req: Request) {
 
     validCategoryId = categoryObj.id;
 
+    const stockQty = stock !== undefined && stock !== null ? Number(stock) : (initialStock !== undefined ? Number(initialStock) : 10);
+    const isProductActive = status ? status === "PUBLISHED" : true;
+    const finalDescription = description && description.trim() !== "" ? description : (shortDescription || `${name} - Fine handcrafted jewelry.`);
+
     // Create product in transaction
     const product = await prisma.$transaction(async (tx) => {
       // 1. Create Product
@@ -138,16 +164,35 @@ export async function POST(req: Request) {
         data: {
           name,
           slug,
-          description,
+          description: finalDescription,
           shortDescription: shortDescription || "",
           price: Number(price),
           compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null,
+          costPrice: costPrice ? Number(costPrice) : null,
           sku,
-          material,
+          barcode: barcode || null,
+          material: material || "Gold",
           weight: weight || null,
           purity: purity || null,
+          stoneType: stoneType || null,
+          stoneWeight: stoneWeight || null,
+          dimensions: dimensions || null,
+          careInstructions: careInstructions || null,
+          shippingDetails: shippingDetails || null,
+          warranty: warranty || null,
+          lowStockWarning: lowStockWarning ? Number(lowStockWarning) : 5,
+          status: status || "PUBLISHED",
           categoryId: validCategoryId,
-          isActive: true,
+          isActive: isProductActive,
+          isFeatured: Boolean(isFeatured),
+          isNewArrival: Boolean(isNewArrival),
+          isBestSeller: Boolean(isBestSeller),
+          tags: Array.isArray(tags) ? tags : [],
+          metaTitle: metaTitle || null,
+          metaDescription: metaDescription || null,
+          ogImage: ogImage || null,
+          canonicalUrl: canonicalUrl || null,
+          keywords: Array.isArray(keywords) ? keywords : [],
         },
       });
 
@@ -159,7 +204,7 @@ export async function POST(req: Request) {
           sku: `${sku}-STD`,
           price: Number(price),
           compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null,
-          material,
+          material: material || "Gold",
           weight: weight || null,
           isActive: true,
         },
@@ -170,31 +215,37 @@ export async function POST(req: Request) {
         data: {
           variantId: defaultVariant.id,
           warehouseId: warehouse!.id,
-          quantity: Number(initialStock),
-          lowStockThreshold: 5,
+          quantity: stockQty,
+          lowStockThreshold: lowStockWarning ? Number(lowStockWarning) : 5,
         },
       });
 
-      // 4. Create Product Image if URL provided
-      if (imageUrl) {
-        await tx.productImage.create({
-          data: {
-            productId: newProduct.id,
-            url: imageUrl,
-            alt: name,
-            position: 0,
-          },
-        });
+      // 4. Create Product Images if provided
+      const imageList: string[] = Array.isArray(images) && images.length > 0
+        ? images
+        : imageUrl ? [imageUrl] : [];
+
+      for (let i = 0; i < imageList.length; i++) {
+        if (imageList[i]) {
+          await tx.productImage.create({
+            data: {
+              productId: newProduct.id,
+              url: imageList[i],
+              alt: name || "Product image",
+              position: i,
+            },
+          });
+        }
       }
 
       return newProduct;
     });
 
     return NextResponse.json({ success: true, product });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Products POST API Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to create product" },
+      { success: false, error: error?.message || "Failed to create product" },
       { status: 500 }
     );
   }
@@ -206,17 +257,38 @@ export async function PUT(req: Request) {
     const {
       id,
       name,
+      slug: customSlug,
       description,
       shortDescription,
       price,
       compareAtPrice,
+      costPrice,
       sku,
+      barcode,
       material,
       weight,
       purity,
+      stoneType,
+      stoneWeight,
+      dimensions,
+      careInstructions,
+      shippingDetails,
+      warranty,
+      lowStockWarning,
+      status,
       categoryId,
       imageUrl,
+      images,
       stock,
+      isFeatured,
+      isNewArrival,
+      isBestSeller,
+      tags,
+      metaTitle,
+      metaDescription,
+      ogImage,
+      canonicalUrl,
+      keywords,
     } = body;
 
     if (!id) {
@@ -226,39 +298,67 @@ export async function PUT(req: Request) {
       );
     }
 
+    const isProductActive = status ? status === "PUBLISHED" : undefined;
+
     const product = await prisma.$transaction(async (tx) => {
       // 1. Update Product
       const updatedProduct = await tx.product.update({
         where: { id },
         data: {
-          name,
-          description,
-          shortDescription,
-          price: price ? Number(price) : undefined,
-          compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null,
-          sku,
-          material,
-          weight,
-          purity,
-          categoryId,
+          ...(name && { name }),
+          ...(customSlug && { slug: customSlug }),
+          ...(description && { description }),
+          ...(shortDescription !== undefined && { shortDescription }),
+          ...(price !== undefined && { price: Number(price) }),
+          ...(compareAtPrice !== undefined && { compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null }),
+          ...(costPrice !== undefined && { costPrice: costPrice ? Number(costPrice) : null }),
+          ...(sku && { sku }),
+          ...(barcode !== undefined && { barcode }),
+          ...(material && { material }),
+          ...(weight !== undefined && { weight }),
+          ...(purity !== undefined && { purity }),
+          ...(stoneType !== undefined && { stoneType }),
+          ...(stoneWeight !== undefined && { stoneWeight }),
+          ...(dimensions !== undefined && { dimensions }),
+          ...(careInstructions !== undefined && { careInstructions }),
+          ...(shippingDetails !== undefined && { shippingDetails }),
+          ...(warranty !== undefined && { warranty }),
+          ...(lowStockWarning !== undefined && { lowStockWarning: Number(lowStockWarning) }),
+          ...(status && { status }),
+          ...(isProductActive !== undefined && { isActive: isProductActive }),
+          ...(categoryId && { categoryId }),
+          ...(isFeatured !== undefined && { isFeatured: Boolean(isFeatured) }),
+          ...(isNewArrival !== undefined && { isNewArrival: Boolean(isNewArrival) }),
+          ...(isBestSeller !== undefined && { isBestSeller: Boolean(isBestSeller) }),
+          ...(tags !== undefined && { tags: Array.isArray(tags) ? tags : [] }),
+          ...(metaTitle !== undefined && { metaTitle }),
+          ...(metaDescription !== undefined && { metaDescription }),
+          ...(ogImage !== undefined && { ogImage }),
+          ...(canonicalUrl !== undefined && { canonicalUrl }),
+          ...(keywords !== undefined && { keywords: Array.isArray(keywords) ? keywords : [] }),
         },
       });
 
-      // 2. If image is updated, update or create it
-      if (imageUrl) {
-        const existingImage = await tx.productImage.findFirst({
+      // 2. Handle images
+      const imageList: string[] = Array.isArray(images) && images.length > 0
+        ? images
+        : imageUrl ? [imageUrl] : [];
+
+      if (imageList.length > 0) {
+        await tx.productImage.deleteMany({
           where: { productId: id },
         });
-
-        if (existingImage) {
-          await tx.productImage.update({
-            where: { id: existingImage.id },
-            data: { url: imageUrl, alt: name || "" },
-          });
-        } else {
-          await tx.productImage.create({
-            data: { productId: id, url: imageUrl, alt: name || "", position: 0 },
-          });
+        for (let i = 0; i < imageList.length; i++) {
+          if (imageList[i]) {
+            await tx.productImage.create({
+              data: {
+                productId: id,
+                url: imageList[i],
+                alt: name || updatedProduct.name || "Product image",
+                position: i,
+              },
+            });
+          }
         }
       }
 
@@ -271,12 +371,14 @@ export async function PUT(req: Request) {
         await tx.productVariant.update({
           where: { id: standardVariant.id },
           data: {
-            price: price ? Number(price) : undefined,
-            compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null,
+            ...(price !== undefined && { price: Number(price) }),
+            ...(compareAtPrice !== undefined && { compareAtPrice: compareAtPrice ? Number(compareAtPrice) : null }),
+            ...(material && { material }),
+            ...(weight !== undefined && { weight }),
           },
         });
 
-        if (stock !== undefined) {
+        if (stock !== undefined && stock !== null) {
           const inventory = await tx.inventory.findFirst({
             where: { variantId: standardVariant.id },
           });
@@ -294,10 +396,10 @@ export async function PUT(req: Request) {
     });
 
     return NextResponse.json({ success: true, product });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Products PUT API Error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to update product" },
+      { success: false, error: error?.message || "Failed to update product" },
       { status: 500 }
     );
   }

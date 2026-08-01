@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -306,7 +306,7 @@ export default function ProductDetailClient({
             <div className="grid grid-cols-3 gap-3 mb-6">
               {[
                 { icon: Truck, label: "Free Shipping", sub: "Above ₹999" },
-                { icon: Shield, label: "BIS Hallmarked", sub: "Certified" },
+                { icon: Shield, label: "Quality Assured", sub: "Premium Finish" },
                 {
                   icon: RefreshCw,
                   label: "15-Day Returns",

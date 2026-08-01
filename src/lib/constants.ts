@@ -1,10 +1,10 @@
-﻿// ============================================
+// ============================================
 // Cherry Jewelry — Application Constants
 // ============================================
 
 export const APP_NAME = "Cherry Jewelry";
 export const APP_TAGLINE = "Where Artistry Meets Elegance";
-export const APP_DESCRIPTION = "Discover exquisite handcrafted jewelry — rings, necklaces, earrings & bracelets. BIS Hallmarked rose-gold & certified diamonds. Free shipping above ₹999.";
+export const APP_DESCRIPTION = "Discover trendy fashion & wholesale jewelry — rings, necklaces, earrings & bracelets. Premium quality metal finish with express shipping above ₹999.";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cherryjewelry.store";
 export const APP_OG_IMAGE = "/og-image.jpg";
 
@@ -59,16 +59,16 @@ export const CATEGORIES = [
   { name: "Mangalsutra", slug: "mangalsutra", icon: "🪷" },
 ] as const;
 
-// Materials
+// Materials (Normal / Wholesale Fashion Jewelry)
 export const MATERIALS = [
-  "Gold (22K)",
-  "Gold (18K)",
-  "Gold (14K)",
-  "Rose Gold",
-  "White Gold",
-  "Platinum",
-  "Silver (925)",
-  "Diamond",
+  "Stainless Steel",
+  "Alloy / Brass",
+  "Gold Plated",
+  "Rose Gold Plated",
+  "Silver Plated",
+  "Oxidised Metal",
+  "Copper",
+  "Beads / Shell",
 ] as const;
 
 // Order statuses
@@ -93,7 +93,7 @@ export const PAYMENT_METHODS = [
 
 // Trust badges
 export const TRUST_BADGES = [
-  { icon: "Shield", label: "100% Certified", description: "BIS Hallmarked jewelry" },
+  { icon: "Shield", label: "Quality Assured", description: "Premium wholesale & fashion jewelry" },
   { icon: "Truck", label: "Free Shipping", description: "On orders above ₹999" },
   { icon: "RefreshCw", label: "Easy Returns", description: "15-day return policy" },
   { icon: "Lock", label: "Secure Payment", description: "256-bit SSL encryption" },

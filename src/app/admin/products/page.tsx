@@ -107,6 +107,8 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<ProductItem | null>(null);
   const [formTab, setFormTab] = useState<"general" | "pricing" | "specs text" | "media" | "seo">("general");
 
+  const [showPreciousSpecs, setShowPreciousSpecs] = useState(false);
+
   // Form State
   const [formData, setFormData] = useState({
     name: "",
@@ -114,11 +116,11 @@ export default function AdminProductsPage() {
     sku: "",
     barcode: "",
     categoryId: DEFAULT_CATEGORIES[0].id,
-    material: "Gold (18K)",
-    purity: "750",
+    material: "Stainless Steel",
+    purity: "",
     weight: "",
-    stoneType: "Diamond (VVS-EF)",
-    stoneWeight: "0.50 ct",
+    stoneType: "",
+    stoneWeight: "",
     dimensions: "",
     price: "",
     compareAtPrice: "",
@@ -127,15 +129,15 @@ export default function AdminProductsPage() {
     lowStockWarning: "5",
     description: "",
     shortDescription: "",
-    careInstructions: "Avoid direct contact with harsh chemicals or perfume. Store in a soft pouch.",
-    shippingDetails: "Insured express delivery within 3-5 business days.",
-    warranty: "Lifetime exchange warranty on BIS hallmarked gold.",
+    careInstructions: "Avoid direct contact with water, perfume, or harsh chemicals. Wipe with a soft dry cloth.",
+    shippingDetails: "Standard express shipping within 2-4 business days.",
+    warranty: "",
     images: [] as string[],
     status: "PUBLISHED",
     isFeatured: false,
     isNewArrival: true,
     isBestSeller: false,
-    tags: "rings, diamond, gold",
+    tags: "fashion jewelry, wholesale, stainless steel",
     metaTitle: "",
     metaDescription: "",
     ogImage: "",
@@ -184,19 +186,21 @@ export default function AdminProductsPage() {
 
   const handleOpenCreateModal = () => {
     const activeCats = categories.length > 0 ? categories : DEFAULT_CATEGORIES;
+    const randomSku = `CJ-${Math.floor(100000 + Math.random() * 900000)}`;
     setEditingProduct(null);
+    setShowPreciousSpecs(false);
     setFormData({
       name: "",
       slug: "",
-      sku: "",
+      sku: randomSku,
       barcode: "",
       categoryId: activeCats[0]?.id || DEFAULT_CATEGORIES[0].id,
-      material: "Gold (18K)",
-      purity: "750",
-      weight: "4.5g",
-      stoneType: "Diamond (VVS1)",
-      stoneWeight: "0.45 ct",
-      dimensions: "18mm x 15mm",
+      material: "Stainless Steel",
+      purity: "",
+      weight: "",
+      stoneType: "",
+      stoneWeight: "",
+      dimensions: "",
       price: "",
       compareAtPrice: "",
       costPrice: "",
@@ -204,15 +208,15 @@ export default function AdminProductsPage() {
       lowStockWarning: "5",
       description: "",
       shortDescription: "",
-      careInstructions: "Clean gently with warm soapy water. Avoid wearing during strenuous activities.",
-      shippingDetails: "Free insured shipping across India. Ships within 48 hours.",
-      warranty: "Lifetime certificate of authenticity & BIS Hallmark warranty.",
+      careInstructions: "Avoid direct contact with water, perfume, or harsh chemicals. Wipe with a soft dry cloth.",
+      shippingDetails: "Standard express shipping within 2-4 business days.",
+      warranty: "",
       images: [],
       status: "PUBLISHED",
       isFeatured: false,
       isNewArrival: true,
       isBestSeller: false,
-      tags: "fine jewelry, gold, diamond",
+      tags: "fashion jewelry, wholesale, stainless steel",
       metaTitle: "",
       metaDescription: "",
       ogImage: "",
@@ -225,6 +229,9 @@ export default function AdminProductsPage() {
 
   const handleOpenEditModal = (product: ProductItem) => {
     setEditingProduct(product);
+    setShowPreciousSpecs(
+      Boolean(product.purity || product.stoneType || product.stoneWeight || product.warranty)
+    );
     setFormData({
       name: product.name,
       slug: product.slug,
@@ -269,18 +276,48 @@ export default function AdminProductsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.price || !formData.sku || !formData.categoryId) {
-      toast.error("Please fill in all required fields (Name, SKU, Price, Category)");
+
+    // Validation with tab switching
+    if (!formData.name || !formData.name.trim()) {
+      toast.error("Please enter a Product Name in Step 1 (Basic & Stock)");
+      setFormTab("general");
       return;
     }
+    if (!formData.sku || !formData.sku.trim()) {
+      toast.error("Please enter a SKU in Step 1 (Basic & Stock)");
+      setFormTab("general");
+      return;
+    }
+    if (!formData.categoryId) {
+      toast.error("Please select a Category in Step 1 (Basic & Stock)");
+      setFormTab("general");
+      return;
+    }
+
+    // Step 2 Validation
+    if (!formData.price || isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
+      toast.error("Please enter a valid Selling Price in Step 2 (Pricing & Specs)");
+      setFormTab("pricing");
+      return;
+    }
+
+    const finalDescription =
+      formData.description.trim() ||
+      formData.shortDescription.trim() ||
+      `${formData.name} - Exquisite fine jewelry handcrafted in ${formData.material}.`;
 
     setSubmitting(true);
     try {
       const payload = {
         ...(editingProduct && { id: editingProduct.id }),
-        name: formData.name,
-        slug: formData.slug,
-        sku: formData.sku,
+        name: formData.name.trim(),
+        slug:
+          formData.slug ||
+          formData.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, ""),
+        sku: formData.sku.trim(),
         barcode: formData.barcode,
         categoryId: formData.categoryId,
         material: formData.material,
@@ -292,16 +329,16 @@ export default function AdminProductsPage() {
         price: Number(formData.price),
         compareAtPrice: formData.compareAtPrice ? Number(formData.compareAtPrice) : null,
         costPrice: formData.costPrice ? Number(formData.costPrice) : null,
-        stock: Number(formData.stock),
-        lowStockWarning: Number(formData.lowStockWarning),
-        description: formData.description,
+        stock: Number(formData.stock || 10),
+        lowStockWarning: Number(formData.lowStockWarning || 5),
+        description: finalDescription,
         shortDescription: formData.shortDescription,
         careInstructions: formData.careInstructions,
         shippingDetails: formData.shippingDetails,
         warranty: formData.warranty,
         imageUrl: formData.images[0] || "",
         images: formData.images,
-        status: formData.status,
+        status: formData.status || "PUBLISHED",
         isFeatured: formData.isFeatured,
         isNewArrival: formData.isNewArrival,
         isBestSeller: formData.isBestSeller,
@@ -322,14 +359,16 @@ export default function AdminProductsPage() {
 
       const data = await res.json();
       if (data.success) {
-        toast.success(editingProduct ? "Product updated" : "Product created & live!");
+        toast.success(
+          editingProduct ? "Product updated successfully!" : "Product published & live on storefront!"
+        );
         setIsModalOpen(false);
         fetchProducts();
       } else {
-        toast.error(data.error || "Saving failed");
+        toast.error(data.error || "Saving failed. Please check form inputs.");
       }
     } catch {
-      toast.error("Error submitting product");
+      toast.error("Network error submitting product.");
     } finally {
       setSubmitting(false);
     }
@@ -638,10 +677,10 @@ export default function AdminProductsPage() {
               <div className="flex items-center justify-between border-b border-neutral-100 pb-4">
                 <div>
                   <h3 className="font-heading text-xl text-deep-plum">
-                    {editingProduct ? "Edit Jewelry Piece" : "Add New Fine Jewelry Piece"}
+                    {editingProduct ? "Edit Jewelry Piece" : "Add New Jewelry Piece"}
                   </h3>
                   <p className="text-xs text-neutral-400">
-                    Fill in specs, pricing, and upload Cloudinary media.
+                    Fill in details, pricing, stock, and upload product images.
                   </p>
                 </div>
                 <button
@@ -700,7 +739,7 @@ export default function AdminProductsPage() {
                                 .replace(/^-|-$/g, ""),
                             })
                           }
-                          placeholder="e.g. Celestial Diamond Solitaire Ring"
+                          placeholder="e.g. Butterfly Wing Pendant Necklace"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                         />
                       </div>
@@ -714,7 +753,7 @@ export default function AdminProductsPage() {
                           required
                           value={formData.sku}
                           onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                          placeholder="LUM-RNG-001"
+                          placeholder="CJ-100234"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs font-mono focus:outline-none focus:border-rose-gold"
                         />
                       </div>
@@ -828,7 +867,7 @@ export default function AdminProductsPage() {
                           required
                           value={formData.price}
                           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                          placeholder="49999"
+                          placeholder="299"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                         />
                       </div>
@@ -841,7 +880,7 @@ export default function AdminProductsPage() {
                           type="number"
                           value={formData.compareAtPrice}
                           onChange={(e) => setFormData({ ...formData, compareAtPrice: e.target.value })}
-                          placeholder="59999"
+                          placeholder="399"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                         />
                       </div>
@@ -854,13 +893,13 @@ export default function AdminProductsPage() {
                           type="number"
                           value={formData.costPrice}
                           onChange={(e) => setFormData({ ...formData, costPrice: e.target.value })}
-                          placeholder="28000"
+                          placeholder="150"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
                         <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
                           Metal / Material *
@@ -869,61 +908,7 @@ export default function AdminProductsPage() {
                           type="text"
                           value={formData.material}
                           onChange={(e) => setFormData({ ...formData, material: e.target.value })}
-                          placeholder="18K Rose Gold"
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
-                          Purity / Hallmark
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.purity}
-                          onChange={(e) => setFormData({ ...formData, purity: e.target.value })}
-                          placeholder="BIS Hallmarked (750)"
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
-                          Gross Weight (grams)
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.weight}
-                          onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                          placeholder="4.85 g"
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
-                          Stone Type / Diamond Cut
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.stoneType}
-                          onChange={(e) => setFormData({ ...formData, stoneType: e.target.value })}
-                          placeholder="Natural Diamond (VVS1)"
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
-                          Stone Weight (Carats)
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.stoneWeight}
-                          onChange={(e) => setFormData({ ...formData, stoneWeight: e.target.value })}
-                          placeholder="0.50 ct"
+                          placeholder="e.g. Stainless Steel, Rose Gold Plated, Alloy"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                         />
                       </div>
@@ -936,11 +921,87 @@ export default function AdminProductsPage() {
                           type="text"
                           value={formData.barcode}
                           onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-                          placeholder="8901234567890"
+                          placeholder="Optional barcode"
                           className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs font-mono focus:outline-none focus:border-rose-gold"
                         />
                       </div>
                     </div>
+
+                    {/* Toggle for Precious Metals / Gemstones Specs */}
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowPreciousSpecs(!showPreciousSpecs)}
+                        className="text-xs text-rose-gold-dark hover:text-deep-plum font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        {showPreciousSpecs
+                          ? "▼ Hide Precious Specs (Gold/Silver/Diamond/Hallmark)"
+                          : "+ Show Precious Specs (Gold/Silver/Diamond/Hallmark)"}
+                      </button>
+                    </div>
+
+                    {showPreciousSpecs && (
+                      <div className="p-4 bg-neutral-50 rounded-2xl border border-neutral-200 space-y-4">
+                        <p className="text-[11px] text-neutral-400 italic">
+                          Optional fine jewelry fields (Gold purity, carats, hallmarking, certifications)
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
+                              Purity / Hallmark
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.purity}
+                              onChange={(e) => setFormData({ ...formData, purity: e.target.value })}
+                              placeholder="e.g. 925 Silver / 18K"
+                              className="w-full px-3.5 py-2 bg-white border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
+                              Gross Weight (grams)
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.weight}
+                              onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                              placeholder="e.g. 4.5 g"
+                              className="w-full px-3.5 py-2 bg-white border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
+                              Stone Type / Diamond Cut
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.stoneType}
+                              onChange={(e) => setFormData({ ...formData, stoneType: e.target.value })}
+                              placeholder="e.g. Cubic Zirconia / Diamond"
+                              className="w-full px-3.5 py-2 bg-white border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
+                              Stone Weight (Carats)
+                            </label>
+                            <input
+                              type="text"
+                              value={formData.stoneWeight}
+                              onChange={(e) => setFormData({ ...formData, stoneWeight: e.target.value })}
+                              placeholder="e.g. 0.50 ct"
+                              className="w-full px-3.5 py-2 bg-white border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -954,7 +1015,7 @@ export default function AdminProductsPage() {
                         type="text"
                         value={formData.shortDescription}
                         onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                        placeholder="Handcrafted 18K rose gold ring adorned with brilliant-cut solitaire diamond."
+                        placeholder="e.g. Rose gold plated butterfly wing pendant necklace."
                         className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                       />
                     </div>
@@ -968,7 +1029,7 @@ export default function AdminProductsPage() {
                         required
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Describe the craftsmanship, design history, and story behind this piece..."
+                        placeholder="Describe the product design, finish, and details..."
                         className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
                       />
                     </div>
@@ -986,17 +1047,19 @@ export default function AdminProductsPage() {
                         />
                       </div>
 
-                      <div className="space-y-1">
-                        <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
-                          Warranty & Certification
-                        </label>
-                        <textarea
-                          rows={2}
-                          value={formData.warranty}
-                          onChange={(e) => setFormData({ ...formData, warranty: e.target.value })}
-                          className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
-                        />
-                      </div>
+                      {showPreciousSpecs && (
+                        <div className="space-y-1">
+                          <label className="text-xs uppercase tracking-wider text-neutral-400 font-medium">
+                            Warranty & Certification (Optional)
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={formData.warranty}
+                            onChange={(e) => setFormData({ ...formData, warranty: e.target.value })}
+                            className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl text-xs focus:outline-none focus:border-rose-gold"
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
