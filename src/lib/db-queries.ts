@@ -6,6 +6,7 @@
 
 import prisma from "@/lib/prisma";
 import { sampleProducts, sampleCategories } from "@/lib/sample-data";
+import { getDynamicProducts } from "@/lib/dynamic-store";
 import type { Product, Category, ProductVariant } from "@/types";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 
@@ -170,9 +171,9 @@ export async function getProducts(
     isBestSeller,
   } = filters;
 
+  let combinedProducts: Product[] = [];
+
   try {
-    // Build the where clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = { isActive: true };
 
     if (category) {
@@ -190,8 +191,6 @@ export async function getProducts(
     if (isNewArrival !== undefined) where.isNewArrival = isNewArrival;
     if (isBestSeller !== undefined) where.isBestSeller = isBestSeller;
 
-    // Build the orderBy clause
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let orderBy: any = { createdAt: "desc" };
     switch (sortBy) {
       case "price_asc":
@@ -209,41 +208,45 @@ export async function getProducts(
         break;
     }
 
-    const skip = (page - 1) * limit;
+    const dbProducts = await prisma.product.findMany({
+      where,
+      include: {
+        images: { orderBy: { position: "asc" } },
+        variants: true,
+        category: true,
+      },
+      orderBy,
+    });
 
-    const [dbProducts, total] = await Promise.all([
-      prisma.product.findMany({
-        where,
-        include: {
-          images: { orderBy: { position: "asc" } },
-          variants: true,
-          category: true,
-        },
-        orderBy,
-        skip,
-        take: limit,
-      }),
-      prisma.product.count({ where }),
-    ]);
-
-    if (dbProducts.length > 0 || total > 0) {
-      return {
-        products: dbProducts.map(normalizeProduct),
-        total,
-        page,
-        totalPages: Math.ceil(total / limit),
-      };
+    if (dbProducts.length > 0) {
+      combinedProducts = dbProducts.map(normalizeProduct);
     }
   } catch {
     // Database not available
   }
 
-  // Fallback to sample data with client-side filtering
-  let filtered = sampleProducts.filter((p) => p.isActive);
+  // Always merge dynamic products & sample products
+  const dynamicItems = (getDynamicProducts() as unknown as Product[]).filter((p) => p.isActive);
+  const map = new Map<string, Product>();
+
+  // 1. Add dynamic products first
+  for (const dp of dynamicItems) {
+    map.set(dp.id, dp);
+  }
+  // 2. Add DB products
+  for (const dbp of combinedProducts) {
+    if (!map.has(dbp.id)) map.set(dbp.id, dbp);
+  }
+  // 3. Add sample products
+  for (const sp of sampleProducts) {
+    if (!map.has(sp.id)) map.set(sp.id, sp);
+  }
+
+  let filtered = Array.from(map.values()).filter((p) => p.isActive);
 
   if (category) {
     const cat = sampleCategories.find((c) => c.slug === category);
-    if (cat) filtered = filtered.filter((p) => p.categoryId === cat.id);
+    if (cat) filtered = filtered.filter((p) => p.categoryId === cat.id || p.category?.slug === category);
   }
   if (material) {
     filtered = filtered.filter((p) =>
@@ -305,6 +308,13 @@ export async function getProducts(
 export async function getProductBySlug(
   slug: string
 ): Promise<Product | null> {
+  const dynamicMatch = getDynamicProducts().find(
+    (p) => (p.slug === slug || p.id === slug) && p.isActive
+  );
+  if (dynamicMatch) {
+    return dynamicMatch as unknown as Product;
+  }
+
   try {
     const dbProduct = await prisma.product.findUnique({
       where: { slug },
@@ -368,6 +378,7 @@ export async function getRelatedProducts(
 // ============================================
 
 export async function getAllProductSlugs(): Promise<string[]> {
+  const dynamicSlugs = (getDynamicProducts() as unknown as Product[]).filter((p) => p.isActive).map((p) => p.slug);
   try {
     const products = await prisma.product.findMany({
       where: { isActive: true },
@@ -375,14 +386,13 @@ export async function getAllProductSlugs(): Promise<string[]> {
     });
 
     if (products.length > 0) {
-      return products.map((p) => p.slug);
+      return Array.from(new Set([...dynamicSlugs, ...products.map((p) => p.slug)]));
     }
   } catch {
     // Database not available
   }
 
-  // Fallback
-  return sampleProducts.map((p) => p.slug);
+  return Array.from(new Set([...dynamicSlugs, ...sampleProducts.map((p) => p.slug)]));
 }
 
 // ============================================
@@ -395,6 +405,15 @@ export async function searchProducts(
   limit: number = 24
 ): Promise<Product[]> {
   if (!query || query.length < 2) return [];
+
+  const lowerQuery = query.toLowerCase();
+  const dynamicMatches = (getDynamicProducts() as unknown as Product[]).filter(
+    (p) =>
+      p.isActive &&
+      (p.name.toLowerCase().includes(lowerQuery) ||
+        p.material.toLowerCase().includes(lowerQuery) ||
+        (p.tags && p.tags.some((t) => t.toLowerCase().includes(lowerQuery))))
+  );
 
   try {
     const dbProducts = await prisma.product.findMany({
@@ -415,23 +434,32 @@ export async function searchProducts(
     });
 
     if (dbProducts.length > 0) {
-      const products = dbProducts.map(normalizeProduct);
-      return sortSearchResults(products, sortBy);
+      const dbMatches = dbProducts.map(normalizeProduct);
+      const combinedMap = new Map<string, Product>();
+      for (const dm of dynamicMatches) combinedMap.set(dm.id, dm);
+      for (const dbm of dbMatches) {
+        if (!combinedMap.has(dbm.id)) combinedMap.set(dbm.id, dbm);
+      }
+      return sortSearchResults(Array.from(combinedMap.values()), sortBy);
     }
   } catch {
     // Database not available
   }
 
-  // Fallback to sample data
-  const lowerQuery = query.toLowerCase();
-  const results = sampleProducts.filter(
+  const sampleResults = sampleProducts.filter(
     (p) =>
       p.name.toLowerCase().includes(lowerQuery) ||
       p.material.toLowerCase().includes(lowerQuery) ||
       p.tags.some((t) => t.toLowerCase().includes(lowerQuery))
   );
 
-  return sortSearchResults(results, sortBy);
+  const combinedMap = new Map<string, Product>();
+  for (const dm of dynamicMatches) combinedMap.set(dm.id, dm);
+  for (const sr of sampleResults) {
+    if (!combinedMap.has(sr.id)) combinedMap.set(sr.id, sr);
+  }
+
+  return sortSearchResults(Array.from(combinedMap.values()), sortBy);
 }
 
 function sortSearchResults(
