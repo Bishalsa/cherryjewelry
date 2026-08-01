@@ -552,7 +552,7 @@ export default function AdminProductsPage() {
                           <div>
                             <p className="font-semibold text-deep-plum">{product.name}</p>
                             <p className="text-[11px] text-neutral-400">
-                              {product.category?.name || "Uncategorized"}
+                              {product.category?.name || categories.find((c) => c.id === product.categoryId)?.name || "Necklaces 📿"}
                             </p>
                           </div>
                         </div>

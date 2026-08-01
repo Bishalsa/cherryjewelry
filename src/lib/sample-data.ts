@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // Cherry Jewelry — Sample Product Data
 // Used for development before database integration
 // ============================================
@@ -69,6 +69,49 @@ export const sampleCategories: Category[] = [
 ];
 
 export const sampleProducts: Product[] = [
+  {
+    id: "nkc-001",
+    name: "Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals for Women",
+    slug: "rose-gold-plated-butterfly-wing-pendant-necklace-with-white-shell-inlay-and-crystals-for-women",
+    description: "Exquisite rose gold plated butterfly wing pendant necklace featuring premium white shell inlay and sparkling AAA micro crystals. Handcrafted in durable anti-tarnish stainless steel for everyday luxury.",
+    shortDescription: "Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals",
+    price: 199,
+    compareAtPrice: 290,
+    costPrice: 80,
+    sku: "NKC-001",
+    material: "Stainless Steel",
+    weight: "8.5g",
+    purity: null,
+    categoryId: "cat-2",
+    category: {
+      id: "cat-2",
+      name: "Necklaces",
+      slug: "necklaces",
+      description: "Stunning necklaces that captivate",
+      image: "/images/categories/necklaces.jpg",
+      parentId: null,
+      position: 2,
+      isActive: true,
+    },
+    images: [
+      { id: "img-nkc-1", url: "/placeholder.jpg", alt: "Rose Gold Plated Butterfly Wing Pendant Necklace", position: 0, productId: "nkc-001" },
+    ],
+    variants: [
+      { id: "var-nkc-1", name: "Standard", sku: "NKC-001-STD", price: 199, compareAtPrice: 290, material: "Stainless Steel", size: null, weight: "8.5g", stock: 10, productId: "nkc-001", isActive: true },
+    ],
+    reviews: [],
+    tags: ["fashion jewelry", "wholesale", "stainless steel", "rose gold", "butterfly", "pendant", "necklace"],
+    metaTitle: "Rose Gold Butterfly Wing Pendant Necklace | Cherry Jewelry",
+    metaDescription: "Shop the Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals.",
+    isFeatured: true,
+    isNewArrival: true,
+    isBestSeller: true,
+    isActive: true,
+    averageRating: 5.0,
+    reviewCount: 18,
+    createdAt: new Date("2026-08-01"),
+    updatedAt: new Date("2026-08-01"),
+  },
   {
     id: "prod-1",
     name: "Celestial Diamond Ring",
