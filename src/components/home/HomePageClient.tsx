@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
@@ -209,7 +209,7 @@ function HeroSection() {
             {[
               { value: "10K+", label: "Happy Customers" },
               { value: "500+", label: "Unique Designs" },
-              { value: "BIS", label: "Hallmarked" },
+              { value: "100%", label: "Quality Assured" },
             ].map((stat) => (
               <div key={stat.label}>
                 <p className="text-2xl md:text-3xl font-heading text-rose-gold-dark">
@@ -460,27 +460,27 @@ function WhyChooseUs() {
   const reasons = [
     {
       icon: <Gem className="w-6 h-6" />,
-      title: "BIS Hallmarked Gold",
+      title: "Anti-Tarnish Polish",
       description:
-        "Every rose-gold piece is certified with BIS hallmark, guaranteeing purity and authenticity you can trust.",
+        "Every piece is crafted with long-lasting anti-tarnish polish and premium finish you can count on.",
     },
     {
       icon: <Award className="w-6 h-6" />,
-      title: "Certified Diamonds",
+      title: "Skin Friendly Materials",
       description:
-        "All our diamonds come with IGI/GIA certification, ensuring quality, cut, clarity, and brilliance.",
+        "Crafted with hypoallergenic stainless steel, alloy, and sparkling AAA cubic zirconia crystals.",
     },
     {
       icon: <Heart className="w-6 h-6" />,
-      title: "Handcrafted with Love",
+      title: "Handcrafted with Care",
       description:
-        "Each piece is meticulously crafted by skilled artisans with decades of expertise in fine jewelry.",
+        "Each piece is meticulously finished for smooth edges, vibrant plating, and everyday comfort.",
     },
     {
       icon: <Shield className="w-6 h-6" />,
-      title: "Lifetime Exchange",
+      title: "Quality Guarantee",
       description:
-        "We stand behind our quality. Enjoy lifetime exchange on all rose-gold jewelry at full value.",
+        "We stand behind our quality. Enjoy premium wholesale finish and hassle-free returns.",
     },
   ];
 

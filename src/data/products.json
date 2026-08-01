@@ -1,0 +1,64 @@
+[
+  {
+    "id": "nkc-001",
+    "name": "Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals for Women",
+    "slug": "rose-gold-plated-butterfly-wing-pendant-necklace-with-white-shell-inlay-and-crystals-for-women",
+    "sku": "NKC-001",
+    "barcode": null,
+    "price": 199,
+    "compareAtPrice": 290,
+    "costPrice": 80,
+    "material": "Stainless Steel",
+    "weight": "8.5g",
+    "purity": null,
+    "stoneType": "Crystals / Shell",
+    "stoneWeight": null,
+    "dimensions": null,
+    "careInstructions": "Avoid direct contact with water, perfume, or harsh chemicals. Wipe clean with a soft dry cloth.",
+    "shippingDetails": "Standard express shipping within 2-4 business days.",
+    "warranty": null,
+    "lowStockWarning": 5,
+    "status": "PUBLISHED",
+    "description": "Exquisite rose gold plated butterfly wing pendant necklace featuring premium white shell inlay and sparkling AAA micro crystals. Handcrafted in durable anti-tarnish stainless steel for everyday luxury.",
+    "shortDescription": "Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals",
+    "categoryId": "cat-2",
+    "images": [
+      {
+        "id": "img-nkc-1",
+        "url": "/placeholder.jpg",
+        "alt": "Rose Gold Plated Butterfly Wing Pendant Necklace",
+        "position": 0,
+        "productId": "nkc-001"
+      }
+    ],
+    "variants": [
+      {
+        "id": "var-nkc-1",
+        "name": "Standard",
+        "sku": "NKC-001-STD",
+        "price": 199,
+        "compareAtPrice": 290,
+        "material": "Stainless Steel",
+        "size": null,
+        "weight": "8.5g",
+        "stock": 10,
+        "productId": "nkc-001",
+        "isActive": true
+      }
+    ],
+    "tags": ["fashion jewelry", "wholesale", "stainless steel", "rose gold", "butterfly", "pendant", "necklace"],
+    "metaTitle": "Rose Gold Butterfly Wing Pendant Necklace | Cherry Jewelry",
+    "metaDescription": "Shop the Rose Gold Plated Butterfly Wing Pendant Necklace with White Shell Inlay and Crystals.",
+    "ogImage": null,
+    "canonicalUrl": null,
+    "keywords": ["butterfly necklace", "rose gold pendant", "wholesale jewelry"],
+    "isFeatured": true,
+    "isNewArrival": true,
+    "isBestSeller": true,
+    "isActive": true,
+    "averageRating": 5.0,
+    "reviewCount": 18,
+    "createdAt": "2026-08-01T00:00:00.000Z",
+    "updatedAt": "2026-08-01T00:00:00.000Z"
+  }
+]

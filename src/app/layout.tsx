@@ -65,10 +65,10 @@ export const metadata: Metadata = {
   keywords: [
     // Primary intent keywords
     "Cherry Jewelry",
-    "handcrafted jewelry India",
-    "luxury jewelry online",
-    "BIS hallmarked rose-gold jewelry",
-    "certified diamond jewelry",
+    "wholesale fashion jewelry India",
+    "fashion jewelry online",
+    "anti-tarnish stainless steel jewelry",
+    "wholesale jewelry supplier",
     // Category keywords
     "rose-gold rings online",
     "diamond necklace",

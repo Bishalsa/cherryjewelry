@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { motion } from "framer-motion";
 import { APP_NAME } from "@/lib/constants";
@@ -31,7 +31,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { icon: Gem, title: "Master Craftsmanship", desc: "Each piece is handcrafted by skilled artisans with decades of experience in traditional and modern jewelry-making techniques." },
-              { icon: Award, title: "Certified Quality", desc: "All our rose-gold jewelry is BIS hallmarked, and diamonds come with IGI/GIA certification — your guarantee of authenticity." },
+              { icon: Award, title: "Quality Assured", desc: "All our fashion jewelry pieces feature durable anti-tarnish polish, skin-friendly materials, and premium wholesale finish." },
               { icon: Users, title: "10,000+ Happy Customers", desc: "We've delivered happiness to over ten thousand customers across India, earning their trust with every order." },
               { icon: Heart, title: "Made with Love", desc: "From sketch to final polish, every Cherry Jewelry piece is infused with passion, precision, and an unwavering commitment to beauty." },
             ].map((value, i) => (
