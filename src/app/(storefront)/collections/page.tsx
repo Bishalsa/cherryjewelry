@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getProducts, getCategories } from "@/lib/db-queries";
 import CollectionsClient from "@/components/collections/CollectionsClient";
 
+export const revalidate = 0;
+
 export const metadata = {
   title: "Collections",
   description:

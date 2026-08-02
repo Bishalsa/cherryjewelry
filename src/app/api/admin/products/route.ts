@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import slugify from "slugify";
 import {
@@ -319,6 +320,7 @@ export async function POST(req: Request) {
     isActive: isProductActive,
   });
 
+  triggerStorefrontRevalidation(createdProduct?.slug || customSlug);
   return NextResponse.json({ success: true, product: createdProduct || dynamicProduct });
 }
 
@@ -366,6 +368,7 @@ export async function PUT(req: Request) {
   }
 
   const dynamicProduct = addOrUpdateDynamicProduct(body);
+  triggerStorefrontRevalidation(body.slug || updatedDbProduct?.slug);
   return NextResponse.json({ success: true, product: updatedDbProduct || dynamicProduct });
 }
 
@@ -388,9 +391,20 @@ export async function DELETE(req: Request) {
     }
 
     softDeleteDynamicProduct(id);
+    triggerStorefrontRevalidation();
 
     return NextResponse.json({ success: true, message: "Product archived successfully" });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error?.message || "Failed to delete" }, { status: 500 });
+  }
+}
+
+function triggerStorefrontRevalidation(slug?: string) {
+  try {
+    revalidatePath("/");
+    revalidatePath("/collections");
+    if (slug) revalidatePath(`/product/${slug}`);
+  } catch (err) {
+    console.warn("Revalidation warning:", err);
   }
 }

@@ -1,6 +1,8 @@
 import { getProducts, getCategories } from "@/lib/db-queries";
 import HomePageClient from "@/components/home/HomePageClient";
 
+export const revalidate = 0;
+
 export default async function HomePage() {
   // Fetch data from database (automatically falls back to sample data)
   const [categories, bestSellersResult, newArrivalsResult] = await Promise.all([
