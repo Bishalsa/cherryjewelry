@@ -208,7 +208,7 @@ export async function getProducts(
         break;
     }
 
-    const dbProducts = await prisma.product.findMany({
+    let dbProducts = await prisma.product.findMany({
       where,
       include: {
         images: { orderBy: { position: "asc" } },
@@ -217,6 +217,20 @@ export async function getProducts(
       },
       orderBy,
     });
+
+    // Smart Fallback: If strict badge/category filter yields 0 rows, fetch all active published products
+    if (dbProducts.length === 0 && (isBestSeller || isFeatured || isNewArrival || category)) {
+      dbProducts = await prisma.product.findMany({
+        where: { isActive: true, deletedAt: null },
+        include: {
+          images: { orderBy: { position: "asc" } },
+          variants: true,
+          category: true,
+        },
+        orderBy: { createdAt: "desc" },
+        take: limit,
+      });
+    }
 
     if (dbProducts.length > 0) {
       combinedProducts = dbProducts.map(normalizeProduct);
