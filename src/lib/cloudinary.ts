@@ -4,10 +4,14 @@ import { resolveCloudinaryFolder } from "./cloudinary-folders";
 // ─── Singleton initialisation ─────────────────────────────────────────────────
 // cloudinary.config() is idempotent once called. Re-importing this module never
 // re-initialises with stale/wrong values.
+const DEFAULT_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "sbgacuq9";
+const DEFAULT_API_KEY = process.env.CLOUDINARY_API_KEY || "494543743177176";
+const DEFAULT_API_SECRET = process.env.CLOUDINARY_API_SECRET || "pwOcUJa7F-Gxzt6d6SjrnNfS-kY";
+
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: DEFAULT_CLOUD_NAME,
+  api_key:    DEFAULT_API_KEY,
+  api_secret: DEFAULT_API_SECRET,
   secure:     true,
 });
 
@@ -47,14 +51,14 @@ export function generateUploadSignature(folderKey: string = "products") {
 
   const signature = cloudinary.utils.api_sign_request(
     { timestamp, folder },
-    process.env.CLOUDINARY_API_SECRET || ""
+    DEFAULT_API_SECRET
   );
 
   return {
     timestamp,
     signature,
-    apiKey:    process.env.CLOUDINARY_API_KEY    || "",
-    cloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    apiKey:    DEFAULT_API_KEY,
+    cloudName: DEFAULT_CLOUD_NAME,
     folder,
   };
 }
