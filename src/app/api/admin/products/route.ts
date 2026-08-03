@@ -452,10 +452,14 @@ export async function DELETE(req: Request) {
 
 function triggerStorefrontRevalidation(slug?: string) {
   try {
+    console.log(`[REVALIDATION] Triggering revalidation for storefront paths... (Slug: ${slug || "none"})`);
     revalidatePath("/");
     revalidatePath("/collections");
-    if (slug) revalidatePath(`/product/${slug}`);
+    revalidatePath("/collections/[slug]", "page");
+    if (slug) {
+      revalidatePath(`/products/${slug}`);
+    }
   } catch (err) {
-    console.warn("Revalidation warning:", err);
+    console.warn("[REVALIDATION WARNING]:", err);
   }
 }

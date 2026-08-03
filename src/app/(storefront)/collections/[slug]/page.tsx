@@ -22,6 +22,10 @@ import {
 import { APP_NAME, APP_URL, APP_OG_IMAGE } from "@/lib/constants";
 import CollectionSlugClient from "@/components/collections/CollectionSlugClient";
 
+// ─── Force Dynamic Server-Side Rendering for Live DB Data ───────────────
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // ─── Static params for ISR / build-time generation ───────────────────────────
 export async function generateStaticParams() {
   return ALL_COLLECTION_SLUGS.map((slug) => ({ slug }));
