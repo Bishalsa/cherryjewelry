@@ -225,24 +225,21 @@ export async function getProducts(
     // Database not available
   }
 
-  // Always merge dynamic products & sample products
-  const dynamicItems = (getDynamicProducts() as unknown as Product[]).filter((p) => p.isActive);
-  const map = new Map<string, Product>();
+  let finalProductList: Product[] = [];
 
-  // 1. Add dynamic products first
-  for (const dp of dynamicItems) {
-    map.set(dp.id, dp);
-  }
-  // 2. Add DB products
-  for (const dbp of combinedProducts) {
-    if (!map.has(dbp.id)) map.set(dbp.id, dbp);
-  }
-  // 3. Add sample products
-  for (const sp of sampleProducts) {
-    if (!map.has(sp.id)) map.set(sp.id, sp);
+  if (combinedProducts.length > 0) {
+    // DB is active: Use PostgreSQL DB records as single source of truth
+    finalProductList = combinedProducts.filter((p) => p.isActive);
+  } else {
+    // Fallback: If DB is empty or unreachable, use dynamic & sample products
+    const dynamicItems = (getDynamicProducts() as unknown as Product[]).filter((p) => p.isActive);
+    const map = new Map<string, Product>();
+    for (const dp of dynamicItems) map.set(dp.id, dp);
+    for (const sp of sampleProducts) if (!map.has(sp.id)) map.set(sp.id, sp);
+    finalProductList = Array.from(map.values()).filter((p) => p.isActive);
   }
 
-  let filtered = Array.from(map.values()).filter((p) => p.isActive);
+  let filtered = finalProductList;
 
   if (category) {
     const cat = sampleCategories.find((c) => c.slug === category);
@@ -308,13 +305,6 @@ export async function getProducts(
 export async function getProductBySlug(
   slug: string
 ): Promise<Product | null> {
-  const dynamicMatch = getDynamicProducts().find(
-    (p) => (p.slug === slug || p.id === slug) && p.isActive
-  );
-  if (dynamicMatch) {
-    return dynamicMatch as unknown as Product;
-  }
-
   try {
     const dbProduct = await prisma.product.findUnique({
       where: { slug },
@@ -326,15 +316,21 @@ export async function getProductBySlug(
     });
 
     if (dbProduct) {
+      if (!dbProduct.isActive || dbProduct.deletedAt) {
+        return null;
+      }
       return normalizeProduct(dbProduct);
     }
-  } catch {
-    // Database not available
+  } catch {}
+
+  const dynamicMatch = getDynamicProducts().find(
+    (p) => (p.slug === slug || p.id === slug) && p.isActive && !p.deletedAt
+  );
+  if (dynamicMatch) {
+    return dynamicMatch as unknown as Product;
   }
 
-  // Fallback to sample data
-  const sample = sampleProducts.find((p) => p.slug === slug);
-  return sample || null;
+  return sampleProducts.find((p) => p.slug === slug) || null;
 }
 
 // ============================================
