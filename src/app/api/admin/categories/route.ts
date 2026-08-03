@@ -55,10 +55,7 @@ export async function GET() {
     return NextResponse.json({ success: true, categories });
   } catch (error) {
     console.error("Categories GET Error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to retrieve categories" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, categories: DEFAULT_CATEGORIES });
   }
 }
 

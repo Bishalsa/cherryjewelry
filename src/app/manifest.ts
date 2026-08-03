@@ -20,9 +20,9 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: "ltr",
     icons: [
       {
-        src: "/favicon.ico",
-        sizes: "any",
-        type: "image/x-icon",
+        src: "/icon.png",
+        sizes: "32x32",
+        type: "image/png",
         purpose: "any",
       },
       {

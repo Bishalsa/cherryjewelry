@@ -11,8 +11,12 @@ const globalForPrisma = globalThis as unknown as {
 
 function createPrismaClient(): PrismaClient {
   try {
+    const connectionString =
+      process.env.DATABASE_URL ||
+      "postgresql://postgres.tligepetgvgvozsbacxu:Bishal%2320033@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=no-verify";
+
     const pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString,
       ssl: {
         rejectUnauthorized: false,
       },
