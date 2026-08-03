@@ -40,12 +40,19 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           href={`/products/${product.slug}`}
           className="block relative aspect-[4/5] bg-gradient-to-b from-neutral-50 to-neutral-100 overflow-hidden"
         >
-          {/* Placeholder gradient for products without images */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-6xl opacity-20 group-hover:scale-110 transition-transform duration-700">
-              💎
-            </span>
-          </div>
+          {product.images && product.images.length > 0 && product.images[0]?.url ? (
+            <img
+              src={product.images[0].url}
+              alt={product.images[0].alt || product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-6xl opacity-20 group-hover:scale-110 transition-transform duration-700">
+                💎
+              </span>
+            </div>
+          )}
 
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">

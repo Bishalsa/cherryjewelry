@@ -33,6 +33,7 @@ export default function ProductDetailClient({
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
     product.variants[0] || null
   );
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [addedToCart, setAddedToCart] = useState(false);
@@ -40,6 +41,9 @@ export default function ProductDetailClient({
   const addItem = useCartStore((s) => s.addItem);
   const { toggleItem, isInWishlist } = useWishlistStore();
   const wishlisted = isInWishlist(product.id);
+
+  const imagesList = product.images && product.images.length > 0 ? product.images : [];
+  const currentImage = imagesList[selectedImageIndex] || imagesList[0] || null;
 
   const currentPrice = selectedVariant
     ? Number(selectedVariant.price)
@@ -78,44 +82,61 @@ export default function ProductDetailClient({
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="aspect-[4/5] bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-2xl overflow-hidden relative group">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.span
-                  className="text-8xl md:text-9xl opacity-20"
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ type: "spring" }}
-                >
-                  💎
-                </motion.span>
-              </div>
+            <div className="aspect-[4/5] bg-gradient-to-b from-neutral-50 to-neutral-100 rounded-2xl overflow-hidden relative group shadow-sm">
+              {currentImage?.url ? (
+                <img
+                  src={currentImage.url}
+                  alt={currentImage.alt || product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <motion.span
+                    className="text-8xl md:text-9xl opacity-20"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring" }}
+                  >
+                    💎
+                  </motion.span>
+                </div>
+              )}
+
               {/* Badges */}
               {product.isNewArrival && (
-                <span className="absolute top-4 left-4 px-3 py-1 bg-deep-plum text-white text-xs uppercase tracking-wider rounded-full">
+                <span className="absolute top-4 left-4 px-3 py-1 bg-deep-plum text-white text-xs uppercase tracking-wider rounded-full z-10">
                   New
                 </span>
               )}
               {discount > 0 && (
-                <span className="absolute top-4 right-4 px-3 py-1 bg-rose-gold text-white text-xs uppercase tracking-wider rounded-full">
+                <span className="absolute top-4 right-4 px-3 py-1 bg-rose-gold text-white text-xs uppercase tracking-wider rounded-full z-10">
                   -{discount}%
                 </span>
               )}
             </div>
+
             {/* Thumbnail strip */}
-            <div className="flex gap-2 mt-3">
-              {[1, 2, 3, 4].map((i) => (
-                <button
-                  key={i}
-                  className={cn(
-                    "w-16 h-20 rounded-lg bg-neutral-100 flex items-center justify-center border-2 transition-colors",
-                    i === 1
-                      ? "border-rose-gold"
-                      : "border-transparent hover:border-neutral-200"
-                  )}
-                >
-                  <span className="text-xl opacity-20">💎</span>
-                </button>
-              ))}
-            </div>
+            {imagesList.length > 1 && (
+              <div className="flex gap-2.5 mt-3 overflow-x-auto pb-1">
+                {imagesList.map((img, i) => (
+                  <button
+                    key={img.id || i}
+                    onClick={() => setSelectedImageIndex(i)}
+                    className={cn(
+                      "w-16 h-20 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0",
+                      selectedImageIndex === i
+                        ? "border-rose-gold scale-105 shadow-md"
+                        : "border-transparent opacity-70 hover:opacity-100 hover:border-neutral-200"
+                    )}
+                  >
+                    <img
+                      src={img.url}
+                      alt={img.alt || `${product.name} thumbnail ${i + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           {/* Product Info */}
