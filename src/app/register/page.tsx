@@ -37,8 +37,7 @@ export default function RegisterPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         toast.success("Welcome! Account created successfully.");
-        router.push("/account");
-        router.refresh();
+        window.location.href = "/account";
       } else {
         toast.error(data.error || "Failed to create account");
       }

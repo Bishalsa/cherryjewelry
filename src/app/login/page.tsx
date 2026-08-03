@@ -48,8 +48,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         toast.success("Welcome back! Redirecting to account...");
-        router.push("/account");
-        router.refresh();
+        window.location.href = "/account";
       } else {
         toast.error(data.error || "Email not registered. Please sign up.");
       }
