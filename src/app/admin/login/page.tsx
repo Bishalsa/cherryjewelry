@@ -35,8 +35,9 @@ export default function AdminLoginPage() {
       }
 
       toast.success("Welcome back! Redirecting...");
-      router.push("/admin");
-      router.refresh();
+      setTimeout(() => {
+        window.location.href = "/admin";
+      }, 500);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Invalid credentials";
       toast.error(message);
