@@ -75,12 +75,22 @@ export default function AdminSettingsPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="uppercase tracking-wider text-neutral-400 font-medium block">Support Phone Number</label>
+              <label className="uppercase tracking-wider text-neutral-400 font-medium block">Studio / Business Location</label>
               <input
                 type="text"
-                value={storePhone}
-                onChange={(e) => setStorePhone(e.target.value)}
-                className="w-full px-3.5 py-2 border border-neutral-200 rounded-xl focus:outline-none focus:border-rose-gold"
+                value="Kolkata, West Bengal, India"
+                readOnly
+                className="w-full px-3.5 py-2 border border-neutral-200 bg-neutral-50 rounded-xl text-neutral-600 focus:outline-none"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="uppercase tracking-wider text-neutral-400 font-medium block">Instagram Profile URL</label>
+              <input
+                type="url"
+                value="https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh"
+                readOnly
+                className="w-full px-3.5 py-2 border border-neutral-200 bg-neutral-50 rounded-xl text-neutral-600 focus:outline-none"
               />
             </div>
           </div>

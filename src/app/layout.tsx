@@ -207,8 +207,7 @@ const organizationSchema = {
         areaServed: "IN",
       },
       sameAs: [
-        "https://instagram.com/cherryjewelry",
-        "https://facebook.com/cherryjewelry",
+        "https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh",
       ],
     },
     {

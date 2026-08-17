@@ -177,9 +177,30 @@ export const COLLECTION_CONFIGS: Record<string, CollectionConfig> = {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** Returns the config for a slug, or null if not found */
-export function getCollectionConfig(slug: string): CollectionConfig | null {
-  return COLLECTION_CONFIGS[slug] ?? null;
+/** Returns the config for a slug, or dynamically creates one for custom dashboard collections */
+export function getCollectionConfig(slug: string): CollectionConfig {
+  if (COLLECTION_CONFIGS[slug]) {
+    return COLLECTION_CONFIGS[slug];
+  }
+
+  // Format title case from slug (e.g. "kundan-choker" -> "Kundan Choker")
+  const titleCase = slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return {
+    slug,
+    title: `${titleCase} — Fashion Jewelry Collection | ${APP_NAME}`,
+    heading: titleCase,
+    description: `Discover trendy ${titleCase.toLowerCase()} at ${APP_NAME}. Premium anti-tarnish fashion & imitation jewelry from Kolkata with express shipping.`,
+    ogDescription: `Shop ${titleCase.toLowerCase()} at ${APP_NAME} — everyday luxury imitation jewelry with waterproof & skin-friendly finish.`,
+    heroTagline: "Fashion Collection",
+    heroParagraph: `Explore our collection of ${titleCase.toLowerCase()} designed for modern elegance and daily wear.`,
+    emoji: "✨",
+    dbFilter: { category: slug },
+    relatedSlugs: ["new-arrivals", "best-sellers", "rings"],
+  };
 }
 
 /** All valid collection slugs (for generateStaticParams) */

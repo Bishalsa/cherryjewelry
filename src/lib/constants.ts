@@ -3,10 +3,15 @@
 // ============================================
 
 export const APP_NAME = "Cherry Jewelry";
-export const APP_TAGLINE = "Where Artistry Meets Elegance";
-export const APP_DESCRIPTION = "Discover trendy fashion & wholesale jewelry — rings, necklaces, earrings & bracelets. Premium quality metal finish with express shipping above ₹999.";
+export const APP_TAGLINE = "Everyday Luxury Fashion & Imitation Jewelry";
+export const APP_DESCRIPTION = "Discover trendy, premium anti-tarnish fashion & imitation jewelry from Kolkata — necklaces, rings, earrings & bracelets. Waterproof, hypoallergenic finish with express shipping across India.";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cherryjewelry.store";
 export const APP_OG_IMAGE = "/og-image.jpg";
+export const APP_INSTAGRAM_URL = "https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh";
+export const APP_INSTAGRAM_HANDLE = "@cherry_jewelry_official";
+export const APP_LOCATION = "Kolkata, West Bengal, India";
+export const APP_EMAIL = "support@cherryjewelry.in";
+export const APP_PHONE = "+91 98765 43210";
 
 // Navigation
 export const NAV_LINKS = [
@@ -29,15 +34,12 @@ export const FOOTER_LINKS = {
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
-    { label: "Careers", href: "/careers" },
   ],
   support: [
     { label: "FAQ", href: "/faq" },
-    { label: "Shipping", href: "/shipping-policy" },
-    { label: "Returns", href: "/returns" },
-    { label: "Size Guide", href: "/size-guide" },
+    { label: "Shipping Policy", href: "/shipping-policy" },
+    { label: "Returns & Refund", href: "/returns" },
     { label: "Care Guide", href: "/care-guide" },
   ],
   legal: [
@@ -59,16 +61,16 @@ export const CATEGORIES = [
   { name: "Mangalsutra", slug: "mangalsutra", icon: "🪷" },
 ] as const;
 
-// Materials (Normal / Wholesale Fashion Jewelry)
+// Materials (Premium Imitation / Fashion Jewelry)
 export const MATERIALS = [
   "Stainless Steel",
-  "Alloy / Brass",
-  "Gold Plated",
+  "18K Gold Plated",
   "Rose Gold Plated",
   "Silver Plated",
+  "Anti-Tarnish Alloy",
+  "Cubic Zirconia (CZ)",
+  "Shell Inlay / Beads",
   "Oxidised Metal",
-  "Copper",
-  "Beads / Shell",
 ] as const;
 
 // Order statuses
@@ -87,16 +89,15 @@ export const ORDER_STATUSES = {
 // Payment methods
 export const PAYMENT_METHODS = [
   { id: "razorpay", label: "Pay Online (UPI, Cards, Net Banking)", icon: "💳" },
-  { id: "cashfree", label: "Cashfree", icon: "🏦" },
   { id: "cod", label: "Cash on Delivery", icon: "💵" },
 ] as const;
 
 // Trust badges
 export const TRUST_BADGES = [
-  { icon: "Shield", label: "Quality Assured", description: "Premium wholesale & fashion jewelry" },
-  { icon: "Truck", label: "Free Shipping", description: "On orders above ₹999" },
-  { icon: "RefreshCw", label: "Easy Returns", description: "15-day return policy" },
-  { icon: "Lock", label: "Secure Payment", description: "256-bit SSL encryption" },
+  { icon: "Shield", label: "Anti-Tarnish Finish", description: "Water-resistant & durable plating" },
+  { icon: "Truck", label: "Free Express Shipping", description: "On prepaid & orders above ₹999" },
+  { icon: "RefreshCw", label: "7-Day Easy Returns", description: "Hassle-free refund policy" },
+  { icon: "Lock", label: "100% Safe Payments", description: "Secured with Razorpay 256-bit SSL" },
 ] as const;
 
 // Free shipping threshold (INR)

@@ -59,16 +59,16 @@ export default function AboutPage() {
         <div className="container-luxury">
           <div className="max-w-3xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="font-heading text-3xl text-deep-plum mb-6">Our Journey</h2>
+              <h2 className="font-heading text-3xl text-deep-plum mb-6">Born in Kolkata, Made for You</h2>
               <div className="text-sm text-neutral-500 space-y-4 leading-relaxed">
                 <p>
-                  {APP_NAME} was born from a simple belief: that everyone deserves to wear jewelry that is as unique and extraordinary as they are. Founded with a passion for artisanal craftsmanship and a vision for modern luxury, we set out to create a platform where quality meets accessibility.
+                  {APP_NAME} was founded in the cultural heart of Kolkata with a distinct mission: to bring high-fashion, anti-tarnish imitation jewelry to modern women without the exorbitant markup of traditional precious metals.
                 </p>
                 <p>
-                  Our team of master artisans, with generations of expertise, works tirelessly to bring you jewelry that transcends trends. Every design begins with inspiration — from nature, architecture, emotions — and is refined through countless iterations until it achieves perfection.
+                  We hand-select durable materials — including surgical grade stainless steel, 18K PVD gold plating, and AAA cubic zirconia crystals — to deliver jewelry that is waterproof, hypoallergenic, and built for daily wear.
                 </p>
                 <p>
-                  Today, {APP_NAME} is proud to serve customers across India, offering a curated selection of rings, necklaces, earrings, bracelets, and more. Each piece in our collection is a testament to our commitment to excellence, sustainability, and the art of fine jewelry making.
+                  Today, {APP_NAME} delivers to fashion lovers and retail customers all across India. Follow our journey on Instagram at <a href="https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh" target="_blank" rel="noopener noreferrer" className="text-rose-gold font-medium hover:underline">@cherry_jewelry_official</a> for new drops and styling inspirations.
                 </p>
               </div>
             </motion.div>

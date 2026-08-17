@@ -538,15 +538,19 @@ function InstagramGallery() {
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader
           subtitle="Follow Us"
-          title="@CherryJewelry"
-          description="Join our community of jewelry lovers. Tag us in your photos for a chance to be featured."
+          title="@cherry_jewelry_official"
+          description="Follow us on Instagram for daily styling inspiration, new anti-tarnish drops, and behind-the-scenes from Kolkata."
+          action={{
+            label: "Follow on Instagram",
+            href: "https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh",
+          }}
         />
 
         <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mt-12">
           {images.map((img, i) => (
             <motion.a
               key={img.id}
-              href="https://instagram.com"
+              href="https://www.instagram.com/cherry_jewelry_official?igsh=Mmc4NHk4bTR5dWZh&igsi=Mmc4NHk4bTR5dWZh"
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, scale: 0.9 }}
