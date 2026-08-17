@@ -15,7 +15,8 @@ import {
   Home, 
   Briefcase,
   Globe,
-  X
+  X,
+  ArrowLeft
 } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
@@ -226,6 +227,17 @@ export default function AccountPage() {
 
   return (
     <div className="container-luxury py-10 md:py-16">
+      {/* Back to Home */}
+      <div className="mb-6">
+        <a
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-neutral-500 hover:text-rose-gold-dark transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </a>
+      </div>
+
       <div className="flex flex-col lg:flex-row gap-8">
         
         {/* Sidebar Nav */}
@@ -275,12 +287,19 @@ export default function AccountPage() {
               })}
             </div>
 
-            <div className="border-t border-neutral-100 mt-6 pt-4">
+            <div className="border-t border-neutral-100 mt-6 pt-4 space-y-1">
+              <a
+                href="/collections"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-neutral-500 hover:bg-neutral-50 hover:text-deep-plum transition-all"
+              >
+                <ShoppingBag className="w-4 h-4 text-neutral-400" />
+                Continue Shopping
+              </a>
               <button
                 onClick={handleLogout}
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-neutral-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
               >
-                <LogOut className="w-4 h-4 text-neutral-400 group-hover:text-rose-600" />
+                <LogOut className="w-4 h-4 text-neutral-400" />
                 Sign Out
               </button>
             </div>
