@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { razorpay } from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/constants";
@@ -185,6 +186,18 @@ export async function POST(req: Request) {
     let createdOrderId = `ord-${Date.now()}`;
     let dbOrderCreated = false;
 
+    // Try to resolve the logged-in user
+    let userId: string | null = null;
+    try {
+      const cookieStore = await cookies();
+      const sessionCookie = cookieStore.get("user_session");
+      if (sessionCookie?.value) {
+        userId = sessionCookie.value;
+      }
+    } catch {
+      // ignore cookie read errors
+    }
+
     try {
       const order = await prisma.order.create({
         data: {
@@ -201,6 +214,7 @@ export async function POST(req: Request) {
           total,
           notes: orderNotes || null,
           shippingData: shippingAddress,
+          ...(userId && { userId }),
           items: {
             create: resolvedItems.map((ri) => ({
               productId: ri.productId,

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import prisma from "@/lib/prisma";
+import { getDynamicOrders } from "@/lib/dynamic-store";
 
 export async function GET() {
   try {
@@ -17,14 +18,6 @@ export async function GET() {
         addresses: {
           orderBy: { isDefault: "desc" },
         },
-        orders: {
-          include: {
-            items: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
       },
     });
 
@@ -34,7 +27,55 @@ export async function GET() {
       return NextResponse.json({ success: true, user: null });
     }
 
-    return NextResponse.json({ success: true, user });
+    // Fetch orders by userId OR by user's email (for guest checkout orders)
+    let dbOrders: any[] = [];
+    try {
+      dbOrders = await prisma.order.findMany({
+        where: {
+          OR: [
+            { userId: user.id },
+            { email: user.email },
+          ],
+        },
+        include: {
+          items: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    } catch (dbErr) {
+      console.warn("Failed to fetch orders from DB:", dbErr);
+    }
+
+    // Also merge dynamic orders matching user's email
+    const dynamicOrders = getDynamicOrders();
+    const dynamicMatching = dynamicOrders.filter(
+      (o) => o.email.toLowerCase() === user.email.toLowerCase()
+    );
+
+    // Deduplicate by orderNumber
+    const orderMap = new Map<string, any>();
+    for (const o of dbOrders) {
+      orderMap.set(o.orderNumber || o.id, o);
+    }
+    for (const o of dynamicMatching) {
+      if (!orderMap.has(o.orderNumber) && !orderMap.has(o.id)) {
+        orderMap.set(o.orderNumber || o.id, o);
+      }
+    }
+
+    const mergedOrders = Array.from(orderMap.values()).sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        ...user,
+        orders: mergedOrders,
+      },
+    });
   } catch (error) {
     console.error("Auth GET API Error:", error);
     return NextResponse.json(
@@ -65,7 +106,7 @@ export async function POST(req: Request) {
 
       if (!user) {
         return NextResponse.json(
-          { success: false, error: "Account not found with this email" },
+          { success: false, error: "No account found with this email. Please create an account first." },
           { status: 404 }
         );
       }
@@ -84,7 +125,7 @@ export async function POST(req: Request) {
     } 
     
     if (action === "register") {
-      if (!name) {
+      if (!name || !name.trim()) {
         return NextResponse.json(
           { success: false, error: "Name is required for registration" },
           { status: 400 }
@@ -98,7 +139,7 @@ export async function POST(req: Request) {
 
       if (existingUser) {
         return NextResponse.json(
-          { success: false, error: "An account already exists with this email" },
+          { success: false, error: "An account with this email already exists. Please sign in instead." },
           { status: 409 }
         );
       }
@@ -117,7 +158,7 @@ export async function POST(req: Request) {
         },
       });
 
-      // Set session cookie
+      // Set session cookie (auto-login after registration)
       const cookieStore = await cookies();
       cookieStore.set("user_session", user.id, {
         path: "/",
@@ -134,8 +175,17 @@ export async function POST(req: Request) {
       { success: false, error: "Invalid action" },
       { status: 400 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Auth POST API Error:", error);
+
+    // Handle Prisma unique constraint violations
+    if (error?.code === "P2002") {
+      return NextResponse.json(
+        { success: false, error: "An account with this email already exists. Please sign in instead." },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
       { success: false, error: "Internal Server Error" },
       { status: 500 }

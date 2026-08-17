@@ -1,10 +1,10 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { CheckCircle2, Package, ShoppingBag, Loader2 } from "lucide-react";
+import { CheckCircle2, Package, ShoppingBag, Loader2, Home } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 
 interface OrderData {
@@ -101,21 +101,30 @@ function OrderConfirmationContent() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+          <div className="flex flex-col gap-3 max-w-sm mx-auto">
             <Link
-              href="/collections"
+              href="/"
               className="flex items-center justify-center gap-2 px-6 py-3.5 bg-deep-plum text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors btn-glow"
             >
-              <ShoppingBag className="w-4 h-4" />
-              Continue Shopping
+              <Home className="w-4 h-4" />
+              Back to Home
             </Link>
-            <Link
-              href="/account"
-              className="flex items-center justify-center gap-2 px-6 py-3.5 border border-neutral-200 text-neutral-600 rounded-full text-sm font-medium hover:bg-neutral-50 transition-colors"
-            >
-              <Package className="w-4 h-4" />
-              Go to Account
-            </Link>
+            <div className="grid grid-cols-2 gap-3">
+              <Link
+                href="/collections"
+                className="flex items-center justify-center gap-2 px-4 py-3 border border-neutral-200 text-neutral-600 rounded-full text-sm font-medium hover:bg-neutral-50 transition-colors"
+              >
+                <ShoppingBag className="w-4 h-4" />
+                Shop More
+              </Link>
+              <Link
+                href="/account"
+                className="flex items-center justify-center gap-2 px-4 py-3 border border-neutral-200 text-neutral-600 rounded-full text-sm font-medium hover:bg-neutral-50 transition-colors"
+              >
+                <Package className="w-4 h-4" />
+                My Account
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>

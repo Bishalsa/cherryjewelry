@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -337,7 +337,14 @@ export default function AccountPage() {
                   <div className="text-center py-12">
                     <p className="text-5xl mb-4">🛍️</p>
                     <h3 className="font-heading text-lg text-deep-plum">No orders placed yet</h3>
-                    <p className="text-neutral-400 text-sm mt-1">Explore our catalog and find your perfect piece.</p>
+                    <p className="text-neutral-400 text-sm mt-1 mb-6">Explore our catalog and find your perfect piece.</p>
+                    <a
+                      href="/collections"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-deep-plum text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      Start Shopping
+                    </a>
                   </div>
                 ) : (
                   <div className="space-y-6">

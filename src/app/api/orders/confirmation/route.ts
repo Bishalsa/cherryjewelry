@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getDynamicOrders } from "@/lib/dynamic-store";
 
 export async function GET(req: Request) {
   try {
@@ -13,17 +14,45 @@ export async function GET(req: Request) {
       );
     }
 
-    const order = await prisma.order.findUnique({
-      where: { id: orderId },
-      select: {
-        orderNumber: true,
-        createdAt: true,
-        paymentMethod: true,
-        total: true,
-        email: true,
-        phone: true,
-      },
-    });
+    // Try DB first
+    let order: any = null;
+    try {
+      order = await prisma.order.findUnique({
+        where: { id: orderId },
+        select: {
+          orderNumber: true,
+          createdAt: true,
+          paymentMethod: true,
+          total: true,
+          email: true,
+          phone: true,
+          status: true,
+          paymentStatus: true,
+        },
+      });
+    } catch (dbErr) {
+      console.warn("Order confirmation DB error:", dbErr);
+    }
+
+    // Fallback to dynamic orders store
+    if (!order) {
+      const dynamicOrders = getDynamicOrders();
+      const dynamicMatch = dynamicOrders.find(
+        (o) => o.id === orderId || o.orderNumber === orderId
+      );
+      if (dynamicMatch) {
+        order = {
+          orderNumber: dynamicMatch.orderNumber,
+          createdAt: dynamicMatch.createdAt,
+          paymentMethod: dynamicMatch.paymentMethod,
+          total: dynamicMatch.total,
+          email: dynamicMatch.email,
+          phone: dynamicMatch.phone,
+          status: dynamicMatch.status,
+          paymentStatus: dynamicMatch.paymentStatus,
+        };
+      }
+    }
 
     if (!order) {
       return NextResponse.json(
