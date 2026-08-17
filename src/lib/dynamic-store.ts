@@ -235,3 +235,99 @@ export function softDeleteDynamicProduct(id: string): boolean {
   }
   return false;
 }
+
+// ============================================
+// Dynamic Orders Store (Fallback persistence)
+// ============================================
+
+export interface DynamicOrder {
+  id: string;
+  orderNumber: string;
+  email: string;
+  phone: string;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  discount: number;
+  total: number;
+  notes?: string | null;
+  shippingData?: any;
+  items: Array<{
+    id: string;
+    productId: string;
+    variantId?: string | null;
+    name: string;
+    sku: string;
+    image?: string;
+    price: number;
+    quantity: number;
+    total: number;
+  }>;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const ORDERS_FILE_PATH = path.join(process.cwd(), "src", "data", "orders.json");
+
+const globalOrderStore = globalThis as unknown as {
+  __dynamicOrdersStore?: DynamicOrder[];
+};
+
+export function getDynamicOrders(): DynamicOrder[] {
+  if (globalOrderStore.__dynamicOrdersStore) {
+    return globalOrderStore.__dynamicOrdersStore;
+  }
+  try {
+    if (fs.existsSync(ORDERS_FILE_PATH)) {
+      const data = fs.readFileSync(ORDERS_FILE_PATH, "utf-8");
+      const parsed = JSON.parse(data);
+      globalOrderStore.__dynamicOrdersStore = parsed;
+      return parsed;
+    }
+  } catch (err) {
+    console.warn("Failed to load orders from file:", err);
+  }
+  globalOrderStore.__dynamicOrdersStore = [];
+  return [];
+}
+
+export function saveOrdersToFile(orders: DynamicOrder[]) {
+  try {
+    const dir = path.dirname(ORDERS_FILE_PATH);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(ORDERS_FILE_PATH, JSON.stringify(orders, null, 2), "utf-8");
+  } catch (err) {
+    console.warn("Failed to save orders to file:", err);
+  }
+}
+
+export function addDynamicOrder(order: DynamicOrder): DynamicOrder {
+  const store = getDynamicOrders();
+  const existingIdx = store.findIndex((o) => o.id === order.id || o.orderNumber === order.orderNumber);
+  if (existingIdx >= 0) {
+    store[existingIdx] = order;
+  } else {
+    store.unshift(order);
+  }
+  globalOrderStore.__dynamicOrdersStore = store;
+  saveOrdersToFile(store);
+  return order;
+}
+
+export function updateDynamicOrder(id: string, updates: Partial<DynamicOrder>): DynamicOrder | null {
+  const store = getDynamicOrders();
+  const order = store.find((o) => o.id === id || o.orderNumber === id);
+  if (!order) return null;
+  Object.assign(order, updates, { updatedAt: new Date().toISOString() });
+  globalOrderStore.__dynamicOrdersStore = store;
+  saveOrdersToFile(store);
+  return order;
+}

@@ -127,6 +127,21 @@ export default function CheckoutPage() {
     }
   };
 
+  const loadRazorpay = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window !== "undefined" && (window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePlaceOrder = async () => {
     if (
       !formData.email ||
@@ -174,10 +189,18 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok || !data.success) {
         toast.error(data.error || "Failed to place order. Please try again.");
+        setPlacingOrder(false);
         return;
       }
 
       if (formData.paymentMethod === "razorpay" && data.payment?.provider === "razorpay") {
+        const isLoaded = await loadRazorpay();
+        if (!isLoaded || !(window as any).Razorpay) {
+          toast.error("Unable to load Razorpay payment gateway. Please check your internet connection.");
+          setPlacingOrder(false);
+          return;
+        }
+
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80",
           amount: data.payment.amount,
@@ -208,10 +231,12 @@ export default function CheckoutPage() {
                 router.refresh();
               } else {
                 toast.error(verifyData.error || "Payment verification failed", { id: toastId });
+                setPlacingOrder(false);
               }
             } catch (err) {
               console.error("Verification call failed:", err);
               toast.error("Failed to verify payment. Please contact support.", { id: toastId });
+              setPlacingOrder(false);
             }
           },
           prefill: {
@@ -224,7 +249,7 @@ export default function CheckoutPage() {
           },
           modal: {
             ondismiss: function () {
-              toast.warning("Payment cancelled by user.");
+              toast.info("Payment cancelled. You can retry placing your order anytime.");
               setPlacingOrder(false);
             },
           },
@@ -234,6 +259,7 @@ export default function CheckoutPage() {
         rzp.on("payment.failed", function (response: any) {
           toast.error(response.error?.description || "Payment failed. Please try again.");
           console.error("Payment failed error:", response.error);
+          setPlacingOrder(false);
         });
         rzp.open();
       } else {
@@ -244,8 +270,7 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       console.error("Order Checkout error:", error);
-      toast.error("Place order failed. Check connection.");
-    } finally {
+      toast.error("Failed to connect to checkout service. Please try again.");
       setPlacingOrder(false);
     }
   };

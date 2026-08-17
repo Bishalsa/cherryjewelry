@@ -579,59 +579,59 @@ export async function checkStock(
 ): Promise<StockCheckResult> {
   const unavailableItems: StockCheckResult["unavailableItems"] = [];
 
-  try {
-    for (const item of items) {
-      const product = await prisma.product.findUnique({
-        where: { id: item.productId },
+  for (const item of items) {
+    try {
+      let product = await prisma.product.findFirst({
+        where: {
+          OR: [{ id: item.productId }, { slug: item.productId }],
+        },
         include: { variants: { include: { inventory: true } } },
       });
 
-      if (!product) {
-        unavailableItems.push({
-          productId: item.productId,
-          variantId: item.variantId,
-          name: "Unknown product",
-          requested: item.quantity,
-          available: 0,
-        });
+      if (product) {
+        if (item.variantId) {
+          const variant = product.variants.find((v) => v.id === item.variantId || v.sku === item.variantId);
+          if (variant) {
+            const totalAvailable = Array.isArray(variant.inventory) && variant.inventory.length > 0
+              ? variant.inventory.reduce((sum, inv) => sum + (inv.quantity - (inv.reserved || 0)), 0)
+              : 10;
+
+            if (totalAvailable < item.quantity) {
+              unavailableItems.push({
+                productId: item.productId,
+                variantId: item.variantId,
+                name: `${product.name} - ${variant.name}`,
+                requested: item.quantity,
+                available: Math.max(0, totalAvailable),
+              });
+            }
+            continue;
+          }
+        }
         continue;
       }
-
-      if (item.variantId) {
-        const variant = product.variants.find(
-          (v) => v.id === item.variantId
-        );
-        if (!variant) {
-          unavailableItems.push({
-            productId: item.productId,
-            variantId: item.variantId,
-            name: product.name,
-            requested: item.quantity,
-            available: 0,
-          });
-          continue;
-        }
-
-        // Calculate available stock across all warehouses
-        const totalAvailable = variant.inventory.reduce(
-          (sum, inv) => sum + (inv.quantity - inv.reserved),
-          0
-        );
-
-        if (totalAvailable < item.quantity) {
-          unavailableItems.push({
-            productId: item.productId,
-            variantId: item.variantId,
-            name: `${product.name} - ${variant.name}`,
-            requested: item.quantity,
-            available: Math.max(0, totalAvailable),
-          });
-        }
-      }
+    } catch {
+      // Ignore DB error, proceed to dynamic/sample lookup
     }
-  } catch {
-    // If DB is unavailable, skip stock check (allow checkout)
-    return { available: true, unavailableItems: [] };
+
+    // Check Dynamic Store or Sample Products
+    const dynamicMatch = (getDynamicProducts() as unknown as Product[]).find(
+      (p) => p.id === item.productId || p.slug === item.productId
+    );
+    const sampleMatch = sampleProducts.find(
+      (p) => p.id === item.productId || p.slug === item.productId
+    );
+    const fallbackProduct = dynamicMatch || sampleMatch;
+
+    if (!fallbackProduct) {
+      unavailableItems.push({
+        productId: item.productId,
+        variantId: item.variantId,
+        name: "Item",
+        requested: item.quantity,
+        available: 0,
+      });
+    }
   }
 
   return {

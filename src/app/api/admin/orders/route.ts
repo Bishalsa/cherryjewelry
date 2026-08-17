@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import { sendShippingConfirmationEmail } from "@/lib/email";
+import { getDynamicOrders, updateDynamicOrder } from "@/lib/dynamic-store";
 
 export async function GET() {
+  let dbOrders: any[] = [];
   try {
-    const orders = await prisma.order.findMany({
+    dbOrders = await prisma.order.findMany({
       include: {
         items: true,
       },
@@ -13,15 +15,29 @@ export async function GET() {
         createdAt: "desc",
       },
     });
-
-    return NextResponse.json({ success: true, orders });
   } catch (error) {
-    console.error("Orders GET API Error:", error);
-    return NextResponse.json(
-      { success: false, error: "Failed to retrieve orders" },
-      { status: 500 }
-    );
+    console.warn("Orders GET DB Warning (falling back to dynamic store):", error);
   }
+
+  const dynamicOrders = getDynamicOrders();
+  const orderMap = new Map<string, any>();
+
+  // Add DB orders
+  for (const o of dbOrders) {
+    orderMap.set(o.orderNumber || o.id, o);
+  }
+  // Overlay dynamic orders (if any punched recently)
+  for (const doItem of dynamicOrders) {
+    if (!orderMap.has(doItem.orderNumber) && !orderMap.has(doItem.id)) {
+      orderMap.set(doItem.orderNumber || doItem.id, doItem);
+    }
+  }
+
+  const orders = Array.from(orderMap.values()).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  return NextResponse.json({ success: true, orders });
 }
 
 export async function PUT(req: Request) {
