@@ -201,67 +201,73 @@ export default function CheckoutPage() {
           return;
         }
 
-        const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80",
-          amount: data.payment.amount,
-          currency: data.payment.currency,
-          name: APP_NAME,
-          description: `Order ${data.orderNumber}`,
-          order_id: data.payment.id,
-          handler: async function (response: any) {
-            const toastId = toast.loading("Verifying payment...");
-            try {
-              const verifyRes = await fetch("/api/verify-payment", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_signature: response.razorpay_signature,
-                  orderId: data.orderId,
-                }),
-              });
+        try {
+          const options = {
+            key: data.payment.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80",
+            amount: data.payment.amount,
+            currency: data.payment.currency,
+            name: APP_NAME,
+            description: `Order ${data.orderNumber}`,
+            order_id: data.payment.id,
+            handler: async function (response: any) {
+              const toastId = toast.loading("Verifying payment...");
+              try {
+                const verifyRes = await fetch("/api/verify-payment", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature,
+                    orderId: data.orderId,
+                  }),
+                });
 
-              const verifyData = await verifyRes.json();
+                const verifyData = await verifyRes.json();
 
-              if (verifyRes.ok && verifyData.success) {
-                toast.success("Payment Successful! Completing order...", { id: toastId });
-                useCartStore.getState().clearCart();
-                router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
-                router.refresh();
-              } else {
-                toast.error(verifyData.error || "Payment verification failed", { id: toastId });
+                if (verifyRes.ok && verifyData.success) {
+                  toast.success("Payment Successful! Completing order...", { id: toastId });
+                  useCartStore.getState().clearCart();
+                  router.push(`/order-confirmation?orderNumber=${data.orderNumber}&orderId=${data.orderId}`);
+                  router.refresh();
+                } else {
+                  toast.error(verifyData.error || "Payment verification failed", { id: toastId });
+                  setPlacingOrder(false);
+                }
+              } catch (err) {
+                console.error("Verification call failed:", err);
+                toast.error("Failed to verify payment. Please contact support.", { id: toastId });
                 setPlacingOrder(false);
               }
-            } catch (err) {
-              console.error("Verification call failed:", err);
-              toast.error("Failed to verify payment. Please contact support.", { id: toastId });
-              setPlacingOrder(false);
-            }
-          },
-          prefill: {
-            name: `${formData.firstName} ${formData.lastName}`,
-            email: formData.email,
-            contact: formData.phone,
-          },
-          theme: {
-            color: "#C5A572",
-          },
-          modal: {
-            ondismiss: function () {
-              toast.info("Payment cancelled. You can retry placing your order anytime.");
-              setPlacingOrder(false);
             },
-          },
-        };
+            prefill: {
+              name: `${formData.firstName} ${formData.lastName}`,
+              email: formData.email,
+              contact: formData.phone,
+            },
+            theme: {
+              color: "#C5A572",
+            },
+            modal: {
+              ondismiss: function () {
+                toast.info("Payment cancelled. You can retry placing your order anytime.");
+                setPlacingOrder(false);
+              },
+            },
+          };
 
-        const rzp = new (window as any).Razorpay(options);
-        rzp.on("payment.failed", function (response: any) {
-          toast.error(response.error?.description || "Payment failed. Please try again.");
-          console.error("Payment failed error:", response.error);
+          const rzp = new (window as any).Razorpay(options);
+          rzp.on("payment.failed", function (response: any) {
+            toast.error(response.error?.description || "Payment failed. Please try again.");
+            console.error("Payment failed error:", response.error);
+            setPlacingOrder(false);
+          });
+          rzp.open();
+        } catch (rzpErr) {
+          console.error("Razorpay instance creation error:", rzpErr);
+          toast.error("Could not open payment window. Please try again.");
           setPlacingOrder(false);
-        });
-        rzp.open();
+        }
       } else {
         toast.success("Order placed successfully! Thank you.");
         useCartStore.getState().clearCart();

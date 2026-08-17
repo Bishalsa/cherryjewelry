@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Contact details are required" }, { status: 400 });
     }
 
-    // 0. Check stock availability before processing
+    // 0. Check stock availability
     const stockResult = await checkStock(
       items.map((item: { productId: string; variantId?: string; quantity: number }) => ({
         productId: item.productId,
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1. Calculate subtotal and resolve products
+    // 1. Resolve every cart item against Database or Dynamic/Sample store
     let subtotal = 0;
     const resolvedItems: Array<{
       productId: string;
@@ -61,19 +61,23 @@ export async function POST(req: Request) {
       let matchedProduct: any = null;
       let matchedVariant: any = null;
 
-      // 1a. Try DB search by id or slug
+      // 1a. Try finding in DB by ID, Slug, or SKU
       try {
         matchedProduct = await prisma.product.findFirst({
           where: {
-            OR: [{ id: item.productId }, { slug: item.productId }],
+            OR: [
+              { id: item.productId },
+              { slug: item.productId },
+              { sku: item.productId },
+            ],
           },
           include: { variants: true, images: { orderBy: { position: "asc" } } },
         });
       } catch (dbErr) {
-        console.warn("DB Product search warning during checkout:", dbErr);
+        console.warn("DB product lookup notice:", dbErr);
       }
 
-      // 1b. Fallback to Dynamic Store or Sample Products
+      // 1b. Fallback to Dynamic store or Sample data lookup
       if (!matchedProduct) {
         const dynamicMatch = (getDynamicProducts() as unknown as Product[]).find(
           (p) => p.id === item.productId || p.slug === item.productId
@@ -84,46 +88,55 @@ export async function POST(req: Request) {
         const fallback = dynamicMatch || sampleMatch;
 
         if (fallback) {
-          // If product exists in memory/fallback but not in DB, sync it to PostgreSQL
+          // Look for matching product in DB by fallback slug or name
           try {
-            let cat = await prisma.category.findFirst({
+            matchedProduct = await prisma.product.findFirst({
               where: {
-                OR: [{ id: fallback.categoryId }, { slug: fallback.category?.slug || "necklaces" }],
+                OR: [
+                  { slug: fallback.slug },
+                  { name: { contains: fallback.name.slice(0, 25), mode: "insensitive" } },
+                ],
               },
+              include: { variants: true, images: { orderBy: { position: "asc" } } },
             });
-            if (!cat) {
-              cat = (await prisma.category.findFirst()) || (await prisma.category.create({
-                data: { name: "Necklaces", slug: "necklaces", description: "Fine jewelry" },
-              }));
-            }
 
-            matchedProduct = await prisma.product.create({
-              data: {
-                id: fallback.id.startsWith("nkc-") ? undefined : fallback.id,
-                name: fallback.name,
-                slug: fallback.slug,
-                description: fallback.description || fallback.name,
-                shortDescription: fallback.shortDescription || "",
-                price: Number(fallback.price),
-                compareAtPrice: fallback.compareAtPrice ? Number(fallback.compareAtPrice) : null,
-                sku: fallback.sku || `CJ-${Date.now().toString().slice(-6)}`,
-                material: fallback.material || "Stainless Steel",
-                categoryId: cat.id,
-                isActive: true,
-                variants: {
-                  create: {
-                    name: "Standard",
-                    sku: `${fallback.sku || "CJ"}-STD`,
-                    price: Number(fallback.price),
-                    material: fallback.material || "Stainless Steel",
-                    isActive: true,
+            // If still not in DB, create it with a safe unique slug
+            if (!matchedProduct) {
+              let cat = await prisma.category.findFirst();
+              if (!cat) {
+                cat = await prisma.category.create({
+                  data: { name: "Jewelry", slug: "jewelry", description: "Fashion jewelry" },
+                });
+              }
+
+              const safeSlug = `${fallback.slug || "product"}-${Date.now().toString().slice(-4)}`;
+              matchedProduct = await prisma.product.create({
+                data: {
+                  name: fallback.name,
+                  slug: safeSlug,
+                  description: fallback.description || fallback.name,
+                  shortDescription: fallback.shortDescription || "",
+                  price: Number(fallback.price),
+                  compareAtPrice: fallback.compareAtPrice ? Number(fallback.compareAtPrice) : null,
+                  sku: fallback.sku || `CJ-${Date.now().toString().slice(-6)}`,
+                  material: fallback.material || "Stainless Steel",
+                  categoryId: cat.id,
+                  isActive: true,
+                  variants: {
+                    create: {
+                      name: "Standard",
+                      sku: `${fallback.sku || "CJ"}-STD`,
+                      price: Number(fallback.price),
+                      material: fallback.material || "Stainless Steel",
+                      isActive: true,
+                    },
                   },
                 },
-              },
-              include: { variants: true, images: true },
-            });
+                include: { variants: true, images: true },
+              });
+            }
           } catch (syncErr) {
-            console.warn("Could not sync fallback product to DB:", syncErr);
+            console.warn("Could not sync product in DB, using fallback:", syncErr);
             matchedProduct = fallback;
           }
         }
@@ -182,11 +195,7 @@ export async function POST(req: Request) {
     // 3. Generate unique order number
     const orderNumber = `CJ-${Date.now().toString().slice(-6)}-${Math.floor(100 + Math.random() * 900)}`;
 
-    // 4. Create Order in Database (or Dynamic fallback)
-    let createdOrderId = `ord-${Date.now()}`;
-    let dbOrderCreated = false;
-
-    // Try to resolve the logged-in user
+    // 4. Resolve logged-in user if available
     let userId: string | null = null;
     try {
       const cookieStore = await cookies();
@@ -195,9 +204,13 @@ export async function POST(req: Request) {
         userId = sessionCookie.value;
       }
     } catch {
-      // ignore cookie read errors
+      // ignore cookie error
     }
 
+    let createdOrderId = `ord-${Date.now()}`;
+    let dbOrderCreated = false;
+
+    // 5. Create Order in Database
     try {
       const order = await prisma.order.create({
         data: {
@@ -233,7 +246,7 @@ export async function POST(req: Request) {
       createdOrderId = order.id;
       dbOrderCreated = true;
     } catch (orderDbErr) {
-      console.warn("Prisma order creation warning (saving to dynamic store):", orderDbErr);
+      console.warn("Order creation DB warning (mirroring in dynamic store):", orderDbErr);
     }
 
     // Always mirror in dynamic store so admin orders always show it
@@ -267,7 +280,7 @@ export async function POST(req: Request) {
       updatedAt: new Date().toISOString(),
     });
 
-    // 4b. Reserve inventory in DB if possible
+    // Reserve inventory if possible
     await reserveInventory(
       items.map((item: { productId: string; variantId?: string; quantity: number }) => ({
         productId: item.productId,
@@ -276,7 +289,9 @@ export async function POST(req: Request) {
       }))
     );
 
-    // 5. Handle Payment Method
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80";
+
+    // 6. Handle Payment Method
     if (paymentMethod === "razorpay") {
       try {
         const amountPaise = Math.round(total * 100);
@@ -323,6 +338,7 @@ export async function POST(req: Request) {
           orderNumber,
           payment: {
             provider: "razorpay",
+            key: razorpayKeyId,
             id: rpOrder.id,
             amount: rpOrder.amount,
             currency: rpOrder.currency,
@@ -330,16 +346,6 @@ export async function POST(req: Request) {
         });
       } catch (rpError: any) {
         console.error("Razorpay API Error:", rpError);
-        if (
-          rpError.statusCode === 401 ||
-          rpError?.error?.code === "AUTHENTICATION_ERROR" ||
-          rpError?.message?.includes("Authentication failed")
-        ) {
-          return NextResponse.json(
-            { success: false, error: "Payment gateway credentials error (401)" },
-            { status: 401 }
-          );
-        }
         return NextResponse.json(
           {
             success: false,
