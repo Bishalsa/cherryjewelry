@@ -56,7 +56,9 @@ export default function ProductDetailClient({
   const discount = comparePrice
     ? getDiscountPercentage(comparePrice, currentPrice)
     : 0;
-  const currentStock = selectedVariant?.stock ?? 0;
+  const currentStock =
+    selectedVariant?.stock ??
+    (!product.variants || product.variants.length === 0 ? 10 : 0);
 
   const handleAddToCart = () => {
     addItem(product, selectedVariant, quantity);

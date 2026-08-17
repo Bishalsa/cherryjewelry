@@ -1,7 +1,17 @@
 import Razorpay from "razorpay";
 
-if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-  console.warn("Razorpay API keys are missing. Payments will not work.");
+export function getRazorpayClient() {
+  const key_id = process.env.RAZORPAY_KEY_ID;
+  const key_secret = process.env.RAZORPAY_KEY_SECRET;
+
+  if (!key_id || !key_secret) {
+    throw new Error("Razorpay credentials (RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET) are missing.");
+  }
+
+  return new Razorpay({
+    key_id,
+    key_secret,
+  });
 }
 
 export const razorpay = new Razorpay({

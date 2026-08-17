@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -179,7 +179,7 @@ export default function CheckoutPage() {
 
       if (formData.paymentMethod === "razorpay" && data.payment?.provider === "razorpay") {
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_mockkey",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80",
           amount: data.payment.amount,
           currency: data.payment.currency,
           name: APP_NAME,

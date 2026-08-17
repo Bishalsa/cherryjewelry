@@ -27,7 +27,30 @@ function toNumberOrNull(value: any): number | null {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeProduct(dbProduct: any): Product {
+  const normalizedVariants = (dbProduct.variants || []).map(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (v: any) => normalizeVariant(v)
+  );
+
+  // If no variants exist, provide a sensible default variant
+  if (normalizedVariants.length === 0) {
+    normalizedVariants.push({
+      id: `var-${dbProduct.id}-default`,
+      name: "Standard",
+      sku: `${dbProduct.sku}-STD`,
+      price: toNumber(dbProduct.price),
+      compareAtPrice: toNumberOrNull(dbProduct.compareAtPrice),
+      material: dbProduct.material || "Stainless Steel",
+      size: null,
+      weight: dbProduct.weight || null,
+      stock: 10,
+      productId: dbProduct.id,
+      isActive: true,
+    });
+  }
+
   return {
     id: dbProduct.id,
     name: dbProduct.name,
@@ -55,10 +78,7 @@ function normalizeProduct(dbProduct: any): Product {
         productId: img.productId,
       })
     ),
-    variants: (dbProduct.variants || []).map(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (v: any) => normalizeVariant(v)
-    ),
+    variants: normalizedVariants,
     reviews: dbProduct.reviews || [],
     tags: dbProduct.tags || [],
     metaTitle: dbProduct.metaTitle || null,
@@ -76,6 +96,22 @@ function normalizeProduct(dbProduct: any): Product {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeVariant(v: any): ProductVariant {
+  let stockQuantity = 10;
+  if (typeof v.stock === "number") {
+    stockQuantity = v.stock;
+  } else if (Array.isArray(v.inventory)) {
+    if (v.inventory.length > 0) {
+      stockQuantity = v.inventory.reduce(
+        (sum: number, inv: any) => sum + Math.max(0, (inv.quantity ?? 0) - (inv.reserved ?? 0)),
+        0
+      );
+    } else {
+      stockQuantity = 10;
+    }
+  } else if (v.inventory?.quantity !== undefined) {
+    stockQuantity = Number(v.inventory.quantity);
+  }
+
   return {
     id: v.id,
     name: v.name,
@@ -85,7 +121,7 @@ function normalizeVariant(v: any): ProductVariant {
     material: v.material,
     size: v.size || null,
     weight: v.weight || null,
-    stock: v.stock ?? v.inventory?.[0]?.quantity ?? 0,
+    stock: stockQuantity,
     productId: v.productId,
     isActive: v.isActive ?? true,
   };
@@ -212,7 +248,11 @@ export async function getProducts(
       where,
       include: {
         images: { orderBy: { position: "asc" } },
-        variants: true,
+        variants: {
+          include: {
+            inventory: true,
+          },
+        },
         category: true,
       },
       orderBy,
@@ -224,7 +264,11 @@ export async function getProducts(
         where: { isActive: true, deletedAt: null },
         include: {
           images: { orderBy: { position: "asc" } },
-          variants: true,
+          variants: {
+            include: {
+              inventory: true,
+            },
+          },
           category: true,
         },
         orderBy: { createdAt: "desc" },
@@ -324,7 +368,11 @@ export async function getProductBySlug(
       where: { slug },
       include: {
         images: { orderBy: { position: "asc" } },
-        variants: true,
+        variants: {
+          include: {
+            inventory: true,
+          },
+        },
         category: true,
       },
     });
@@ -365,7 +413,11 @@ export async function getRelatedProducts(
       },
       include: {
         images: { orderBy: { position: "asc" } },
-        variants: true,
+        variants: {
+          include: {
+            inventory: true,
+          },
+        },
       },
       take: limit,
     });
@@ -438,7 +490,11 @@ export async function searchProducts(
       },
       include: {
         images: { orderBy: { position: "asc" } },
-        variants: true,
+        variants: {
+          include: {
+            inventory: true,
+          },
+        },
       },
       take: limit,
     });

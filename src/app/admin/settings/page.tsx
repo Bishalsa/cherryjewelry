@@ -14,7 +14,7 @@ export default function AdminSettingsPage() {
   const [freeShippingLimit, setFreeShippingLimit] = useState("999");
   const [shippingCost, setShippingCost] = useState("99");
   const [gstRate, setGstRate] = useState("3"); // 3% GST on Gold/Diamond jewelry in India
-  const [razorpayKey, setRazorpayKey] = useState("rzp_test_TCZD2a3giQ0WY6");
+  const [razorpayKey, setRazorpayKey] = useState("rzp_test_TQjpb54U6bXt80");
   const [logoUrl, setLogoUrl] = useState<string[]>([]);
   const [faviconUrl, setFaviconUrl] = useState<string[]>([]);
 
