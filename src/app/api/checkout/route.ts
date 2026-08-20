@@ -289,7 +289,7 @@ export async function POST(req: Request) {
       }))
     );
 
-    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80";
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_TS9MnP4nZCgaNM";
 
     // 6. Handle Payment Method
     if (paymentMethod === "razorpay") {

@@ -15,6 +15,6 @@ export function getRazorpayClient() {
 }
 
 export const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || "mock_key_id",
-  key_secret: process.env.RAZORPAY_KEY_SECRET || "mock_key_secret",
+  key_id: process.env.RAZORPAY_KEY_ID || "rzp_live_TS9MnP4nZCgaNM",
+  key_secret: process.env.RAZORPAY_KEY_SECRET || "kLeJ1C4nV19Xx7fI6cks0ME6",
 });

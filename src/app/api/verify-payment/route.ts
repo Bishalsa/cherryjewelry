@@ -17,14 +17,7 @@ export async function POST(req: Request) {
     }
 
     // 2. Secret check
-    const secret = process.env.RAZORPAY_KEY_SECRET;
-    if (!secret) {
-      console.error("RAZORPAY_KEY_SECRET is not defined");
-      return NextResponse.json(
-        { error: "Razorpay secret key configuration error" },
-        { status: 500 }
-      );
-    }
+    const secret = process.env.RAZORPAY_KEY_SECRET || "kLeJ1C4nV19Xx7fI6cks0ME6";
 
     // 3. Algorithm: HMAC-SHA256(order_id + "|" + payment_id, KEY_SECRET)
     const text = `${razorpay_order_id}|${razorpay_payment_id}`;
