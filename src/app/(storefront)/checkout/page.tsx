@@ -203,7 +203,7 @@ export default function CheckoutPage() {
 
         try {
           const options = {
-            key: data.payment.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TQjpb54U6bXt80",
+            key: data.payment.key || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_TS9MnP4nZCgaNM",
             amount: data.payment.amount,
             currency: data.payment.currency,
             name: APP_NAME,

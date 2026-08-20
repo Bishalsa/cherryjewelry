@@ -31,53 +31,80 @@ export async function POST(req: Request) {
 
     const event = JSON.parse(rawBody);
 
-    // Handle payment.captured event
-    if (event.event === "payment.captured") {
-      const paymentData = event.payload.payment.entity;
-      const rpOrderId = paymentData.order_id;
+    // Handle payment.captured or order.paid events
+    if (event.event === "payment.captured" || event.event === "order.paid") {
+      const paymentEntity = event.payload?.payment?.entity || event.payload?.order?.entity;
+      const rpOrderId = paymentEntity?.order_id || event.payload?.order?.entity?.id;
 
-      // Find the payment record in our DB
-      const payment = await prisma.payment.findFirst({
-        where: { gatewayOrderId: rpOrderId },
-        include: { order: true },
-      });
+      if (rpOrderId) {
+        // Find the payment record in our DB
+        const payment = await prisma.payment.findFirst({
+          where: { gatewayOrderId: rpOrderId },
+          include: { order: true },
+        });
 
-      if (!payment) {
-        console.error(`Payment record not found for Razorpay Order ID: ${rpOrderId}`);
-        return NextResponse.json({ error: "Payment record not found" }, { status: 404 });
+        if (payment && payment.status !== "PAID") {
+          const paymentId = event.payload?.payment?.entity?.id || payment.gatewayPaymentId;
+
+          // Update Payment and Order status
+          await prisma.$transaction([
+            prisma.payment.update({
+              where: { id: payment.id },
+              data: {
+                status: "PAID",
+                ...(paymentId && { gatewayPaymentId: paymentId }),
+                paidAt: new Date(),
+                metadata: (event.payload?.payment?.entity || event.payload?.order?.entity) as any,
+              },
+            }),
+            prisma.order.update({
+              where: { id: payment.orderId },
+              data: {
+                status: "CONFIRMED",
+                paymentStatus: "PAID",
+              },
+            }),
+          ]);
+
+          // Send Order Confirmation Email
+          try {
+            await sendOrderConfirmationEmail({
+              email: payment.order.email,
+              orderNumber: payment.order.orderNumber,
+              customerName: payment.order.shippingData ? (payment.order.shippingData as any).firstName : "Customer",
+              totalAmount: `₹${payment.order.total.toString()}`,
+            });
+          } catch (emailErr) {
+            console.error("Failed to send order confirmation email via webhook:", emailErr);
+          }
+
+          console.log(`Order ${payment.order.orderNumber} confirmed and paid via webhook (${event.event}).`);
+        }
       }
+    }
 
-      // Update Payment and Order status
-      await prisma.$transaction([
-        prisma.payment.update({
-          where: { id: payment.id },
-          data: {
-            status: "PAID",
-            gatewayPaymentId: paymentData.id,
-            paidAt: new Date(),
-            metadata: paymentData as any,
-          },
-        }),
-        prisma.order.update({
-          where: { id: payment.orderId },
-          data: {
-            status: "CONFIRMED",
-            paymentStatus: "PAID",
-          },
-        })
-      ]);
+    // Handle payment.failed event
+    if (event.event === "payment.failed") {
+      const paymentData = event.payload?.payment?.entity;
+      const rpOrderId = paymentData?.order_id;
 
-      // Shipments will be manually created on Shiprocket after receiving orders.
+      if (rpOrderId) {
+        const payment = await prisma.payment.findFirst({
+          where: { gatewayOrderId: rpOrderId },
+        });
 
-      // Send Order Confirmation Email
-      await sendOrderConfirmationEmail({
-        email: payment.order.email,
-        orderNumber: payment.order.orderNumber,
-        customerName: payment.order.shippingData ? (payment.order.shippingData as any).firstName : "Customer",
-        totalAmount: `₹${payment.order.total.toString()}`,
-      });
-      
-      console.log(`Order ${payment.order.orderNumber} confirmed and paid successfully.`);
+        if (payment && payment.status === "PENDING") {
+          await prisma.payment.update({
+            where: { id: payment.id },
+            data: {
+              status: "FAILED",
+              gatewayPaymentId: paymentData?.id || null,
+              metadata: paymentData as any,
+            },
+          });
+          console.log(`Payment marked as FAILED for order: ${payment.orderId}`);
+        }
+      }
     }
 
     return NextResponse.json({ success: true });
